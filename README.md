@@ -24,6 +24,29 @@ This documentation system exists to provide a few features that I think are impo
     
 ## Usage
 
+This system acts a pre-processor, taking Markdown documentation files as input, converting special references to code targets into 
+'materialised' code blocks and returning Markdown files as output.
+
+During pre-processing, the system can also run tests and other checks on referenced code.
+
+To provide this functionality, **`technical-documentation-system`** exposes the `technical_documents` Bazel rule:
+
+```python
+technical_documents(
+    name = "foo",
+    inputs = ["hello-world.md"],
+    references = [
+        "//foo/bar",
+        "//bee/boo:biz",
+    ],
+    tests = [
+        "//foo/bar:test",
+    ],
+)
+```
+
+## Installation
+
 `TODO`
 
 ## Development
