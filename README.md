@@ -33,7 +33,7 @@ To provide this functionality, **`technical-documentation-system`** exposes the 
 
 ```python
 technical_documents(
-    name = "foo",
+    name = "doc_1",
     inputs = ["hello-world.md"],
     references = [
         "//foo/bar",
@@ -42,6 +42,20 @@ technical_documents(
     tests = [
         "//foo/bar:test",
     ],
+)
+```
+
+For detailed documentation of the rule, see: [`TODO.md`]().
+
+While the system is designed to be agnostic of the particular documentation framework used, a minimal 'render and serve' engine
+is provided. It is exposed via the `technical_documentation_website` Bazel rule:
+
+```python
+technical_documentation_website(
+    name = "all_docs",
+    srcs = {
+        "//:doc_1": "/"  # <key = document> : <value = position in website's doc-tree>
+    }
 )
 ```
 
