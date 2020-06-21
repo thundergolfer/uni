@@ -14,7 +14,7 @@
 This documentation system exists to provide a few features that I think are important to great technical documentation:
 
 1. **Code updates and any required changes to relevant documentation can be completed in _one workflow_, a pull request.** 
-    * No jumping into _Confluence_ once a pull request is merged.
+    * No jumping into [_Confluence_](https://www.atlassian.com/software/confluence) once a pull request is merged.
 2. **Code in documentation should _run_.** Any code shown in technical documentation has automated testing for compilation and format.
     * No copy-pasting code from docs and finding a referenced object has been removed/renamed or that there's a missing semicolon. 
 3. **Code in documentation should be tested.** Any code functionality shown in technical documentation can be unit or integration tested.
