@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/12058921/85215787-98fc8480-b3c0-11ea-8d11-3f5eab64144b.png" height="150px"/>
+</p>
+
 <h1 align="center"><code>technical-documentation-system</code></h1>
 <p align="center">
     <a href="https://github.com/thundergolfer/technical-documentation-system/actions/">
