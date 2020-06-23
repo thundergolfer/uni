@@ -5,4 +5,7 @@ java_binary(
     ],
     deps = [],
     main_class = "preprocessor.Preprocessor",
+    visibility = [
+        "//visibility:public",
+    ]
 )

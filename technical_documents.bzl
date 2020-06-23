@@ -1,10 +1,5 @@
 def _technical_documents_impl(ctx):
-#    print(ctx.attr.inputs)
-#    print([dir(x) for x in ctx.files.inputs])
-
-    out_file = ctx.actions.declare_file("%s.size" % ctx.attr.name)
-
-    print(out_file.path)
+    out_file = ctx.actions.declare_file("%s.dummy" % ctx.attr.name)
 
     ctx.actions.run_shell(
         # Input files visible to the action.
@@ -38,4 +33,20 @@ technical_documents = rule(
             allow_files = [".md"]
         )
     },
+)
+
+def _tech_docs_website_impl(ctx):
+    pass
+
+technical_documentation_website = rule(
+    implementation = _tech_docs_website_impl,
+    attrs = {
+        "srcs": attr.label_keyed_string_dict(
+            allow_empty = True,
+            allow_files = [".md"]
+        ),
+        "_preprocessor": attr.label(
+            default = Label("@technical_documentation_system//preprocessor"),
+        )
+    }
 )
