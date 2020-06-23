@@ -8,6 +8,8 @@ bazel-out
 bazel-testlogs
 bazel-technical-documentation-system
 
+examples/bazel-examples
+
 # Direnv
 **/*.envrc
 
