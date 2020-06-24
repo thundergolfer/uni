@@ -27,23 +27,26 @@ public class StaticFileHandler implements HttpHandler {
             output.close();
         } else {
             String line;
-            String resp = "";
+//            String resp = "";
+            StringBuilder resp = new StringBuilder();
 
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
                 while ((line = bufferedReader.readLine()) != null) {
-                    System.out.println(line);
-                    resp += line;
+                    resp.append(line);
+                    resp.append("\n");
                 }
                 bufferedReader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            headers.add("Content-Type", "text/html");
 
-            exchange.sendResponseHeaders(200, resp.length());
+            String markdownResp = MarkdownRenderer.render(resp.toString());
+
+            headers.add("Content-Type", "text/html");
+            exchange.sendResponseHeaders(200, markdownResp.length());
             OutputStream outputStream = exchange.getResponseBody();
-            outputStream.write(resp.getBytes());
+            outputStream.write(markdownResp.getBytes());
             outputStream.close();
         }
     }

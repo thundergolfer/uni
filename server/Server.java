@@ -31,11 +31,9 @@ public class Server {
             try {
                 String indexFilepath = runfiles.rlocation("technical_documentation_system/server/static/index.html");
                 File newFile = new File(indexFilepath);
-                System.out.println("*****lecture du fichier*****");
-                System.out.println("nom du fichier: " + newFile.getName());
+                System.out.println("Name of file: " + newFile.getName());
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(newFile)));
                 while ((line = bufferedReader.readLine()) != null) {
-                    System.out.println(line);
                     resp += line;
                 }
                 bufferedReader.close();

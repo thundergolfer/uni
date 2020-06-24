@@ -7,7 +7,7 @@ java_binary(
     ],
     deps = [
         "@bazel_tools//tools/java/runfiles",
-
+        "//vendor/github.com/atlassian/commonmark-java/commonmark",
     ],
     main_class = "server.Server",
     visibility = [
