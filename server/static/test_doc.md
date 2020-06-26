@@ -6,53 +6,22 @@ Bring to the table win-win survival strategies to ensure proactive domination. A
 
 Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.
 
-#### Test some credit card numbers for validity: 
+#### Test Fibonacci: 
 
-```golang
-package main
+```python
+def fib(n,x=[0,1]):
+   for i in range(abs(n)-1): x=[x[1],sum(x)]
+   return x[1]*pow(-1,abs(n)-1) if n<0 else x[1] if n else 0
  
-import (
-    "fmt"
-    "strings"
-)
- 
-const input = `49927398716
-49927398717
-1234567812345678
-1234567812345670`
- 
-var t = [...]int{0, 2, 4, 6, 8, 1, 3, 5, 7, 9}
- 
-func luhn(s string) bool {
-    odd := len(s) & 1
-    var sum int
-    for i, c := range s {
-        if c < '0' || c > '9' {
-            return false
-        }
-        if i&1 == odd {
-            sum += t[c-'0']
-        } else {
-            sum += int(c - '0')
-        }
-    }
-    return sum%10 == 0
-}
- 
-func main() {
-    for _, s := range strings.Split(input, "\n") {
-        fmt.Println(s, luhn(s))
-    }
-}
+for i in range(-30,31): print(fib(i))
 ```
 
 **Output:**
 
 ```
-49927398716 true
-49927398717 false
-1234567812345678 false
-1234567812345670 true
+-832040 514229 -317811 196418 -121393 75025 -46368 28657 -17711 10946 -6765 4181 -2584 1597 -987 
+610 -377 233 -144 89 -55 34 -21 13 -8 5 -3 2 -1 1 0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 
+1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229 832040
 ```
 
 ### Fin

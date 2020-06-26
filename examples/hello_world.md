@@ -4,10 +4,7 @@ This is an example markdown document to demonstrate the functionality
 of this project.
 
 ```python
-foo = 10
-bar = 20
-
-print(foo + bar)
+%% //demo_code:hello_world %%
 ```
 
 ### Subheading One
