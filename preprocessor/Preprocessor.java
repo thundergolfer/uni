@@ -2,6 +2,8 @@ package preprocessor;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +11,6 @@ import java.util.regex.Pattern;
  * USAGE: Preprocessor.jar <input file> <output file> [<references> ...]
  */
 public class Preprocessor {
-
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
             throw new IllegalArgumentException("Incorrect arguments passed to program.");
@@ -56,10 +57,67 @@ public class Preprocessor {
     }
 
     private static String processReferences(String mdContents) {
-        Pattern p = Pattern.compile("%% \\/\\/[0-9a-z_-]+:[0-9a-z_-]+ %%", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile("%% .+ %%", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(mdContents);
-        String result = m.replaceAll("FOOBAR, My son!");
+        String matchedRef;
+        while(m.find()) {
+            System.out.println(m.group(0));
+            matchedRef = m.group(0);
+            matchedRef = removePrefix(matchedRef, "%% ");
+            System.out.println(matchedRef);
+            matchedRef = removeSuffix(matchedRef, " %%");
+            Substitution sub = parseSubstitution(matchedRef);
+            System.out.println(sub);
+        }
+        return m.replaceAll("FOOBAR, My son!");
+    }
 
-        return result;
+    private static Substitution parseSubstitution(String substitutionDirective) {
+        String[] parts = substitutionDirective.split("\\s+");
+        System.out.println(substitutionDirective);
+        switch (parts.length) {
+            case 1:
+                return new Substitution(parts[0]);
+            case 2:
+                return new Substitution(parts[1]);
+            default:
+                throw new RuntimeException("Fuck");
+        }
+    }
+
+    private static class Substitution {
+        String filePath;
+        Optional<Integer> lineStart;
+        Optional<Integer> lineEnd;
+
+        public Substitution(String filePath) {
+            this.filePath = filePath;
+            lineStart = Optional.empty();
+            lineEnd = Optional.empty();
+        }
+
+        public Substitution(String filePath, int lineStart, int lineEnd) {
+            this.filePath = filePath;
+            this.lineStart = Optional.of(lineStart);
+            this.lineEnd = Optional.of(lineEnd);
+        }
+
+        public String toString() {
+            return filePath + " " + lineStart.toString() + "-" + lineEnd.toString();
+        }
+    }
+
+    private static String removePrefix(String s, String prefix) {
+        if (s != null && prefix != null && s.startsWith(prefix)){
+            return s.substring(prefix.length());
+        }
+        return s;
+    }
+
+    private static String removeSuffix(String s, String suffix) {
+        if (s != null && suffix != null && s.endsWith(suffix)){
+            return s.substring(0, s.length() - suffix.length());
+        }
+        return s;
     }
 }
