@@ -4,11 +4,11 @@ This is an example markdown document to demonstrate the functionality
 of this project.
 
 ```python
-%% demo_code/hello_world.py 0-100 %%
+%% demo_code/hello_world.py 1-100 %%
 ```
 
 ```python
-%% demo_code/hello_world.py 0-3 %%
+%% demo_code/hello_world.py 1-3 %%
 ```
 
 ```python

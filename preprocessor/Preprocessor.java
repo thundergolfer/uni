@@ -1,8 +1,9 @@
 package preprocessor;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,8 +22,10 @@ public class Preprocessor {
         String writeFilePath = args[1];
         File writeFile = new File(writeFilePath);
 
-        String[] reference_files = Arrays.copyOfRange(args, 2, args.length);
-        for (String ref: reference_files) {
+        Set<String> referenceFiles = new HashSet(
+                Arrays.asList(Arrays.copyOfRange(args, 2, args.length))
+        );
+        for (String ref: referenceFiles) {
             System.out.printf("REF: %s\n", ref);
         }
 
@@ -33,9 +36,15 @@ public class Preprocessor {
         String markdownFileContents = readMarkdownFile(mdFile);
         System.out.println(markdownFileContents);
 
-        String processedMarkdownFileContents = processReferences(markdownFileContents);
-
-        System.out.println(processedMarkdownFileContents);
+        String processedMarkdownFileContents;
+        try {
+            processedMarkdownFileContents = processReferences(markdownFileContents, referenceFiles);
+            System.out.println(processedMarkdownFileContents);
+        } catch (ReferenceProcessingException e) {
+            e.printStackTrace();
+            System.out.println("bugger");
+            System.exit(1);
+        }
 
         try (PrintWriter out = new PrintWriter(writeFile)) {
             out.println(markdownFileContents);
@@ -56,33 +65,80 @@ public class Preprocessor {
         }
     }
 
-    private static String processReferences(String mdContents) {
+    private static String processReferences(String mdContents, Set<String> referenceFiles) throws ReferenceProcessingException, IOException {
         Pattern p = Pattern.compile("%% .+ %%", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(mdContents);
         String matchedRef;
         while(m.find()) {
-            System.out.println(m.group(0));
             matchedRef = m.group(0);
             matchedRef = removePrefix(matchedRef, "%% ");
-            System.out.println(matchedRef);
             matchedRef = removeSuffix(matchedRef, " %%");
             Substitution sub = parseSubstitution(matchedRef);
-            System.out.println(sub);
+            if (!referenceFiles.contains(sub.filePath)) {
+                String errMsg = String.format(
+                        "Invalid file reference. '%s' not found. A relevant target be missing from the 'references' attribute.",
+                        sub.filePath
+                );
+                throw new ReferenceProcessingException(errMsg);
+            }
+            String requestedSubstitutionContents = extractSubstitutionContents(sub);
+            System.out.println("requested substitution");
+            System.out.println(requestedSubstitutionContents);
         }
         return m.replaceAll("FOOBAR, My son!");
     }
 
-    private static Substitution parseSubstitution(String substitutionDirective) {
+    private static String extractSubstitutionContents(Substitution sub) throws IOException {
+        List<String> requestedLines;
+        Path p = new File(sub.filePath).toPath();
+        List<String> fileLines = Files.readAllLines(p);
+
+        if (sub.lineStart.isPresent() && sub.lineEnd.isPresent()) {
+            int lineStart = sub.lineStart.get();
+            int lineEnd = sub.lineEnd.get();
+            int safeLineEnd = Math.min(lineEnd, fileLines.size());
+            requestedLines = fileLines.subList(lineStart, safeLineEnd);
+        } else {
+            requestedLines = fileLines;
+        }
+        return String.join("\n", requestedLines);
+    }
+
+    private static Substitution parseSubstitution(String substitutionDirective) throws ReferenceProcessingException {
         String[] parts = substitutionDirective.split("\\s+");
-        System.out.println(substitutionDirective);
         switch (parts.length) {
             case 1:
                 return new Substitution(parts[0]);
             case 2:
-                return new Substitution(parts[1]);
+                String lineRangeDeclaration = parts[1];
+                String[] lineRangeDeclarationParts = lineRangeDeclaration.split("-");
+                if (lineRangeDeclarationParts.length != 2) {
+                    throw new ReferenceProcessingException("Wrong line range declaration fmt. Valid format example: 1-19");
+                }
+                try {
+                    int lineStart = Integer.parseInt(lineRangeDeclarationParts[0]);
+                    int lineEnd = Integer.parseInt(lineRangeDeclarationParts[1]);
+                    return new Substitution(parts[0], lineStart, lineEnd);
+                } catch (NumberFormatException e) {
+                    throw new ReferenceProcessingException("Could not parse integer in line range declaration. Valid format example: 1-19");
+                }
             default:
-                throw new RuntimeException("Fuck");
+                throw new ReferenceProcessingException("Fuck");
         }
+    }
+
+    private static String removePrefix(String s, String prefix) {
+        if (s != null && prefix != null && s.startsWith(prefix)){
+            return s.substring(prefix.length());
+        }
+        return s;
+    }
+
+    private static String removeSuffix(String s, String suffix) {
+        if (s != null && suffix != null && s.endsWith(suffix)){
+            return s.substring(0, s.length() - suffix.length());
+        }
+        return s;
     }
 
     private static class Substitution {
@@ -105,19 +161,5 @@ public class Preprocessor {
         public String toString() {
             return filePath + " " + lineStart.toString() + "-" + lineEnd.toString();
         }
-    }
-
-    private static String removePrefix(String s, String prefix) {
-        if (s != null && prefix != null && s.startsWith(prefix)){
-            return s.substring(prefix.length());
-        }
-        return s;
-    }
-
-    private static String removeSuffix(String s, String suffix) {
-        if (s != null && suffix != null && s.endsWith(suffix)){
-            return s.substring(0, s.length() - suffix.length());
-        }
-        return s;
     }
 }

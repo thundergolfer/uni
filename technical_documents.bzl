@@ -11,11 +11,12 @@ def _technical_documents_impl(ctx):
 
     out_file = ctx.actions.declare_file("%s.preprocessed" % ctx.files.inputs[0].short_path)
 
-    args = [ctx.files.inputs[0].path, out_file.path] + [f.path for f in reference_files_ds.to_list()]
+    reference_files_list = reference_files_ds.to_list()
+    args = [ctx.files.inputs[0].path, out_file.path] + [f.path for f in reference_files_list]
 
     ctx.actions.run(
         # Input files visible to the action.
-        inputs = ctx.files.inputs,
+        inputs = ctx.files.inputs + reference_files_list,
         # Output files that must be created by the action.
         outputs = [out_file],
         arguments = args,
