@@ -37,17 +37,14 @@ public class Preprocessor {
         System.out.println(markdownFileContents);
 
         String processedMarkdownFileContents;
-        try {
+        try (PrintWriter out = new PrintWriter(writeFile)) {
             processedMarkdownFileContents = processReferences(markdownFileContents, referenceFiles);
             System.out.println(processedMarkdownFileContents);
+            out.println(processedMarkdownFileContents);
         } catch (ReferenceProcessingException e) {
             e.printStackTrace();
             System.out.println("bugger");
             System.exit(1);
-        }
-
-        try (PrintWriter out = new PrintWriter(writeFile)) {
-            out.println(markdownFileContents);
         }
     }
 
@@ -69,6 +66,7 @@ public class Preprocessor {
         Pattern p = Pattern.compile("%% .+ %%", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(mdContents);
         String matchedRef;
+        StringBuffer sb = new StringBuffer();
         while(m.find()) {
             matchedRef = m.group(0);
             matchedRef = removePrefix(matchedRef, "%% ");
@@ -82,10 +80,14 @@ public class Preprocessor {
                 throw new ReferenceProcessingException(errMsg);
             }
             String requestedSubstitutionContents = extractSubstitutionContents(sub);
+            // TODO(Jonathon): I'll have to store these
             System.out.println("requested substitution");
             System.out.println(requestedSubstitutionContents);
+            m.appendReplacement(sb, requestedSubstitutionContents);
         }
-        return m.replaceAll("FOOBAR, My son!");
+        m.appendTail(sb);
+        return sb.toString();
+//        return m.replaceAll("FOOBAR, My son!");
     }
 
     private static String extractSubstitutionContents(Substitution sub) throws IOException {
