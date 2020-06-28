@@ -2,7 +2,10 @@ load("@technical_documentation_system//:technical_documents.bzl", "technical_doc
 
 technical_documents(
     name = "docs",
-    inputs = ["hello_world.md"],
+    inputs = [
+        "hello_world.md",
+        "example.md",
+    ],
     references = [
         "//demo_code:hello_world",
     ]

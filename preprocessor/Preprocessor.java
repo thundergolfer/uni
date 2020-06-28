@@ -25,16 +25,12 @@ public class Preprocessor {
         Set<String> referenceFiles = new HashSet(
                 Arrays.asList(Arrays.copyOfRange(args, 2, args.length))
         );
-        for (String ref: referenceFiles) {
-            System.out.printf("REF: %s\n", ref);
-        }
 
         if (!mdFile.exists()) {
             throw new IllegalArgumentException("Must pass markdown file that exists.");
         }
 
         String markdownFileContents = readMarkdownFile(mdFile);
-        System.out.println(markdownFileContents);
 
         String processedMarkdownFileContents;
         try (PrintWriter out = new PrintWriter(writeFile)) {
@@ -98,8 +94,15 @@ public class Preprocessor {
         if (sub.lineStart.isPresent() && sub.lineEnd.isPresent()) {
             int lineStart = sub.lineStart.get();
             int lineEnd = sub.lineEnd.get();
-            int safeLineEnd = Math.min(lineEnd, fileLines.size());
-            requestedLines = fileLines.subList(lineStart, safeLineEnd);
+            if (lineStart > lineEnd) {
+                requestedLines = new ArrayList<>();
+            } else if (lineStart == lineEnd) {
+                requestedLines = new ArrayList<>();
+                requestedLines.add(fileLines.get(lineStart-1));
+            } else {
+                int safeLineEnd = Math.min(lineEnd, fileLines.size());
+                requestedLines = fileLines.subList(lineStart-1, safeLineEnd);
+            }
         } else {
             requestedLines = fileLines;
         }

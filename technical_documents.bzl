@@ -2,27 +2,24 @@ def _technical_documents_impl(ctx):
     all_reference_srcs = []
     if ctx.attr.references:
         for ref in ctx.attr.references:
-#            print(ref)
-#            print(ref.files)
             all_reference_srcs.append(ref.files)
-#            print(dir(ref))
 
     reference_files_ds = depset(transitive = all_reference_srcs)
 
-    out_file = ctx.actions.declare_file("%s.preprocessed" % ctx.files.inputs[0].short_path)
-
     reference_files_list = reference_files_ds.to_list()
-    args = [ctx.files.inputs[0].path, out_file.path] + [f.path for f in reference_files_list]
 
-    ctx.actions.run(
-        # Input files visible to the action.
-        inputs = ctx.files.inputs + reference_files_list,
-        # Output files that must be created by the action.
-        outputs = [out_file],
-        arguments = args,
-        progress_message = "Running preprocessor, outputting to %s" % out_file.short_path,
-        executable = ctx.executable._preprocessor,
-    )
+    for input_md_file in ctx.files.inputs:
+        out_file = ctx.actions.declare_file("%s.preprocessed" % input_md_file.short_path)
+        args = [input_md_file.path, out_file.path] + [f.path for f in reference_files_list]
+        ctx.actions.run(
+            # Input files visible to the action.
+            inputs = [input_md_file] + reference_files_list,
+            # Output files that must be created by the action.
+            outputs = [out_file],
+            arguments = args,
+            progress_message = "Running preprocessor, outputting to %s" % out_file.short_path,
+            executable = ctx.executable._preprocessor,
+        )
 
     return [DefaultInfo(files = depset([out_file]))]
 
