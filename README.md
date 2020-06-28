@@ -39,9 +39,6 @@ technical_documents(
         "//foo/bar",
         "//bee/boo:biz",
     ],
-    tests = [
-        "//foo/bar:test",
-    ],
 )
 ```
 
