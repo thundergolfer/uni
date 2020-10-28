@@ -4,6 +4,10 @@ bazel-out
 bazel-testlogs
 bazel-uni
 
+# Intellij IDEA
+.ijwb/*
+!.ijwb/.bazelproject
+
 # Prerequisites
 *.d
 
