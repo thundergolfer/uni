@@ -16,10 +16,10 @@ A mono-repo containing code I've written to educate myself.
 
 ### Prerequisites
 
-1. Nix
-2. Direnv
+1. [Nix](https://nixos.org/) - Provide a hermetic developer environment. Runs properly on my machine, runs properly on everyone else's. At least, that's the idea.
+2. [Direnv](https://direnv.net/) - Integrate with Nix's `nix-shell` to provide hermetic developer environment.
 3. [`lorri`](https://github.com/target/lorri)
-4. Bazel
+4. [Bazel](https://bazel.build/) - build everything fast, and correctly, no matter the language
 
 #### Steps
 
