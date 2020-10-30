@@ -8,6 +8,9 @@ bazel-uni
 .ijwb/*
 !.ijwb/.bazelproject
 
+# Direnv / Nix
+.direnv
+
 # Prerequisites
 *.d
 
