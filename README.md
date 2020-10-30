@@ -1,5 +1,12 @@
 <h1 align="center"><code>uni'</code></h1>
 
+<p align="center">
+    <a href="https://github.com/thundergolfer/uni/actions/">
+        <img src="https://github.com/thundergolfer/uni/workflows/CI/badge.svg">
+    </a>
+</p>
+
+
 ----
 
 A mono-repo containing code I've written to educate myself. 
