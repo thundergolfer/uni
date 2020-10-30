@@ -11,7 +11,8 @@ A mono-repo containing code I've written to educate myself.
 
 1. Nix
 2. Direnv
-3. Bazel
+3. [`lorri`](https://github.com/target/lorri)
+4. Bazel
 
 ### Steps
 
