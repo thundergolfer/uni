@@ -14,6 +14,16 @@ A mono-repo containing code I've written to educate myself.
 3. [`lorri`](https://github.com/target/lorri)
 4. Bazel
 
-### Steps
+#### Steps
 
 TODO
+
+## Development
+
+### Build
+
+`bazel build //...`
+
+### Test
+
+`bazel test //...`
