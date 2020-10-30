@@ -22,3 +22,5 @@ jobs:
 
     - name: Run tests
       run: bazel test //...
+      env:
+        PYTHONIOENCODING: utf8
