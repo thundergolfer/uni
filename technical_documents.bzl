@@ -46,7 +46,27 @@ technical_documents = rule(
 )
 
 def _tech_docs_website_impl(ctx):
-    pass
+    output = ctx.actions.declare_file("docs_webserver.sh")
+    args = []
+    ctx.actions.expand_template(
+        template = ctx.file._template,
+        output = output,
+        substitutions = {
+            "{EXE}": ctx.executable._webserver.short_path,
+            "{ARGS}": " ".join(args),
+        },
+        is_executable=True
+    )
+    runfiles = ctx.runfiles(
+        files = [ctx.executable._webserver, ctx.attr._webserver.files_to_run.executable] + ctx.attr._webserver.files.to_list(),
+    )
+    runfiles.merge(ctx.attr._webserver.default_runfiles)
+    runfiles.merge(ctx.attr._webserver.data_runfiles)
+
+    return DefaultInfo(
+        runfiles = runfiles,
+        executable = output,
+    )
 
 technical_documentation_website = rule(
     implementation = _tech_docs_website_impl,
@@ -55,8 +75,16 @@ technical_documentation_website = rule(
             allow_empty = True,
             allow_files = [".md"]
         ),
-        "_preprocessor": attr.label(
-            default = Label("@technical_documentation_system//preprocessor"),
+        "_webserver": attr.label(
+            default = Label("@technical_documentation_system//server"),
+            providers = [JavaInfo],
+            executable = True,
+            cfg = "target",
+        ),
+        "_template": attr.label(
+            default = Label("@technical_documentation_system//templates:run_docs_webserver.sh.tpl"),
+            allow_single_file = True,
         )
-    }
+    },
+    executable = True,
 )

@@ -1,6 +1,7 @@
 package server;
 
 import java.io.*;
+import java.util.Map;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -10,14 +11,21 @@ import com.google.devtools.build.runfiles.Runfiles;
 
 @SuppressWarnings("restriction")
 public class StaticFileHandler implements HttpHandler {
+    Map<String, String> routeToStaticFile;
+
+    public StaticFileHandler(Map<String, String> routeToStaticFile) {
+        this.routeToStaticFile = routeToStaticFile;
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         Runfiles runfiles = Runfiles.create();
         Headers headers = exchange.getResponseHeaders();
         String fileId = exchange.getRequestURI().getPath();
-        System.out.printf("Retrieving %s\n", fileId);
-        File file = getFile(runfiles, fileId);
+        String key = fileId.replaceFirst("/static/", "");
+        System.out.printf("Retrieving '%s'\n", key);
+        String docFilepath = this.routeToStaticFile.getOrDefault(key, key);
+        File file = getFile(runfiles, docFilepath);
         if (file == null) {
             String response = "Error 404 File not found.";
             exchange.sendResponseHeaders(404, response.length());
