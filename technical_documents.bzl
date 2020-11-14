@@ -48,24 +48,27 @@ technical_documents = rule(
 def _tech_docs_website_impl(ctx):
     output = ctx.actions.declare_file("docs_webserver.sh")
     args = []
-    ctx.actions.expand_template(
-        template = ctx.file._template,
+
+    executable_script = [
+        "#!/usr/bin/env bash",
+        "{exe} {arguments}".format(
+            exe=ctx.executable._webserver.short_path,
+            arguments=" ".join(args),
+        ),
+    ]
+
+    ctx.actions.write(
         output = output,
-        substitutions = {
-            "{EXE}": ctx.executable._webserver.short_path,
-            "{ARGS}": " ".join(args),
-        },
-        is_executable=True
+        content = "\n".join(executable_script),
     )
+
     runfiles = ctx.runfiles(
-        files = [ctx.executable._webserver, ctx.attr._webserver.files_to_run.executable] + ctx.attr._webserver.files.to_list(),
+        files = [ctx.executable._webserver],
     )
-    runfiles.merge(ctx.attr._webserver.default_runfiles)
-    runfiles.merge(ctx.attr._webserver.data_runfiles)
 
     return DefaultInfo(
-        runfiles = runfiles,
         executable = output,
+        runfiles = runfiles.merge(ctx.attr._webserver[DefaultInfo].default_runfiles),
     )
 
 technical_documentation_website = rule(
@@ -73,18 +76,14 @@ technical_documentation_website = rule(
     attrs = {
         "srcs": attr.label_keyed_string_dict(
             allow_empty = True,
-            allow_files = [".md"]
+            allow_files = [".md", ".md.preprocessed"]
         ),
         "_webserver": attr.label(
+            cfg = "host",
             default = Label("@technical_documentation_system//server"),
-            providers = [JavaInfo],
             executable = True,
-            cfg = "target",
+            providers = [JavaInfo],
         ),
-        "_template": attr.label(
-            default = Label("@technical_documentation_system//templates:run_docs_webserver.sh.tpl"),
-            allow_single_file = True,
-        )
     },
     executable = True,
 )
