@@ -15,8 +15,10 @@ import com.google.devtools.build.runfiles.Runfiles;
 public class Server {
     public static void main(String[] args) throws Exception {
         Map<String, String> routeToDocFile = processArgs(args);
+        int portNumber = 8000;
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+        System.out.printf("🚀 Starting web server at localhost:%s\n", portNumber);
+        HttpServer server = HttpServer.create(new InetSocketAddress(portNumber), 0);
         server.createContext("/", new IndexPageHandler());
         server.createContext("/test", new MyHandler());
         server.createContext("/static", new StaticFileHandler(routeToDocFile));
