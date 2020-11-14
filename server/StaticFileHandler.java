@@ -22,9 +22,13 @@ public class StaticFileHandler implements HttpHandler {
         Runfiles runfiles = Runfiles.create();
         Headers headers = exchange.getResponseHeaders();
         String fileId = exchange.getRequestURI().getPath();
-        String key = fileId.replaceFirst("/static/", "");
+        String key = fileId.replaceFirst("/static/", "/");
         System.out.printf("Retrieving '%s'\n", key);
         String docFilepath = this.routeToStaticFile.getOrDefault(key, key);
+        // TODO(Jonathon): Clean up.
+        //  - Should users have to hit /static to retrieve their docs?
+        //  - Should test_doc.md even still be here?
+        //  - How do users specify the index page to replace the default? It can't just be a technical_documents target because they contain many docs.
         File file = getFile(runfiles, docFilepath);
         if (file == null) {
             String response = "Error 404 File not found.";
@@ -60,11 +64,16 @@ public class StaticFileHandler implements HttpHandler {
     }
 
     private File getFile(Runfiles runfiles, String fileId) {
+        // TODO(Jonathon): Surely not necessary?
         if (fileId.equals("/static/foo")) {
             System.out.printf("No file at %s\n", fileId);
             return null;
         }
-        String path = runfiles.rlocation("technical_documentation_system/server/static/test_doc.md");
+        String path = runfiles.rlocation(fileId);
+        // TODO(Jonathon): Necessary?
+        if (path == null) {
+            path = runfiles.rlocation("technical_documentation_system/server/static/test_doc.md");
+        }
         return new File(path);
     }
 }
