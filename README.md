@@ -56,6 +56,8 @@ technical_documentation_website(
 )
 ```
 
+Use `bazel run //path/to:all_docs` to run the minimal document server. 🚀
+
 ## Installation
 
 `TODO`
