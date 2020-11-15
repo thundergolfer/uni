@@ -45,24 +45,46 @@ technical_documents = rule(
     },
 )
 
+
+def _dict_to_pairs_of_strings(d):
+    result = []
+    for key, val in d.items():
+        result.append(key)
+        result.append(val)
+    return result
+
+
 def _tech_docs_website_impl(ctx):
     output = ctx.actions.declare_file("docs_webserver.sh")
-    args = []
+    map_url_path_to_doc = {}
+    map_url_path_to_label = {}  # Maintained only for more user friendly error messages.
     docs = []
 
-    for label, path_prefix in ctx.attr.srcs.items():
-        doc_files = label.files.to_list()
+    for target, path_prefix in ctx.attr.srcs.items():
+        doc_files = target.files.to_list()
         docs.extend(doc_files)
-        # Map each document under the label's outputs (likely a label for a `technical_documents` target) to the
+        # Map each document under the target's outputs (likely a `technical_documents` target) to the
         # URL subpath is will be served under, and pair that with the document's runfiles location in the WORKSPACE.
         for doc_file in doc_files:
             url_path = "{}/{}".format(path_prefix, doc_file.short_path.replace(".preprocessed", ""))
             runfiles_location = ctx.workspace_name + "/" + doc_file.short_path
-            args.extend([
-                url_path,
-                runfiles_location
-            ])
+            if url_path in map_url_path_to_doc:
+                err_msg = (
+                    "Found duplicate. '{url_p}' already maps to '{curr_doc}' from the '{curr_label}' target, so " +
+                    "cannot also map to '{new_doc}' from the '{new_label}' target"
+                )
+                print(type(map_url_path_to_label[url_path]))
+                fail(err_msg.format(
+                    url_p=url_path,
+                    curr_doc=map_url_path_to_doc[url_path],
+                    curr_label = map_url_path_to_label[url_path],
+                    new_doc=runfiles_location,
+                    new_label=target.label,
+                ))
+            map_url_path_to_doc[url_path] = runfiles_location
+            map_url_path_to_label[url_path] = target.label
 
+    args = _dict_to_pairs_of_strings(d=map_url_path_to_doc)
     executable_script = [
         "#!/usr/bin/env bash",
         "{exe} {arguments}".format(
