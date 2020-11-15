@@ -39,7 +39,6 @@ public class Preprocessor {
             out.println(processedMarkdownFileContents);
         } catch (ReferenceProcessingException e) {
             e.printStackTrace();
-            System.out.println("bugger");
             System.exit(1);
         }
     }
@@ -76,14 +75,12 @@ public class Preprocessor {
                 throw new ReferenceProcessingException(errMsg);
             }
             String requestedSubstitutionContents = extractSubstitutionContents(sub);
-            // TODO(Jonathon): I'll have to store these
             System.out.println("requested substitution");
             System.out.println(requestedSubstitutionContents);
             m.appendReplacement(sb, requestedSubstitutionContents);
         }
         m.appendTail(sb);
         return sb.toString();
-//        return m.replaceAll("FOOBAR, My son!");
     }
 
     private static String extractSubstitutionContents(Substitution sub) throws IOException {
