@@ -52,19 +52,11 @@ def _tech_docs_website_impl(ctx):
     docs = []
 
     for label, value in ctx.attr.srcs.items():
-        print(label)
-        print(dir(label))
-        print(label.files)
-        print(value)
         doc_files = label.files.to_list()
         docs.extend(doc_files)
         for doc_file in doc_files:
-            print("root")
-            print(doc_file.root.path)
             url_path = "{}/{}".format(value, doc_file.short_path.replace(".preprocessed", ""))
-            print("{} : {}".format(url_path, ctx.workspace_name + "/" + doc_file.short_path))
-            # TODO(Jonathon): Clean this up. Current implemenation at least works with thundergolfer/uni:README.md
-#            args.extend([url_path, doc_file.path])
+            # TODO(Jonathon): Clean this up. Current implementation at least works with thundergolfer/uni:README.md
             args.extend([url_path, ctx.workspace_name + "/" + doc_file.short_path])
 
     executable_script = [

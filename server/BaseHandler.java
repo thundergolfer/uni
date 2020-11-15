@@ -10,10 +10,10 @@ import com.sun.net.httpserver.HttpHandler;
 import com.google.devtools.build.runfiles.Runfiles;
 
 @SuppressWarnings("restriction")
-public class StaticFileHandler implements HttpHandler {
+public class BaseHandler implements HttpHandler {
     Map<String, String> routeToStaticFile;
 
-    public StaticFileHandler(Map<String, String> routeToStaticFile) {
+    public BaseHandler(Map<String, String> routeToStaticFile) {
         this.routeToStaticFile = routeToStaticFile;
     }
 
@@ -22,13 +22,18 @@ public class StaticFileHandler implements HttpHandler {
         Runfiles runfiles = Runfiles.create();
         Headers headers = exchange.getResponseHeaders();
         String fileId = exchange.getRequestURI().getPath();
-        String key = fileId.replaceFirst("/static/", "/");
+//        String key = fileId.replaceFirst("/static/", "/");
+        String key = fileId;
+
+        if (key.equals("/")) {
+            // TODO(Jonathon): How do users specify the index page to replace the default? It can't just be a technical_documents target because they contain many docs.
+            System.out.println("No Index page registered. Falling back to thundergolfer/technical_document_system Index page.");
+            handleIndex(exchange, runfiles);
+            return;
+        }
+
         System.out.printf("Retrieving '%s'\n", key);
         String docFilepath = this.routeToStaticFile.getOrDefault(key, key);
-        // TODO(Jonathon): Clean up.
-        //  - Should users have to hit /static to retrieve their docs?
-        //  - Should test_doc.md even still be here?
-        //  - How do users specify the index page to replace the default? It can't just be a technical_documents target because they contain many docs.
         File file = getFile(runfiles, docFilepath);
         if (file == null) {
             String response = "Error 404 File not found.";
@@ -39,7 +44,6 @@ public class StaticFileHandler implements HttpHandler {
             output.close();
         } else {
             String line;
-//            String resp = "";
             StringBuilder resp = new StringBuilder();
 
             try {
@@ -63,17 +67,39 @@ public class StaticFileHandler implements HttpHandler {
         }
     }
 
+    public void handleIndex(HttpExchange exchange, Runfiles runfiles) throws IOException {
+        Headers headers = exchange.getResponseHeaders();
+        String line;
+        String resp = "";
+        try {
+            String indexFilepath = runfiles.rlocation("technical_documentation_system/server/static/index.html");
+            File newFile = new File(indexFilepath);
+            System.out.println("Name of file: " + newFile.getName());
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(newFile)));
+            while ((line = bufferedReader.readLine()) != null) {
+                resp += line;
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        headers.add("Content-Type", "text/html");
+        exchange.sendResponseHeaders(200, resp.length());
+        OutputStream outputStream = exchange.getResponseBody();
+        outputStream.write(resp.getBytes());
+        outputStream.close();
+    }
+
     private File getFile(Runfiles runfiles, String fileId) {
-        // TODO(Jonathon): Surely not necessary?
-        if (fileId.equals("/static/foo")) {
-            System.out.printf("No file at %s\n", fileId);
+        String path = runfiles.rlocation(fileId);
+        if (path == null) {
             return null;
         }
-        String path = runfiles.rlocation(fileId);
-        // TODO(Jonathon): Necessary?
-        if (path == null) {
-            path = runfiles.rlocation("technical_documentation_system/server/static/test_doc.md");
+        File f = new File(path);
+        if (f.exists() && f.isFile()) {
+            return f;
         }
-        return new File(path);
+        return null;
     }
 }

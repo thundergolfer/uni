@@ -3,7 +3,7 @@ java_binary(
     srcs = [
         "MarkdownRenderer.java",
         "Server.java",
-        "StaticFileHandler.java",
+        "BaseHandler.java",
     ],
     deps = [
         "@bazel_tools//tools/java/runfiles",
