@@ -8,6 +8,30 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpServer;
 
 public class Server {
+    /**
+     * This very basic HTTP Server receives from the `technical_documentation_website` starlark rule's
+     * implementation a number of Markdown documents preprocessed by `technical_documents` rules (and included in
+     * runfiles).
+     *
+     * For example:
+     *
+     * <pre>
+     *   technical_documents(
+     *      name = "readmes",
+     *      inputs = ["README.md", "CONTRIBUTING.md"],
+     *   )
+     *
+     *   technical_documentation_website(
+     *      name = "demo_docs_website",
+     *      srcs = {
+     *          "//:readmes": "/foo"  # <key = document> : <value = position in website's doc-tree>
+     *      }
+     *  )
+     * </pre>
+     *
+     * Makes the docs in <pre>:readmes</pre> available at "/foo/README.md" and "/foo/CONTRIBUTING.md", respectively.
+     * "/foo/README" and "/foo/CONTRIBUTING" would also be valid.
+     */
     public static void main(String[] args) throws Exception {
         Map<String, String> routeToDocFile = processArgs(args);
         int portNumber = 8000;
@@ -19,6 +43,16 @@ public class Server {
         server.start();
     }
 
+    /**
+     * The Server expects to receive as argument only a series of pairs of strings,
+     * in the form:
+     * <url sub-path> <runfiles path to .md doc> <url sub-path> <runfiles path to .md doc> ...
+     *
+     * This list of arguments is broken up into a route map for the HttpHandler.
+     *
+     * @param args
+     * @return A Map from path route -> runfiles location of a markdown document.
+     */
     private static Map<String, String> processArgs(String[] args) {
         if (args.length % 2 != 0) throw new IllegalArgumentException();
         String [][] pairs = chunkArrayIntoPairs(args);
