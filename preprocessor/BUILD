@@ -10,3 +10,13 @@ java_binary(
         "//visibility:public",
     ]
 )
+
+java_test(
+    name = "TestPreprocessor",
+    srcs = ["TestPreprocessor.java"],
+    test_class = "preprocessor.TestPreprocessor",
+    deps = [
+        ":preprocessor",
+        "//third_party:junit4",
+    ],
+)

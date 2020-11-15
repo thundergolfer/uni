@@ -106,7 +106,8 @@ public class Preprocessor {
         return String.join("\n", requestedLines);
     }
 
-    private static Substitution parseSubstitution(String substitutionDirective) throws ReferenceProcessingException {
+    // VisibleForTesting
+    protected static Substitution parseSubstitution(String substitutionDirective) throws ReferenceProcessingException {
         String[] parts = substitutionDirective.split("\\s+");
         switch (parts.length) {
             case 1:
@@ -143,7 +144,7 @@ public class Preprocessor {
         return s;
     }
 
-    private static class Substitution {
+    protected static class Substitution {
         String filePath;
         Optional<Integer> lineStart;
         Optional<Integer> lineEnd;
