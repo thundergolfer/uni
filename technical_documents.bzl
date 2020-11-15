@@ -48,16 +48,20 @@ technical_documents = rule(
 def _tech_docs_website_impl(ctx):
     output = ctx.actions.declare_file("docs_webserver.sh")
     args = []
-
     docs = []
 
-    for label, value in ctx.attr.srcs.items():
+    for label, path_prefix in ctx.attr.srcs.items():
         doc_files = label.files.to_list()
         docs.extend(doc_files)
+        # Map each document under the label's outputs (likely a label for a `technical_documents` target) to the
+        # URL subpath is will be served under, and pair that with the document's runfiles location in the WORKSPACE.
         for doc_file in doc_files:
-            url_path = "{}/{}".format(value, doc_file.short_path.replace(".preprocessed", ""))
-            # TODO(Jonathon): Clean this up. Current implementation at least works with thundergolfer/uni:README.md
-            args.extend([url_path, ctx.workspace_name + "/" + doc_file.short_path])
+            url_path = "{}/{}".format(path_prefix, doc_file.short_path.replace(".preprocessed", ""))
+            runfiles_location = ctx.workspace_name + "/" + doc_file.short_path
+            args.extend([
+                url_path,
+                runfiles_location
+            ])
 
     executable_script = [
         "#!/usr/bin/env bash",
