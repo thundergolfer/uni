@@ -11,6 +11,10 @@
 
 ---
 
+> 👋 ⚠️ **This project is *experimental*, and I don't intend for it to be adopted by others until I've validated its usefulness and sensibility.** 
+
+---
+
 This documentation system exists as an experiment in providing a few features that I am coming to believe help ensure great technical documentation:
 
 1. **Code updates and any required changes to relevant documentation can be completed in _one workflow_, a pull request.** 
