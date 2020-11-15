@@ -12,6 +12,8 @@ import com.google.devtools.build.runfiles.Runfiles;
 @SuppressWarnings("restriction")
 public class BaseHandler implements HttpHandler {
     Map<String, String> routeToStaticFile;
+    final String DEFAULT_INDEX_PAGE_LOCATION = "technical_documentation_system/server/static/index.html";
+    final String DEFAULT_404_PAGE_LOCATION = "technical_documentation_system/server/static/404.html";
 
     public BaseHandler(Map<String, String> routeToStaticFile) {
         this.routeToStaticFile = routeToStaticFile;
@@ -22,7 +24,6 @@ public class BaseHandler implements HttpHandler {
         Runfiles runfiles = Runfiles.create();
         Headers headers = exchange.getResponseHeaders();
         String fileId = exchange.getRequestURI().getPath();
-//        String key = fileId.replaceFirst("/static/", "/");
         String key = fileId;
 
         if (key.equals("/")) {
@@ -36,12 +37,7 @@ public class BaseHandler implements HttpHandler {
         String docFilepath = this.routeToStaticFile.getOrDefault(key, key);
         File file = getFile(runfiles, docFilepath);
         if (file == null) {
-            String response = "Error 404 File not found.";
-            exchange.sendResponseHeaders(404, response.length());
-            OutputStream output = exchange.getResponseBody();
-            output.write(response.getBytes());
-            output.flush();
-            output.close();
+            handle404(exchange, runfiles);
         } else {
             String line;
             StringBuilder resp = new StringBuilder();
@@ -72,7 +68,7 @@ public class BaseHandler implements HttpHandler {
         String line;
         String resp = "";
         try {
-            String indexFilepath = runfiles.rlocation("technical_documentation_system/server/static/index.html");
+            String indexFilepath = runfiles.rlocation(DEFAULT_INDEX_PAGE_LOCATION);
             File newFile = new File(indexFilepath);
             System.out.println("Name of file: " + newFile.getName());
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(newFile)));
@@ -86,6 +82,30 @@ public class BaseHandler implements HttpHandler {
 
         headers.add("Content-Type", "text/html");
         exchange.sendResponseHeaders(200, resp.length());
+        OutputStream outputStream = exchange.getResponseBody();
+        outputStream.write(resp.getBytes());
+        outputStream.close();
+    }
+
+    public void handle404(HttpExchange exchange, Runfiles runfiles) throws IOException {
+        Headers headers = exchange.getResponseHeaders();
+        String line;
+        String resp = "";
+        try {
+            String indexFilepath = runfiles.rlocation(DEFAULT_404_PAGE_LOCATION);
+            File newFile = new File(indexFilepath);
+            System.out.println("Name of file: " + newFile.getName());
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(newFile)));
+            while ((line = bufferedReader.readLine()) != null) {
+                resp += line;
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        headers.add("Content-Type", "text/html");
+        exchange.sendResponseHeaders(404, resp.length());
         OutputStream outputStream = exchange.getResponseBody();
         outputStream.write(resp.getBytes());
         outputStream.close();
