@@ -65,7 +65,10 @@ int main(int argc, char *argv[]) {
     // e8 55 8e e8 fe 7f 00 00
     printf("Homework 2.55:\n");
     test_show_bytes(val);
-
+    // On my MacBook Pro, this outputs:
+    // 39 30
+    // 39 30 00 00 00 00 00 00
+    // 00 00 00 00 80 1c c8 40
     printf("Homework 2.57:\n");
     test_show_bytes_hw_2_57(val);
     return 0;
