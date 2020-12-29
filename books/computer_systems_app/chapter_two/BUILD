@@ -20,3 +20,9 @@ cc_test(
     srcs = ["homework_2_59.c"],
     deps = [],
 )
+
+cc_test(
+    name = "homework_2_60",
+    srcs = ["homework_2_60.c"],
+    deps = [],
+)
