@@ -27,3 +27,8 @@ cc_test(
     name = "homework_2_61",
     srcs = ["homework_2_61.c"],
 )
+
+cc_test(
+    name = "homework_2_62",
+    srcs = ["homework_2_62.c"],
+)
