@@ -28,7 +28,7 @@ cc_test(
     srcs = ["homework_2_61.c"],
 )
 
-cc_test(
+cc_binary(
     name = "homework_2_62",
     srcs = ["homework_2_62.c"],
 )

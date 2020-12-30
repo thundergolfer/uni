@@ -29,6 +29,24 @@
 // Write a function `int_shifts_are_arithmetic()` that yields 1 when run on a
 // machine that uses arithmetic shifts for data type int and yields 0 otherwise.
 // Your code should work on a machine with any word size. Test your code on several machines.
-#include <assert.h>
-#include <limits.h>
 #include <stdio.h>
+
+int int_shifts_are_arithmetic() {
+    // if run using arithmetic shifts, then:
+    //     (1111 1111 >> 8) == 1111 1111
+    // if run using logical shifts, then:
+    //     (1111 1111 >> 8) == 0000 0000 != 1111 1111
+    int x = -1;
+    int w = sizeof(int) << 3;
+    return (x >> w) == x;
+}
+
+int main(int argc, char *argv[]) {
+    if (int_shifts_are_arithmetic()) {
+        printf("This code was run on a machine with arithmetic shifts for data type `int`.\n");
+    } else {
+        printf("This code was run on a machine with logical right shifts for data type `int`.\n");
+    }
+
+    return 0;
+}
