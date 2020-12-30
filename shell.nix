@@ -11,6 +11,8 @@ pkgs.mkShell {
     pkgs.python38
     pkgs.python38Packages.pip
     pkgs.python38Packages.virtualenv
+    # Racket is added for use in doing SICP exercises
+    pkgs.racket-minimal
     # Useful for avoiding mistakes in Bash scripts
     pkgs.shellcheck
     pkgs.which
