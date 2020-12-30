@@ -26,10 +26,6 @@ Importantly, the following components are included in the repo's Nix environment
 * _Python 3_
 * _Racket_ lang, used in [`books/sicp`](/books/sicp)
 
-#### Steps
-
-TODO
-
 ## Development
 
 ### Build
