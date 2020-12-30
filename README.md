@@ -11,6 +11,16 @@
 
 A mono-repo containing code I've written to educate myself. 
 
+## Contents
+
+Currently, the contents of this mono-repo are broken down into the following top-level concerns:
+
+* [**Books**](/books) - Code for all kinds of practical exercises in various great textbooks. Homework, practicals, exercises, labs, assignments, etc.
+    * [Computer Systems: A Programmer's Perspective](/books/computer_systems_app)
+    * [Structure and Interpretation of Computer Programs](/books/sicp) 🚧
+* [**Optimization**](/optimization) - Code written to learn how to solve optimization problems using code, particularly using the kinds of optimization algorithms used in Machine Learning.
+* [**Tools**](/tools) - Tooling code, scripts, and configuration, serving the repository's needs and not of interest in of itself.
+
 
 ## Setup
 
