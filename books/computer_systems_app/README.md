@@ -23,4 +23,4 @@ Below is a table of different platform and whether I've figured how to easily ru
 | Linux 32-bit | 32 | Little | 🚧 Dunno yet | |
 | OSX 64-bit   | 64 | Little | I use my personal laptop, which is 64-bit by default. | |
 | Windows      | 64 | Little | 🚧 Dunno yet | |
-| Sun (Solaris)| 64 | Big    | 🚧 Dunno yet | Bazel will not be useable. |
+| Sun (Solaris)| 64 | Big    | Use 'Oracle Solaris 11.4' Image on [Oracle Public Cloud](https://www.oracle.com/cloud/free/) | Bazel will not be useable. |
