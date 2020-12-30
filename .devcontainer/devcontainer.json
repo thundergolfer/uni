@@ -4,7 +4,6 @@
 		"dockerfile": "Dockerfile",
 		"args": {
 			"BAZEL_VERSION": "3.7.2",
-			"BAZEL_DOWNLOAD_SHA": "70dc0bee198a4c3d332925a32d464d9036a831977501f66d4996854ad4e4fc0d"
 		}
 	},
 
