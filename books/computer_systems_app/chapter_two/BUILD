@@ -37,3 +37,8 @@ cc_binary(
     name = "homework_2_63",
     srcs = ["homework_2_63.c"],
 )
+
+cc_binary(
+    name = "homework_2_64",
+    srcs = ["homework_2_64.c"],
+)
