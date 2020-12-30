@@ -2,6 +2,11 @@
 
 I worked through this textbook as part of the [teachyourselfcs.com](https://teachyourselfcs.com/) program.
 
+## Contents
+
+1. Twelve `chapter_*` folders containing code the solves the 'homework problems' (and sometimes 'practice problems') from the respective chapter.
+2. The `labs/` folder, which contains the 9 labs provided with the CS:APP textbook.
+
 #### "Test your code on multiple machines"
 
 Parts of the textbook (eg. chapter two) are interested in the low-level computer architectural differences between
