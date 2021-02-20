@@ -11,9 +11,9 @@ cc_test(
         "add_binary_test.cc",
         "add_binary.h"
     ],
-    copts = ["-Iexternal/gtest/include"],
+    copts = ["-Iexternal/googletest/googletest/include"],
     deps = [
-        "@gtest//:main",
+        "@googletest//:main",
         ":base",
     ],
 )

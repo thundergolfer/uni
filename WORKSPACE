@@ -49,17 +49,10 @@ mypy_integration_deps("//tools/build/typing:mypy_version.txt")
 # C++
 ##########
 
-#http_archive(
-#    name = "googletest",
-#    build_file = "@//third_party:BUILD.googletest",
-#    sha256 = "9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb",
-#    urls = ["https://github.com/google/googletest/archive/release-1.10.0.tar.gz"],
-#    strip_prefix = "googletest-release-1.10.0",
-#)
 http_archive(
-    name = "gtest",
-    url = "https://github.com/google/googletest/archive/release-1.7.0.zip",
-    sha256 = "b58cb7547a28b2c718d1e38aee18a3659c9e3ff52440297e965f5edffe34b6d0",
+    name = "googletest",
     build_file = "@//third_party:BUILD.googletest",
-    strip_prefix = "googletest-release-1.7.0",
+    sha256 = "9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb",
+    urls = ["https://github.com/google/googletest/archive/release-1.10.0.tar.gz"],
+    strip_prefix = "googletest-release-1.10.0",
 )
