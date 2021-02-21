@@ -17,3 +17,16 @@ cc_test(
         ":base",
     ],
 )
+
+cc_test(
+    name = "two_sum_test",
+    srcs = [
+        "two_sum_test.cc",
+        "two_sum.h"
+    ],
+    copts = ["-Iexternal/googletest/googletest/include"],
+    deps = [
+        "@googletest//:main",
+        ":base",
+    ],
+)
