@@ -1,1 +1,4 @@
 build --test_output=all
+
+# Workaround for https://github.com/bazelbuild/bazel/pull/12882. Issue should be fixed in >= 4.1.0
+common --features=-debug_prefix_map_pwd_is_dot
