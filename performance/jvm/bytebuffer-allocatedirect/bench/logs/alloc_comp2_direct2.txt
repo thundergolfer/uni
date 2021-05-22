@@ -1,0 +1,121 @@
+============================= C2-compiled nmethod ==============================
+----------------------------------- Assembly -----------------------------------
+
+Compiled method (c2)     387  557       4       me.serce.AllocateBuffer2::direct (8 bytes)
+ total in heap  [0x00007f3e50278b10,0x00007f3e50278ef8] = 1000
+ relocation     [0x00007f3e50278c70,0x00007f3e50278c98] = 40
+ main code      [0x00007f3e50278ca0,0x00007f3e50278dc0] = 288
+ stub code      [0x00007f3e50278dc0,0x00007f3e50278de8] = 40
+ oops           [0x00007f3e50278de8,0x00007f3e50278df0] = 8
+ metadata       [0x00007f3e50278df0,0x00007f3e50278e08] = 24
+ scopes data    [0x00007f3e50278e08,0x00007f3e50278e40] = 56
+ scopes pcs     [0x00007f3e50278e40,0x00007f3e50278ec0] = 128
+ dependencies   [0x00007f3e50278ec0,0x00007f3e50278ec8] = 8
+ handler table  [0x00007f3e50278ec8,0x00007f3e50278ef8] = 48
+
+--------------------------------------------------------------------------------
+[Constant Pool (empty)]
+
+--------------------------------------------------------------------------------
+
+[Entry Point]
+  # {method} {0x00007f3e444d3960} 'direct' '()Ljava/nio/ByteBuffer;' in 'me/serce/AllocateBuffer2'
+  #           [sp+0x30]  (sp of caller)
+  0x00007f3e50278ca0:   mov    r10d,DWORD PTR [rsi+0x8]
+  0x00007f3e50278ca4:   shl    r10,0x3
+  0x00007f3e50278ca8:   movabs r12,0x800000000
+  0x00007f3e50278cb2:   add    r10,r12
+  0x00007f3e50278cb5:   xor    r12,r12
+  0x00007f3e50278cb8:   cmp    rax,r10
+  0x00007f3e50278cbb:   jne    0x00007f3e487cd580           ;   {runtime_call ic_miss_stub}
+  0x00007f3e50278cc1:   data16 xchg ax,ax
+  0x00007f3e50278cc4:   nop    DWORD PTR [rax+rax*1+0x0]
+  0x00007f3e50278ccc:   data16 data16 xchg ax,ax
+[Verified Entry Point]
+  0x00007f3e50278cd0:   mov    DWORD PTR [rsp-0x14000],eax
+  0x00007f3e50278cd7:   push   rbp
+  0x00007f3e50278cd8:   sub    rsp,0x20                     ;*synchronization entry
+                                                            ; - me.serce.AllocateBuffer2::direct@-1 (line 34)
+  0x00007f3e50278cdc:   mov    r10d,DWORD PTR [rsi+0xc]     ;*getfield size {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - me.serce.AllocateBuffer2::direct@1 (line 34)
+  0x00007f3e50278ce0:   mov    DWORD PTR [rsp],r10d
+  0x00007f3e50278ce4:   mov    rax,QWORD PTR [r15+0x118]
+  0x00007f3e50278ceb:   mov    r10,rax
+  0x00007f3e50278cee:   add    r10,0x40
+  0x00007f3e50278cf2:   cmp    r10,QWORD PTR [r15+0x128]
+  0x00007f3e50278cf9:   jae    0x00007f3e50278d8b
+  0x00007f3e50278cff:   mov    QWORD PTR [r15+0x118],r10
+  0x00007f3e50278d06:   prefetchw BYTE PTR [r10+0xc0]
+  0x00007f3e50278d0e:   mov    r11d,0x2b613                 ;   {metadata('java/nio/DirectByteBuffer')}
+  0x00007f3e50278d14:   movabs r10,0x800000000
+  0x00007f3e50278d1e:   lea    r10,[r10+r11*8]
+  0x00007f3e50278d22:   mov    r10,QWORD PTR [r10+0xb8]
+  0x00007f3e50278d29:   mov    QWORD PTR [rax],r10
+  0x00007f3e50278d2c:   mov    DWORD PTR [rax+0x8],0x2b613  ;   {metadata('java/nio/DirectByteBuffer')}
+  0x00007f3e50278d33:   mov    DWORD PTR [rax+0xc],0x0
+  0x00007f3e50278d3a:   mov    QWORD PTR [rax+0x10],0x0
+  0x00007f3e50278d42:   mov    QWORD PTR [rax+0x18],0x0
+  0x00007f3e50278d4a:   mov    QWORD PTR [rax+0x20],0x0
+  0x00007f3e50278d52:   mov    QWORD PTR [rax+0x28],0x0
+  0x00007f3e50278d5a:   mov    QWORD PTR [rax+0x30],0x0
+  0x00007f3e50278d62:   mov    QWORD PTR [rax+0x38],0x0
+  0x00007f3e50278d6a:   mov    rbp,rax                      ;*new {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::allocateDirect@0 (line 320)
+                                                            ; - me.serce.AllocateBuffer2::direct@4 (line 34)
+  0x00007f3e50278d6d:   mov    rsi,rbp
+  0x00007f3e50278d70:   mov    edx,DWORD PTR [rsp]
+  0x00007f3e50278d73:   call   0x00007f3e502760d0           ; ImmutableOopMap {rbp=Oop }
+                                                            ;*invokespecial <init> {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::allocateDirect@5 (line 320)
+                                                            ; - me.serce.AllocateBuffer2::direct@4 (line 34)
+                                                            ;   {optimized virtual_call}
+  0x00007f3e50278d78:   mov    rax,rbp
+  0x00007f3e50278d7b:   add    rsp,0x20
+  0x00007f3e50278d7f:   pop    rbp
+  0x00007f3e50278d80:   mov    r10,QWORD PTR [r15+0x108]
+  0x00007f3e50278d87:   test   DWORD PTR [r10],eax          ;   {poll_return}
+  0x00007f3e50278d8a:   ret
+  0x00007f3e50278d8b:   movabs rsi,0x80015b098              ;   {metadata('java/nio/DirectByteBuffer')}
+  0x00007f3e50278d95:   mov    ebp,DWORD PTR [rsp]
+  0x00007f3e50278d98:   data16 xchg ax,ax
+  0x00007f3e50278d9b:   call   0x00007f3e48883380           ; ImmutableOopMap {}
+                                                            ;*new {reexecute=0 rethrow=0 return_oop=1}
+                                                            ; - java.nio.ByteBuffer::allocateDirect@0 (line 320)
+                                                            ; - me.serce.AllocateBuffer2::direct@4 (line 34)
+                                                            ;   {runtime_call _new_instance_Java}
+  0x00007f3e50278da0:   jmp    0x00007f3e50278d6a
+  0x00007f3e50278da2:   mov    rsi,rax
+  0x00007f3e50278da5:   jmp    0x00007f3e50278daa
+  0x00007f3e50278da7:   mov    rsi,rax                      ;*new {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::allocateDirect@0 (line 320)
+                                                            ; - me.serce.AllocateBuffer2::direct@4 (line 34)
+  0x00007f3e50278daa:   add    rsp,0x20
+  0x00007f3e50278dae:   pop    rbp
+  0x00007f3e50278daf:   jmp    0x00007f3e48881000           ;   {runtime_call _rethrow_Java}
+  0x00007f3e50278db4:   hlt
+  0x00007f3e50278db5:   hlt
+  0x00007f3e50278db6:   hlt
+  0x00007f3e50278db7:   hlt
+  0x00007f3e50278db8:   hlt
+  0x00007f3e50278db9:   hlt
+  0x00007f3e50278dba:   hlt
+  0x00007f3e50278dbb:   hlt
+  0x00007f3e50278dbc:   hlt
+  0x00007f3e50278dbd:   hlt
+  0x00007f3e50278dbe:   hlt
+  0x00007f3e50278dbf:   hlt
+[Stub Code]
+  0x00007f3e50278dc0:   movabs rbx,0x0                      ;   {no_reloc}
+  0x00007f3e50278dca:   jmp    0x00007f3e50278dca           ;   {runtime_call}
+[Exception Handler]
+  0x00007f3e50278dcf:   jmp    0x00007f3e48878080           ;   {runtime_call ExceptionBlob}
+[Deopt Handler Code]
+  0x00007f3e50278dd4:   call   0x00007f3e50278dd9
+  0x00007f3e50278dd9:   sub    QWORD PTR [rsp],0x5
+  0x00007f3e50278dde:   jmp    0x00007f3e487cac20           ;   {runtime_call DeoptimizationBlob}
+  0x00007f3e50278de3:   hlt
+  0x00007f3e50278de4:   hlt
+  0x00007f3e50278de5:   hlt
+  0x00007f3e50278de6:   hlt
+  0x00007f3e50278de7:   hlt
+--------------------------------------------------------------------------------

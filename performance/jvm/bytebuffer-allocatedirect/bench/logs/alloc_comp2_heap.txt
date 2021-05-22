@@ -1,0 +1,268 @@
+============================= C2-compiled nmethod ==============================
+----------------------------------- Assembly -----------------------------------
+
+Compiled method (c2)     298  514       4       me.serce.AllocateBuffer2::heap (8 bytes)
+ total in heap  [0x00007f2ebc276610,0x00007f2ebc276d38] = 1832
+ relocation     [0x00007f2ebc276770,0x00007f2ebc276798] = 40
+ main code      [0x00007f2ebc2767a0,0x00007f2ebc276a20] = 640
+ stub code      [0x00007f2ebc276a20,0x00007f2ebc276a38] = 24
+ oops           [0x00007f2ebc276a38,0x00007f2ebc276a40] = 8
+ metadata       [0x00007f2ebc276a40,0x00007f2ebc276aa0] = 96
+ scopes data    [0x00007f2ebc276aa0,0x00007f2ebc276b48] = 168
+ scopes pcs     [0x00007f2ebc276b48,0x00007f2ebc276cf8] = 432
+ dependencies   [0x00007f2ebc276cf8,0x00007f2ebc276d08] = 16
+ handler table  [0x00007f2ebc276d08,0x00007f2ebc276d38] = 48
+
+--------------------------------------------------------------------------------
+[Constant Pool (empty)]
+
+--------------------------------------------------------------------------------
+
+[Entry Point]
+  # {method} {0x00007f2eb0783888} 'heap' '()Ljava/nio/ByteBuffer;' in 'me/serce/AllocateBuffer2'
+  #           [sp+0x40]  (sp of caller)
+  0x00007f2ebc2767a0:   mov    r10d,DWORD PTR [rsi+0x8]
+  0x00007f2ebc2767a4:   shl    r10,0x3
+  0x00007f2ebc2767a8:   movabs r12,0x800000000
+  0x00007f2ebc2767b2:   add    r10,r12
+  0x00007f2ebc2767b5:   xor    r12,r12
+  0x00007f2ebc2767b8:   cmp    rax,r10
+  0x00007f2ebc2767bb:   jne    0x00007f2eb47cd580           ;   {runtime_call ic_miss_stub}
+  0x00007f2ebc2767c1:   data16 xchg ax,ax
+  0x00007f2ebc2767c4:   nop    DWORD PTR [rax+rax*1+0x0]
+  0x00007f2ebc2767cc:   data16 data16 xchg ax,ax
+[Verified Entry Point]
+  0x00007f2ebc2767d0:   mov    DWORD PTR [rsp-0x14000],eax
+  0x00007f2ebc2767d7:   push   rbp
+  0x00007f2ebc2767d8:   sub    rsp,0x30                     ;*synchronization entry
+                                                            ; - me.serce.AllocateBuffer2::heap@-1 (line 24)
+  0x00007f2ebc2767dc:   mov    r11d,DWORD PTR [rsi+0xc]     ;*getfield size {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - me.serce.AllocateBuffer2::heap@1 (line 24)
+  0x00007f2ebc2767e0:   mov    DWORD PTR [rsp],r11d
+  0x00007f2ebc2767e4:   test   r11d,r11d
+  0x00007f2ebc2767e7:   jl     0x00007f2ebc2769f8
+  0x00007f2ebc2767ed:   mov    rbp,QWORD PTR [r15+0x118]
+  0x00007f2ebc2767f4:   mov    r10,rbp
+  0x00007f2ebc2767f7:   add    r10,0x30
+  0x00007f2ebc2767fb:   cmp    r10,QWORD PTR [r15+0x128]
+  0x00007f2ebc276802:   jae    0x00007f2ebc2769b9           ;*putfield hb {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::<init>@35 (line 285)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276808:   mov    QWORD PTR [r15+0x118],r10
+  0x00007f2ebc27680f:   prefetchw BYTE PTR [r10+0xc0]
+  0x00007f2ebc276817:   mov    r11d,0x5d5c8                 ;   {metadata('java/nio/HeapByteBuffer')}
+  0x00007f2ebc27681d:   movabs r10,0x800000000
+  0x00007f2ebc276827:   lea    r10,[r10+r11*8]
+  0x00007f2ebc27682b:   mov    r10,QWORD PTR [r10+0xb8]
+  0x00007f2ebc276832:   mov    QWORD PTR [rbp+0x0],r10
+  0x00007f2ebc276836:   mov    DWORD PTR [rbp+0x8],0x5d5c8  ;   {metadata('java/nio/HeapByteBuffer')}
+  0x00007f2ebc27683d:   mov    DWORD PTR [rbp+0xc],0x0
+  0x00007f2ebc276844:   mov    QWORD PTR [rbp+0x10],0x0
+  0x00007f2ebc27684c:   mov    QWORD PTR [rbp+0x18],0x0
+  0x00007f2ebc276854:   mov    QWORD PTR [rbp+0x20],0x0
+  0x00007f2ebc27685c:   mov    QWORD PTR [rbp+0x28],0x0     ;*new {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::allocate@9 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276864:   mov    r11d,DWORD PTR [rsp]
+  0x00007f2ebc276868:   cmp    r11d,0x100000
+  0x00007f2ebc27686f:   ja     0x00007f2ebc2769f0
+  0x00007f2ebc276875:   movsxd rcx,r11d                     ;*newarray {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.HeapByteBuffer::<init>@6 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276878:   cmp    r11d,0x100000
+  0x00007f2ebc27687f:   ja     0x00007f2ebc2769d4           ;*putfield hb {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::<init>@35 (line 285)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276885:   mov    r8,QWORD PTR [r15+0x118]
+  0x00007f2ebc27688c:   add    rcx,0x17                     ;*newarray {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.HeapByteBuffer::<init>@6 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276890:   mov    r10,rcx
+  0x00007f2ebc276893:   and    r10,0xfffffffffffffff8
+  0x00007f2ebc276897:   mov    r11,r8
+  0x00007f2ebc27689a:   add    r11,r10
+  0x00007f2ebc27689d:   cmp    r11,QWORD PTR [r15+0x128]
+  0x00007f2ebc2768a4:   jae    0x00007f2ebc2769d4           ;*putfield hb {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::<init>@35 (line 285)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc2768aa:   mov    QWORD PTR [r15+0x118],r11
+  0x00007f2ebc2768b1:   prefetchw BYTE PTR [r11+0xc0]
+  0x00007f2ebc2768b9:   mov    QWORD PTR [r8],0x1
+  0x00007f2ebc2768c0:   prefetchw BYTE PTR [r11+0x100]
+  0x00007f2ebc2768c8:   mov    DWORD PTR [r8+0x8],0x708cf   ;   {metadata({type array byte})}
+  0x00007f2ebc2768d0:   mov    r9d,DWORD PTR [rsp]
+  0x00007f2ebc2768d4:   mov    DWORD PTR [r8+0xc],r9d
+  0x00007f2ebc2768d8:   prefetchw BYTE PTR [r11+0x140]
+  0x00007f2ebc2768e0:   mov    rdi,r8
+  0x00007f2ebc2768e3:   add    rdi,0x10
+  0x00007f2ebc2768e7:   prefetchw BYTE PTR [r11+0x180]
+  0x00007f2ebc2768ef:   shr    rcx,0x3
+  0x00007f2ebc2768f3:   add    rcx,0xfffffffffffffffe
+  0x00007f2ebc2768f7:   xor    rax,rax
+  0x00007f2ebc2768fa:   cmp    rcx,0x8
+  0x00007f2ebc2768fe:   jg     0x00007f2ebc276910
+  0x00007f2ebc276900:   dec    rcx
+  0x00007f2ebc276903:   js     0x00007f2ebc276917
+  0x00007f2ebc276905:   mov    QWORD PTR [rdi+rcx*8],rax
+  0x00007f2ebc276909:   dec    rcx
+  0x00007f2ebc27690c:   jge    0x00007f2ebc276905
+  0x00007f2ebc27690e:   jmp    0x00007f2ebc276917
+  0x00007f2ebc276910:   shl    rcx,0x3
+  0x00007f2ebc276914:   rep rex.W stos BYTE PTR es:[rdi],al ;*newarray {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.HeapByteBuffer::<init>@6 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276917:   mov    BYTE PTR [rbp+0x29],0x1      ;*putfield bigEndian {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::<init>@11 (line 1825)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc27691b:   mov    DWORD PTR [rbp+0xc],0xffffffff;*putfield mark {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.Buffer::<init>@6 (line 199)
+                                                            ; - java.nio.ByteBuffer::<init>@6 (line 284)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276922:   mov    r10,r8
+  0x00007f2ebc276925:   mov    DWORD PTR [rbp+0x2c],r10d
+  0x00007f2ebc276929:   mov    r10,r8
+  0x00007f2ebc27692c:   mov    r11,rbp                      ;*putfield hb {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::<init>@35 (line 285)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc27692f:   xor    r10,r11
+  0x00007f2ebc276932:   mov    r8d,DWORD PTR [rsp]          ;*newarray {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.HeapByteBuffer::<init>@6 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276936:   mov    DWORD PTR [rbp+0x1c],r8d     ;*putfield limit {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.Buffer::limit@34 (line 348)
+                                                            ; - java.nio.ByteBuffer::limit@2 (line 1313)
+                                                            ; - java.nio.ByteBuffer::limit@2 (line 265)
+                                                            ; - java.nio.Buffer::<init>@33 (line 223)
+                                                            ; - java.nio.ByteBuffer::<init>@6 (line 284)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc27693a:   mov    DWORD PTR [rbp+0x20],r8d     ;*putfield capacity {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.Buffer::<init>@28 (line 222)
+                                                            ; - java.nio.ByteBuffer::<init>@6 (line 284)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc27693e:   shr    r10,0x14
+  0x00007f2ebc276942:   test   r10,r10
+  0x00007f2ebc276945:   je     0x00007f2ebc276997
+  0x00007f2ebc276947:   shr    r11,0x9
+  0x00007f2ebc27694b:   movabs rdi,0x7f2ed0ba5000
+  0x00007f2ebc276955:   add    rdi,r11
+  0x00007f2ebc276958:   cmp    BYTE PTR [rdi],0x20
+  0x00007f2ebc27695b:   je     0x00007f2ebc276997
+  0x00007f2ebc27695d:   mov    r10,QWORD PTR [r15+0x68]
+  0x00007f2ebc276961:   mov    r11,QWORD PTR [r15+0x78]
+  0x00007f2ebc276965:   lock add DWORD PTR [rsp-0x40],0x0
+  0x00007f2ebc27696b:   cmp    BYTE PTR [rdi],0x0
+  0x00007f2ebc27696e:   je     0x00007f2ebc276997
+  0x00007f2ebc276970:   mov    BYTE PTR [rdi],0x0
+  0x00007f2ebc276973:   test   r10,r10
+  0x00007f2ebc276976:   jne    0x00007f2ebc27698a
+  0x00007f2ebc276978:   mov    rsi,r15
+  0x00007f2ebc27697b:   movabs r10,0x7f2ed2d8f560
+  0x00007f2ebc276985:   call   r10
+  0x00007f2ebc276988:   jmp    0x00007f2ebc276997
+  0x00007f2ebc27698a:   mov    QWORD PTR [r11+r10*1-0x8],rdi
+  0x00007f2ebc27698f:   add    r10,0xfffffffffffffff8
+  0x00007f2ebc276993:   mov    QWORD PTR [r15+0x68],r10     ;*putfield hb {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::<init>@35 (line 285)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276997:   mov    DWORD PTR [rbp+0x24],0x0     ;*synchronization entry
+                                                            ; - java.nio.HeapByteBuffer::<init>@-1 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc27699e:   mov    QWORD PTR [rbp+0x10],0x10    ;*synchronization entry
+                                                            ; - me.serce.AllocateBuffer2::heap@-1 (line 24)
+  0x00007f2ebc2769a6:   mov    rax,rbp
+  0x00007f2ebc2769a9:   add    rsp,0x30
+  0x00007f2ebc2769ad:   pop    rbp
+  0x00007f2ebc2769ae:   mov    r10,QWORD PTR [r15+0x108]
+  0x00007f2ebc2769b5:   test   DWORD PTR [r10],eax          ;   {poll_return}
+  0x00007f2ebc2769b8:   ret
+  0x00007f2ebc2769b9:   movabs rsi,0x8002eae40              ;   {metadata('java/nio/HeapByteBuffer')}
+  0x00007f2ebc2769c3:   mov    ebp,r11d
+  0x00007f2ebc2769c6:   nop
+  0x00007f2ebc2769c7:   call   0x00007f2eb47eef80           ; ImmutableOopMap {}
+                                                            ;*new {reexecute=0 rethrow=0 return_oop=1}
+                                                            ; - java.nio.ByteBuffer::allocate@9 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+                                                            ;   {runtime_call _new_instance_Java}
+  0x00007f2ebc2769cc:   mov    rbp,rax
+  0x00007f2ebc2769cf:   jmp    0x00007f2ebc276864           ;*synchronization entry
+                                                            ; - java.nio.HeapByteBuffer::<init>@-1 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc2769d4:   movabs rsi,0x800384678              ;   {metadata({type array byte})}
+  0x00007f2ebc2769de:   mov    edx,DWORD PTR [rsp]
+  0x00007f2ebc2769e1:   xchg   ax,ax
+  0x00007f2ebc2769e3:   call   0x00007f2eb47ec300           ; ImmutableOopMap {rbp=Oop }
+                                                            ;*newarray {reexecute=0 rethrow=0 return_oop=1}
+                                                            ; - java.nio.HeapByteBuffer::<init>@6 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+                                                            ;   {runtime_call _new_array_Java}
+  0x00007f2ebc2769e8:   mov    r8,rax
+  0x00007f2ebc2769eb:   jmp    0x00007f2ebc276917
+  0x00007f2ebc2769f0:   movsxd rcx,r11d                     ;*newarray {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.HeapByteBuffer::<init>@6 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc2769f3:   jmp    0x00007f2ebc276878
+  0x00007f2ebc2769f8:   mov    esi,0xffffff45
+  0x00007f2ebc2769fd:   mov    ebp,r11d
+  0x00007f2ebc276a00:   data16 xchg ax,ax
+  0x00007f2ebc276a03:   call   0x00007f2eb478ae80           ; ImmutableOopMap {}
+                                                            ;*ifge {reexecute=1 rethrow=0 return_oop=0}
+                                                            ; - (reexecute) java.nio.ByteBuffer::allocate@1 (line 349)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+                                                            ;   {runtime_call UncommonTrapBlob}
+  0x00007f2ebc276a08:   mov    rsi,rax
+  0x00007f2ebc276a0b:   jmp    0x00007f2ebc276a10
+  0x00007f2ebc276a0d:   mov    rsi,rax                      ;*new {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::allocate@9 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+  0x00007f2ebc276a10:   add    rsp,0x30
+  0x00007f2ebc276a14:   pop    rbp
+  0x00007f2ebc276a15:   jmp    0x00007f2eb4883480           ;*putfield hb {reexecute=0 rethrow=0 return_oop=0}
+                                                            ; - java.nio.ByteBuffer::<init>@35 (line 285)
+                                                            ; - java.nio.HeapByteBuffer::<init>@9 (line 63)
+                                                            ; - java.nio.ByteBuffer::allocate@15 (line 351)
+                                                            ; - me.serce.AllocateBuffer2::heap@4 (line 24)
+                                                            ;   {runtime_call _rethrow_Java}
+  0x00007f2ebc276a1a:   hlt
+  0x00007f2ebc276a1b:   hlt
+  0x00007f2ebc276a1c:   hlt
+  0x00007f2ebc276a1d:   hlt
+  0x00007f2ebc276a1e:   hlt
+  0x00007f2ebc276a1f:   hlt
+[Exception Handler]
+  0x00007f2ebc276a20:   jmp    0x00007f2eb47eb300           ;   {no_reloc}
+[Deopt Handler Code]
+  0x00007f2ebc276a25:   call   0x00007f2ebc276a2a
+  0x00007f2ebc276a2a:   sub    QWORD PTR [rsp],0x5
+  0x00007f2ebc276a2f:   jmp    0x00007f2eb47cac20           ;   {runtime_call DeoptimizationBlob}
+  0x00007f2ebc276a34:   hlt
+  0x00007f2ebc276a35:   hlt
+  0x00007f2ebc276a36:   hlt
+  0x00007f2ebc276a37:   hlt
+--------------------------------------------------------------------------------
+25.797 ns/op
