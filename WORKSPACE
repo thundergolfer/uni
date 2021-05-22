@@ -56,3 +56,39 @@ http_archive(
     urls = ["https://github.com/google/googletest/archive/release-1.10.0.tar.gz"],
     strip_prefix = "googletest-release-1.10.0",
 )
+
+##########
+# JVM
+##########
+
+RULES_JVM_EXTERNAL_TAG = "4.0"
+RULES_JVM_EXTERNAL_SHA = "31701ad93dbfe544d597dbe62c9a1fdd76d81d8a9150c2bf1ecf928ecdf97169"
+
+http_archive(
+    name = "rules_jvm_external",
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
+)
+
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+
+maven_install(
+    artifacts = [
+        "junit:junit:4.12",
+        "io.projectreactor:reactor-core:3.4.6",
+        "io.rsocket:rsocket-core:1.0.2",
+        "io.rsocket:rsocket-transport-netty:1.0.2",
+        "org.openjdk.jmh:jmh-core:1.31",
+        "org.openjdk.jmh:jmh-generator-annprocess:1.31",
+        "org.slf4j:slf4j-simple:1.7.30",
+        "org.slf4j:slf4j-api:1.7.30",
+        "io.netty:netty-buffer:4.1.51.Final",
+    ],
+    repositories = [
+        # Private repositories are supported through HTTP Basic auth
+        "http://username:password@localhost:8081/artifactory/my-repository",
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+    ],
+)
