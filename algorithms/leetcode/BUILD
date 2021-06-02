@@ -30,3 +30,8 @@ cc_test(
         ":base",
     ],
 )
+
+cc_test(
+    name = "trie",
+    srcs = ["trie.c"],
+)
