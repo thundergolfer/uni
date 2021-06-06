@@ -7,7 +7,7 @@
  * ⚠️ I am garbage at C code. Haven't written it in years. This is likely awful.
 **/
 
-const int ALPHABET_LEN = 26;
+#define ALPHABET_LEN 26
 
 typedef struct Node Node;  // declare 'struct Node' as 'Node'
 
