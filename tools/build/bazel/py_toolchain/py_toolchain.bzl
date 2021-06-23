@@ -15,8 +15,17 @@ def _foo(repository_ctx):
         output = "python.tar.zst",
     )
     # TODO(Jonathon): NOT HERMETIC. Need to install 'unzstd' in rule and use it.
-    unzstd_bin_path = repository_ctx.which("unzstd")
-    res = repository_ctx.execute([unzstd_bin_path, "python.tar.zst"])
+    if os_name == "mac os x":
+        unzstd_bin_path = repository_ctx.which("unzstd")
+        if unzstd_bin_path == None:
+            fail("On OSX this Python toolchain requires that zstd's 'unzstd' exe is available on the $PATH, but it was not found.")
+        res = repository_ctx.execute([unzstd_bin_path, "python.tar.zst"])
+    elif os_name == "linux":
+        # Linux's GNU tar supports zstd out-of-the-box
+        res = repository_ctx.execute(["tar", "-axvf", "python.tar.zst"])
+    else:
+        fail("OS '{}' is not supported.".format(os_name))
+
     if res.return_code:
         fail("error decompressiong zstd" + res.stdout + res.stderr)
     else:
