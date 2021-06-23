@@ -20,22 +20,20 @@ def _foo(repository_ctx):
         if unzstd_bin_path == None:
             fail("On OSX this Python toolchain requires that zstd's 'unzstd' exe is available on the $PATH, but it was not found.")
         res = repository_ctx.execute([unzstd_bin_path, "python.tar.zst"])
+
+        if res.return_code:
+            fail("error decompressiong zstd" + res.stdout + res.stderr)
+
+        res = repository_ctx.execute(["tar", "-xvf", "python.tar"])
+        if res.return_code:
+            fail("error extracting Python runtime:\n" + res.stdout + res.stderr)
+        repository_ctx.delete("python.tar")
     elif os_name == "linux":
         # Linux's GNU tar supports zstd out-of-the-box
         res = repository_ctx.execute(["tar", "-axvf", "python.tar.zst"])
     else:
         fail("OS '{}' is not supported.".format(os_name))
-
-    if res.return_code:
-        fail("error decompressiong zstd" + res.stdout + res.stderr)
-    else:
-        res = repository_ctx.execute(["ls"])
-        print(res.stdout)
-    res = repository_ctx.execute(["tar", "-xvf", "python.tar"])
-    if res.return_code:
-        fail("error extracting Python runtime:\n" + res.stdout + res.stderr)
     repository_ctx.delete("python.tar.zst")
-    repository_ctx.delete("python.tar")
 
     python_build_data = json.decode(repository_ctx.read("python/PYTHON.json"))
 
