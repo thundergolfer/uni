@@ -5,6 +5,6 @@ build --test_output=all
 # common --features=-debug_prefix_map_pwd_is_dot
 
 # Configure Java version
-common --java_toolchain=@bazel_tools//tools/jdk:toolchain_java11 
-common --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_java11
+build --java_toolchain=@bazel_tools//tools/jdk:toolchain_java11 
+build --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_java11
 

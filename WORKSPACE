@@ -2,6 +2,13 @@ workspace(name = "uni")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+load("//tools/build/bazel/py_toolchain:py_toolchain.bzl", "foo")
+
+foo(
+    name = "python_interpreter",
+)
+#############################
+
 rules_python_version = "0.1.0"
 
 http_archive(
@@ -15,6 +22,7 @@ load("@rules_python//python:pip.bzl", "pip_install")
 pip_install(
    name = "pypi",
    requirements = "//:requirements.txt",
+   python_interpreter_target = "@python_interpreter//:python/install/bin/python3.8"
 )
 
 #############################
@@ -92,3 +100,7 @@ maven_install(
         "https://repo1.maven.org/maven2",
     ],
 )
+
+
+
+register_toolchains("//tools/build/bazel/py_toolchain:hermetic_py_toolchain")
