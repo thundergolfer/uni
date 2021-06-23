@@ -1,7 +1,7 @@
 def _foo(repository_ctx):
     os_name = repository_ctx.os.name.lower()
     # TODO(Jonathon): This can't differentiate ARM (Mac M1) from old x86.
-    # TODO(Jonathon: Support Linux.
+    # TODO(Jonathon: Support Windows.
     if os_name == "mac os x":
         url = "https://github.com/indygreg/python-build-standalone/releases/download/20210228/cpython-3.8.8-x86_64-apple-darwin-pgo+lto-20210228T1503.tar.zst"
     elif os_name == "linux":
@@ -51,9 +51,7 @@ filegroup(
 )
 """.format(interpreter_path = python_build_data["python_exe"])
 
-#    repository_ctx.template("BUILD", Label(repository_ctx.name +  "//" + ":BUILD"), {})
     repository_ctx.file("BUILD.bazel", BUILD_FILE_CONTENT)
-#    native.register_toolchains("bee")
     return None
 
 
