@@ -2,9 +2,12 @@ def _foo(repository_ctx):
     os_name = repository_ctx.os.name.lower()
     # TODO(Jonathon): This can't differentiate ARM (Mac M1) from old x86.
     # TODO(Jonathon: Support Linux.
-    if os_name != "mac os x":
-        fail("OS '{}' is not supported.".format(os_name))
+    if os_name == "mac os x":
         url = "https://github.com/indygreg/python-build-standalone/releases/download/20210228/cpython-3.8.8-x86_64-apple-darwin-pgo+lto-20210228T1503.tar.zst"
+    elif os_name == "linux":
+        url = "https://github.com/indygreg/python-build-standalone/releases/download/20210228/cpython-3.8.8-x86_64-unknown-linux-gnu-pgo+lto-20210228T1503.tar.zst"
+    else:
+        fail("OS '{}' is not supported.".format(os_name))
 
     repository_ctx.download(
         url = [url],
