@@ -2,12 +2,15 @@ workspace(name = "uni")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-load("//tools/build/bazel/py_toolchain:py_toolchain.bzl", "foo")
+#############################
+# Python
+#############################
 
-foo(
+load("//tools/build/bazel/py_toolchain:py_interpreter.bzl", "python_build_standalone_interpreter")
+
+python_build_standalone_interpreter(
     name = "python_interpreter",
 )
-#############################
 
 rules_python_version = "0.1.0"
 

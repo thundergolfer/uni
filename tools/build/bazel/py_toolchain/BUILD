@@ -9,13 +9,13 @@ py_runtime(
 )
 
 py_runtime_pair(
-    name = "my_py_runtime_pair",
+    name = "py_runtime",
     py2_runtime = None,
     py3_runtime = ":python3_runtime",
 )
 
 toolchain(
     name = "hermetic_py_toolchain",
-    toolchain = ":my_py_runtime_pair",
+    toolchain = ":py_runtime",
     toolchain_type = "@bazel_tools//tools/python:toolchain_type",
 )
