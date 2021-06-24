@@ -22,6 +22,7 @@ Currently, the contents of this mono-repo are broken down into the following top
     * [The Algorithm Design Manual](/books/the_algorithm_design_manual)
 * [**Concurrency**](/concurrency) - Code written to learn how to solve concurrency problems/exercises using code.
 * [**Databases**](/databases) - SQL, mostly.
+* [**Machine Learning**](/machine_learning) - H Y P E
 * [**Performance**](/performance) - Code for learning about how certain programs change in system resource usage under load. 
 * [**Optimization**](/optimization) - Code written to learn how to solve optimization problems using code, particularly using the kinds of optimization algorithms used in Machine Learning.
 * [**Tools**](/tools) - Tooling code, scripts, and configuration, serving the repository's needs and not of interest in of itself.
