@@ -122,7 +122,7 @@ def main():
     model = NeuralNetwork()
     model.load_state_dict(torch.load("model.pth"))
 
-    classes: List[str] = {
+    classes: List[str] = [
         "T-shirt/top",
         "Trouser",
         "Pullover",
@@ -133,7 +133,7 @@ def main():
         "Sneaker",
         "Bag",
         "Ankle boot",
-    }
+    ]
     model.eval()
     x, y = test_data[0][0], test_data[0][1]
     with torch.no_grad():
