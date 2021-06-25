@@ -109,4 +109,4 @@ maven_install(
 
 
 
-register_toolchains("//tools/build/bazel/py_toolchain:hermetic_py_toolchain")
+register_toolchains("//tools/build/bazel/py_toolchain:py_toolchain")
