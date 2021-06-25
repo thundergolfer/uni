@@ -20,14 +20,14 @@ def _python_build_standalone_interpreter_impl(repository_ctx):
         sha256 = integrity_shasum,
         output = "python.tar.zst",
     )
+
+    # TODO(Jonathon): NOT HERMETIC. Need to install 'unzstd' in rule and use it.
+    unzstd_bin_path = repository_ctx.which("unzstd")
+    if unzstd_bin_path == None:
+        fail("On OSX and Linux this Python toolchain requires that the zstd and unzstd exes are available on the $PATH, but it was not found.")
+            
     # NOTE: *Not Hermetic*. Need to install 'unzstd' in rule and use it.
     if os_name == OSX_OS_NAME:
-        unzstd_bin_path = repository_ctx.which("unzstd")
-        if unzstd_bin_path == None:
-            fail(
-                "On OSX this Python toolchain requires that zstd's 'unzstd' exe is available on the $PATH, but it was not found. " +
-                "https://formulae.brew.sh/formula/zstd is an option for installation."
-            )
         res = repository_ctx.execute([unzstd_bin_path, "python.tar.zst"])
 
         if res.return_code:
@@ -41,6 +41,8 @@ def _python_build_standalone_interpreter_impl(repository_ctx):
     elif os_name == LINUX_OS_NAME:
         # Linux's GNU tar (version >=1.31) supports zstd out-of-the-box
         res = repository_ctx.execute(["tar", "-axvf", "python.tar.zst"])
+        if res.return_code:
+            fail("error extracting Python runtime:\n" + res.stdout + res.stderr)
     else:
         fail("OS '{}' is not supported.".format(os_name))
     repository_ctx.delete("python.tar.zst")
