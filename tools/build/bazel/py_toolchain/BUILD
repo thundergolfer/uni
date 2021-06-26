@@ -15,7 +15,7 @@ py_runtime_pair(
 )
 
 toolchain(
-    name = "hermetic_py_toolchain",
+    name = "py_toolchain",
     toolchain = ":py_runtime",
     toolchain_type = "@bazel_tools//tools/python:toolchain_type",
 )
