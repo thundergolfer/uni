@@ -18,7 +18,4 @@ This project defines core build rules for [Nim-lang](https://nim-lang.org/) that
 
 ### Getting Started
 
-The `$HOME` environment variable is required by [`choosenim`](https://github.com/dom96/choosenim), so it's worth
-putting `build --action_env=HOME` in your `.bazelrc` file to avoid typing it out over and over.
-
-`coming soon`
+TODO
