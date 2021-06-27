@@ -3,8 +3,10 @@ load(":actions.bzl", "nim_compile")
 def _nim_binary_impl(ctx):
     # Declare an output file for the main package and compile it from srcs.
     executable = ctx.actions.declare_file(ctx.label.name)
+    nim_exe= ctx.executable._nim
     nim_compile(
         ctx,
+        nim_exe = nim_exe,
         projectfile = ctx.file.projectfile,
         srcs = ctx.files.srcs,
         out = executable,
@@ -32,6 +34,12 @@ nim_binary = rule(
             allow_single_file = True,
             doc = "Nim 'projectfile' to compile for this package",
             mandatory = True,
+        ),
+        "_nim": attr.label(
+            allow_single_file = True,
+            default = "@nim_prebuilt//:exe",
+            executable = True,
+            cfg = "exec",
         )
     },
     doc = "Builds an executable program from Nim-lang source code",
