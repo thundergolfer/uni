@@ -2,7 +2,9 @@
   <img src="/logo.png"/>
 </p>
 
-## Nim-lang rules for Bazel
+## rules_nim
+
+> 👑 🌿 💚 — Nim-lang build rules for Bazel
 
 ### Overview
 
