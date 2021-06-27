@@ -14,7 +14,7 @@ This project defines core build rules for [Nim-lang](https://nim-lang.org/) that
 ### Rules
 
 * [`nim_library`]() - `coming soon`
-* [`nim_binary`]() - `coming soon`
+* [`nim_binary`]() - WIP. Very basics working.
 
 ### Getting Started
 
