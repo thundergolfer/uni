@@ -1,0 +1,17 @@
+load("//tools/build/bazel/rules_nim:def.bzl", "nim_binary")
+
+sh_test(
+    name = "hello_world_test",
+    srcs = ["hello_world_test.sh"],
+    args = ["$(location :hello)"],
+    data = [":hello"],
+)
+
+nim_binary(
+    name = "hello",
+    srcs = [
+        "hello.nim",
+        "message.nim",
+    ],
+    projectfile = "hello.nim"
+)

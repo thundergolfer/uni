@@ -107,6 +107,13 @@ maven_install(
     ],
 )
 
+###########
+# Nim Lang
+###########
+
+load("//tools/build/bazel/rules_nim:deps.bzl", "nim_rules_dependencies")
+
+nim_rules_dependencies()
 
 
 register_toolchains("//tools/build/bazel/py_toolchain:py_toolchain")
