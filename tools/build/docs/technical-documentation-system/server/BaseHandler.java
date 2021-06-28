@@ -12,8 +12,8 @@ import com.google.devtools.build.runfiles.Runfiles;
 @SuppressWarnings("restriction")
 public class BaseHandler implements HttpHandler {
     Map<String, String> routeToStaticFile;
-    final String DEFAULT_INDEX_PAGE_LOCATION = "technical_documentation_system/server/static/index.html";
-    final String DEFAULT_404_PAGE_LOCATION = "technical_documentation_system/server/static/404.html";
+    final String DEFAULT_INDEX_PAGE_LOCATION = "uni/tools/build/docs/technical-documentation-system/server/static/index.html";
+    final String DEFAULT_404_PAGE_LOCATION = "uni/tools/build/docs/technical-documentation-system/server/static/404.html";
 
     public BaseHandler(Map<String, String> routeToStaticFile) {
         this.routeToStaticFile = routeToStaticFile;

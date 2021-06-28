@@ -40,7 +40,7 @@ technical_documents = rule(
         "_preprocessor": attr.label(
             executable = True,
             cfg = "host",
-            default = Label("@technical_documentation_system//preprocessor"),
+            default = Label("@uni//tools/build/docs/technical-documentation-system/preprocessor"),
         )
     },
 )
@@ -116,7 +116,7 @@ technical_documentation_website = rule(
         ),
         "_webserver": attr.label(
             cfg = "host",
-            default = Label("@technical_documentation_system//server"),
+            default = Label("@uni//tools/build/docs/technical-documentation-system/server:server"),
             executable = True,
             providers = [JavaInfo],
         ),
