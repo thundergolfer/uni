@@ -69,6 +69,8 @@ Any Markdown documents in `//:doc_1` will be served under `/foo/`, eg. `localhos
 
 ## Installation
 
+> 👋 **NOTE:** These installation instructions are only relevant once this code is moved to its own repo.
+
 The project has no dependencies, so it's easy to install in your Bazel `WORKSPACE`:
 
 ```python
