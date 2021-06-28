@@ -9,7 +9,7 @@
 
 ----
 
-A mono-repo containing code I've written to educate myself. 
+A mono-repo containing code I've written or studied for self-education purposes.
 
 ## Contents
 
