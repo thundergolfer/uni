@@ -4,6 +4,9 @@ bazel-out
 bazel-testlogs
 bazel-uni
 
+# Internal example Bazel workspaces 
+tools/build/docs/technical-documentation-system/examples/bazel-*
+
 # Intellij IDEA
 .ijwb/*
 !.ijwb/.bazelproject
