@@ -1,4 +1,4 @@
-load("@technical_documentation_system//:technical_documents.bzl", "technical_documents", "technical_documentation_website")
+load("@uni//tools/build/docs/technical-documentation-system:technical_documents.bzl", "technical_documents", "technical_documentation_website")
 
 technical_documents(
     name = "docs",
