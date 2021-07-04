@@ -1,6 +1,6 @@
 {
-  "name": "uni' repo docs",
-  "short_name": "uni' repo docs",
+  "name": "uni' docs",
+  "short_name": "uni' docs",
   "start_url": "/uni/",
   "scope": "/uni/",
   "display": "standalone",
