@@ -7,9 +7,6 @@ bazel-uni
 # Internal example Bazel workspaces 
 tools/build/docs/technical-documentation-system/examples/bazel-*
 
-# Docs
-docs/*
-
 # Intellij IDEA
 .ijwb/*
 !.ijwb/.bazelproject
