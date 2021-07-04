@@ -56,6 +56,8 @@ def main(repo_root: str):
         if "_index.md" not in root:
             pathlib.Path(root, "_index.md").touch()
 
+    # TODO(Jonathon): Right now relative references to images in Markdown files do not work. Fix that.
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
