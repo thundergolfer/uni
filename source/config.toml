@@ -1,0 +1,4 @@
+baseURL = "http://thundergolfer.com/uni"
+languageCode = "en-us"
+title = "uni' repo docs"
+theme = "book"
