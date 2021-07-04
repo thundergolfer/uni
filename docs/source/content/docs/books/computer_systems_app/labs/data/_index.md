@@ -1,3 +1,5 @@
+---
+---
 ## _Data_ Lab
 
 This is likely the **first** lab students should do. Quoting from the assignment write-up,

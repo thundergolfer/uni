@@ -1,3 +1,5 @@
+---
+---
 ## SerCe's blog - Indirect Effects of Allocate Direct
 
 > https://serce.me/posts/18-11-2020-allocate-direct/

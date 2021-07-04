@@ -1,5 +1,6 @@
 <h1 align="center"><code>uni'</code></h1>
 
+<!-- The CI badge image won't show in the static site until the repo is public. -->
 <p align="center">
     <a href="https://github.com/thundergolfer/uni/actions/">
         <img src="https://github.com/thundergolfer/uni/workflows/CI/badge.svg">
