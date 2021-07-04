@@ -1,0 +1,7 @@
+# NOTE: Using Bazel's built-in cc rules.
+
+cc_binary(
+    name = "minitrace",
+    srcs = ["minitrace.c"],
+    deps = [],
+)
