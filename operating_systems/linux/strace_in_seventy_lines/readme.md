@@ -28,10 +28,10 @@ out a sequence of all the system calls which made by the program.
 
 (Only on Linux)
 
-```bazel build //systems_engineering/unix/strace_in_seventy_lines:minitrace```
+```bazel build //operating_systems/linux/strace_in_seventy_lines:minitrace```
 
 and run:
 
 
-```bazel run //systems_engineering/unix/strace_in_seventy_lines:minitrace -- python -c "print('hello world')"```
+```bazel run //operating_systems/linux/strace_in_seventy_lines:minitrace -- python -c "print('hello world')"```
 
