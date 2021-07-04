@@ -2,3 +2,7 @@ baseURL = "http://thundergolfer.com/uni"
 languageCode = "en-us"
 title = "uni' docs"
 theme = "book"
+
+[markup]
+[markup.goldmark.renderer]
+unsafe = true

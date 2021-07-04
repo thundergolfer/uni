@@ -1,0 +1,250 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Binary Bomb Lab #  Contents #   bomb: The executable binary bomb. bomb.c: Source file with the bomb’s main routine and a friendly greeting from Dr. Evil Solution Details: TODO 🚧  I think the bomb.c file is not intended to be compiled and run, just read.
+Lab Assignment Write-Up #  csapp.cs.cmu.edu/3e/bomblab.pdf.
+This write-up is pretty helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem."><meta name=theme-color content="#FFFFFF"><meta property="og:title" content><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:url" content="http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/"><title>Binary Bomb | uni' docs</title><link rel=manifest href=/uni/manifest.json><link rel=icon href=/uni/favicon.png type=image/x-icon><link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous><script defer src=/uni/flexsearch.min.js></script><script defer src=/uni/en.search.min.24b62ed8a57b0f1ef86c7924eea14f3f02f2a840a526a37613bae56b33b86528.js integrity="sha256-JLYu2KV7Dx74bHkk7qFPPwLyqEClJqN2E7rlazO4ZSg=" crossorigin=anonymous></script><link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/index.xml title="uni' docs"></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a href=/uni/><span>uni' docs</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><span>Books</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a><ul><li><span>Labs</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/ class=active>Binary Bomb</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a><ul></ul></li></ul></li></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a><ul></ul></li><li><span>Databases</span><ul><li><a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a><ul></ul></li></ul></li><li><span>Operating Systems</span><ul><li><span>Linux</span><ul><li><a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a><ul></ul></li></ul></li></ul></li><li><span>Optimization</span><ul><li><a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/>Performance</a><ul><li><span>Jvm</span><ul><li><a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a><ul></ul></li></ul></li></ul></li><li><span>Tools</span><ul><li><span>Build</span><ul><li><span>Bazel</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a><ul></ul></li></ul></li><li><span>Docs</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a><ul></ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/uni/svg/menu.svg class=book-icon alt=Menu></label>
+<strong>Binary Bomb</strong>
+<label for=toc-control><img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#_binary-bomb_-lab><em>Binary Bomb</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-bomb-terminology>3. Bomb Terminology</a></li><li><a href=#4-offering-the-bomb-lab>4. Offering the Bomb Lab</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=_binary-bomb_-lab><em>Binary Bomb</em> Lab
+<a class=anchor href=#_binary-bomb_-lab>#</a></h2><h2 id=contents>Contents
+<a class=anchor href=#contents>#</a></h2><ul><li><strong><code>bomb</code>:</strong> The executable binary bomb.</li><li><strong><code>bomb.c</code>:</strong> Source file with the bomb’s main routine and a friendly greeting from Dr. Evil</li><li><strong>Solution Details:</strong> TODO 🚧</li></ul><p>I think the <code>bomb.c</code> file is <em>not</em> intended to be compiled and run, just read.</p><h2 id=lab-assignment-write-up>Lab Assignment Write-Up
+<a class=anchor href=#lab-assignment-write-up>#</a></h2><p><a href=http://csapp.cs.cmu.edu/3e/bomblab.pdf>csapp.cs.cmu.edu/3e/bomblab.pdf</a>.</p><p>This write-up is pretty helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem.</p><h2 id=original-readmemd>Original <code>README.md</code>
+<a class=anchor href=#original-readmemd>#</a></h2><p>This section is copied from <a href=http://csapp.cs.cmu.edu/3e/README-bomblab>csapp.cs.cmu.edu/3e/README-bomblab</a>.
+It was modified only to conform to standard Markdown formatting.</p><p>It is not particularly useful for people doing self-study, but is reproduced here anyway.</p><hr><pre><code>#######################################################
+# CS:APP Bomb Lab
+# Directions to Instructors
+#
+# Copyright (c) 2003-2016, R. Bryant and D. O'Hallaron
+#
+#######################################################
+</code></pre><p>This directory contains the files that you will use to build and run
+the CS:APP Bomb Lab. The Bomb Lab teaches students principles of
+machine-level programs, as well as general debugger and reverse
+engineering skills.</p><h3 id=1-overview>1. Overview
+<a class=anchor href=#1-overview>#</a></h3><h4 id=11-binary-bombs>1.1. Binary Bombs
+<a class=anchor href=#11-binary-bombs>#</a></h4><p>A &ldquo;binary bomb&rdquo; is a Linux executable C program that consists of six
+&ldquo;phases.&rdquo; Each phase expects the student to enter a particular string
+on stdin. If the student enters the expected string, then that phase
+is &ldquo;defused.&rdquo; Otherwise the bomb &ldquo;explodes&rdquo; by printing &ldquo;BOOM!!!&rdquo;.
+The goal for the students is to defuse as many phases as possible.</p><h4 id=12-solving-binary-bombs>1.2. Solving Binary Bombs
+<a class=anchor href=#12-solving-binary-bombs>#</a></h4><p>In order to defuse the bomb, students must use a debugger, typically
+gdb or ddd, to disassemble the binary and single-step through the
+machine code in each phase. The idea is to understand what each
+assembly statement does, and then use this knowledge to infer the
+defusing string. Students earn points for defusing phases, and they
+lose points (configurable by the instructor, but typically 1/2 point)
+for each explosion. Thus, they quickly learn to set breakpoints before
+each phase and the function that explodes the bomb. It&rsquo;s a great
+lesson and forces them to learn to use a debugger.</p><h4 id=13-autograding-service>1.3. Autograding Service
+<a class=anchor href=#13-autograding-service>#</a></h4><p>We have created a stand-alone user-level autograding service that
+handles all aspects of the Bomb Lab for you: Students download their
+bombs from a server. As the students work on their bombs, each
+explosion and defusion is streamed back to the server, where the
+current results for each bomb are displayed on a Web &ldquo;scoreboard.&rdquo;
+There are no explicit handins and the lab is self-grading.</p><p>The autograding service consists of four user-level programs that run
+in the main ./bomblab directory:</p><ul><li><p>Request Server (bomblab-requestd.pl). Students download their bombs
+and display the scoreboard by pointing a browser at a simple HTTP
+server called the &ldquo;request server.&rdquo; The request server builds the
+bomb, archives it in a tar file, and then uploads the resulting tar
+file back to the browser, where it can be saved on disk and
+untarred. The request server also creates a copy of the bomb and its
+solution for the instructor.</p></li><li><p>Result Server (bomblab-resultd.pl). Each time a student defuses a
+bomb phase or causes an explosion, the bomb sends a short HTTP
+message, called an &ldquo;autoresult string,&rdquo; to an HTTP &ldquo;result server,&rdquo;
+which simply appends the autoresult string to a &ldquo;scoreboard log file.&rdquo;</p></li><li><p>Report Daemon (bomblab-reportd.pl). The &ldquo;report daemon&rdquo; periodically
+scans the scoreboard log file. The report daemon finds the most recent
+defusing string submitted by each student for each phase, and
+validates these strings by applying them to a local copy of the
+student&rsquo;s bomb. It then updates the HTML scoreboard that summarizes
+the current number of explosions and defusions for each bomb, rank
+ordered by the total number of accrued points.</p></li><li><p>Main daemon (bomblab.pl). The &ldquo;main daemon&rdquo; starts and nannies the
+request server, result server, and report deamon, ensuring that
+exactly one of these processes (and itself) is running at any point in
+time. If one of these processes dies for some reason, the main daemon
+detects this and automatically restarts it. The main daemon is the
+only program you actually need to run.</p></li></ul><h3 id=2-files>2. Files
+<a class=anchor href=#2-files>#</a></h3><p>The <code>./bomblab</code> directory contains the following files:</p><p>Makefile - For starting/stopping the lab and cleaning files
+bomblab.pl* - Main daemon that nannies the other servers & daemons
+Bomblab.pm - Bomblab configuration file<br>bomblab-reportd.pl* - Report daemon that continuously updates scoreboard
+bomblab-requestd.pl* - Request server that serves bombs to students
+bomblab-resultd.pl* - Result server that gets autoresult strings from bombs
+bomblab-scoreboard.html - Real-time Web scoreboard
+bomblab-update.pl* - Helper to bomblab-reportd.pl that updates scoreboard
+bombs/ - Contains the bombs sent to each student
+log-status.txt - Status log with msgs from various servers and daemons
+log.txt - Scoreboard log of autoresults received from bombs
+makebomb.pl* - Helper script that builds a bomb
+scores.txt - Summarizes current scoreboard scores for each student
+src/ - The bomb source files
+writeup/ - Sample Latex Bomb Lab writeup</p><h3 id=3-bomb-terminology>3. Bomb Terminology
+<a class=anchor href=#3-bomb-terminology>#</a></h3><p>LabID: Each instance (offering) of the lab is identified by a unique
+name, e.g., &ldquo;f12&rdquo; or &ldquo;s13&rdquo;, that the instructor chooses. Explosion and
+diffusions from bombs whose LabIDs are different from the current
+LabID are ignored. The LabID must not have any spaces.</p><p>BombID: Each bomb in a given instance of the lab has a unique
+non-negative integer called the &ldquo;bombID.&rdquo;</p><p>Notifying Bomb: A bomb can be compiled with a NOTIFY option that
+causes the bomb to send a message each time the student explodes or
+defuses a phase. Such bombs are called &ldquo;notifying bombs.&rdquo;</p><p>Quiet Bomb: If compiled with the NONOTIFY option, then the bomb
+doesn&rsquo;t send any messages when it explodes or is defused. Such bombs
+are called &ldquo;quiet bombs.&rdquo;</p><p>We will also find it helpful to distinguish between custom and
+generic bombs:</p><p>Custom Bomb: A &ldquo;custom bomb&rdquo; has a BombID > 0, is associated with a
+particular student, and can be either notifying or quiet. Custom
+notifying bombs are constrained to run on a specific set of Linux
+hosts determined by the instructor. On the other hand, custom quiet
+bombs can run on any Linux host.</p><p>Generic Bomb: A &ldquo;generic bomb&rdquo; has a BombID = 0, isn&rsquo;t associated with
+any particular student, is quiet, and hence can run on any host.</p><h3 id=4-offering-the-bomb-lab>4. Offering the Bomb Lab
+<a class=anchor href=#4-offering-the-bomb-lab>#</a></h3><p>There are two basic flavors of Bomb Lab: In the &ldquo;online&rdquo; version, the
+instructor uses the autograding service to handout a custom notifying
+bomb to each student on demand, and to automatically track their
+progress on the realtime scoreboard. In the &ldquo;offline&rdquo; version, the
+instructor builds, hands out, and grades the student bombs manually,
+without using the autograding service.</p><p>While both version give the students a rich experience, we recommend
+the online version. It is clearly the most compelling and fun for the
+students, and the easiest for the instructor to grade. However, it
+requires that you keep the autograding service running non-stop,
+because handouts, grading, and reporting occur continuously for the
+duration of the lab. We&rsquo;ve made it very easy to run the service, but
+some instructors may be uncomfortable with this requirement and will
+opt instead for the offline version.</p><p>Here are the directions for offering both versions of the lab.</p><h4 id=41-create-a-bomb-lab-directory>4.1. Create a Bomb Lab Directory
+<a class=anchor href=#41-create-a-bomb-lab-directory>#</a></h4><p>Identify the generic Linux machine ($SERVER_NAME) where you will
+create the Bomb Lab directory (./bomblab) and, if you are offering the
+online version, run the autograding service. You&rsquo;ll only need to have
+a user account on this machine. You don&rsquo;t need root access.</p><p>Each offering of the Bomb Lab starts with a clean new ./bomblab
+directory on $SERVER_NAME. For example:</p><pre><code>linux&gt; tar xvf bomblab.tar
+linux&gt; cd bomblab   
+linux&gt; make cleanallfiles
+</code></pre><h4 id=42-configure-the-bomb-lab>4.2 Configure the Bomb Lab
+<a class=anchor href=#42-configure-the-bomb-lab>#</a></h4><p>Configure the Bomb Lab by editing the following file:</p><p><code>./Bomblab.pm</code> - This is the main configuration file. You will only need
+to modify or inspect a few variables in Section 1 of this file. Each
+variable is preceded by a descriptive comment. If you are offering the
+offline version, you can ignore most of these settings.</p><p>If you are offering the online version, you will also need to edit the
+following file:</p><p><code>./src/config.h</code> - This file lists the domain names of the hosts that
+notifying bombs are allowed to run on. Make sure you update this
+correctly, else you and your students won&rsquo;t be able to run your bombs.</p><h4 id=43-update-the-lab-writeup>4.3. Update the Lab Writeup
+<a class=anchor href=#43-update-the-lab-writeup>#</a></h4><p>Once you have updated the configuration files, modify the Latex lab
+writeup in ./writeup/bomblab.tex for your environment. Then type the
+following in the ./writeup directory:</p><pre><code>unix&gt; make clean
+unix&gt; make
+</code></pre><p>This will create ps and pdf versions of the writeup</p><h4 id=44-running-the-online-bomb-lab>4.4. Running the Online Bomb Lab
+<a class=anchor href=#44-running-the-online-bomb-lab>#</a></h4><h5 id=441-short-version>4.4.1. Short Version
+<a class=anchor href=#441-short-version>#</a></h5><p>From the <code>./bomblab</code> directory:</p><p>(1) Reset the Bomb Lab from scratch by typing <code>make cleanallfiles</code></p><p>(2) Start the autograding service by typing <code>make start</code></p><p>(3) Stop the autograding service by typing <code>make stop</code></p><p>You can start and stop the autograding service as often as you like
+without losing any information. When in doubt &ldquo;make stop; make start&rdquo;
+will get everything in a stable state.</p><p>However, resetting the lab deletes all old bombs, status logs, and the
+scoreboard log. Do this only during debugging, or the very first time
+you start the lab for your students.</p><p>Students request bombs by pointing their browsers at <code>http://$SERVER_NAME:$REQUESTD_PORT/</code></p><p>Students view the scoreboard by pointing their browsers at <code>http://$SERVER_NAME:$REQUESTD_PORT/scoreboard</code></p><h5 id=442-long-version>4.4.2. Long Version
+<a class=anchor href=#442-long-version>#</a></h5><p>(1) Resetting the Bomb Lab. &ldquo;make stop&rdquo; ensures that there are no
+servers running. &ldquo;make cleanallfiles&rdquo; resets the lab from scratch,
+deleting all data specific to a particular instance of the lab, such
+as the status log, all bombs created by the request server, and the
+scoreboard log. Do this when you&rsquo;re ready for the lab to go &ldquo;live&rdquo; to
+the students.</p><p>Resetting is also useful while you&rsquo;re preparing the lab. Before the
+lab goes live, you&rsquo;ll want to request a few bombs for yourself, run
+them, defuse a few phases, explode a few phases, and make sure that
+the results are displayed properly on the scoreboard. If there is a
+problem (say because you forgot to update the list of machines the
+bombs are allowed to run in <code>src/config.h</code>) you can fix the
+configuration, reset the lab, and then request and run more test
+bombs.</p><p>CAUTION: If you reset the lab after it&rsquo;s live, you&rsquo;ll lose all your
+records of the students bombs and their solutions. You won&rsquo;t be able
+to validate the students handins. And your students will have to get
+new bombs and start over.</p><p>(2) Starting the Bomb Lab. &ldquo;make start&rdquo; runs <code>bomblab.pl</code>, the main
+daemon that starts and nannies the other programs in the service,
+checking their status every few seconds and restarting them if
+necessary:</p><p>(3) Stopping the Bomb Lab. &ldquo;make stop&rdquo; kills all of the running
+servers. You can start and stop the autograding service as often as
+you like without losing any information. When in doubt &ldquo;make stop;
+make start&rdquo; will get everything in a stable state.</p><p>Request Server: The request server is a simple special-purpose HTTP
+server that (1) builds and delivers custom bombs to student browsers
+on demand, and (2) displays the current state of the real-time
+scoreboard.</p><p>A student requests a bomb from the request daemon in two
+steps: First, the student points their favorite browser at <code>http://$SERVER_NAME:$REQUESTD_PORT/</code>.</p><p>For example, <a href=http://foo.cs.cmu.edu:15213/>http://foo.cs.cmu.edu:15213/</a>. The request server
+responds by sending an HTML form back to the browser. Next, the
+student fills in this form with their user name and email address, and
+then submits the form. The request server parses the form, builds and
+tars up a notifying custom bomb with bombID=n, and delivers the tar
+file to the browser. The student then saves the tar file to disk. When
+the student untars this file, it creates a directory (./bomb<n>) with
+the following four files:</p><pre><code>bomb*        Notifying custom bomb executable
+bomb.c       Source code for the main bomb routine
+ID           Identifies the student associated with this bomb
+README       Lists bomb number, student, and email address
+</code></pre><p>The request server also creates a directory (bomblab/bombs/bomb<n>)
+that contains the following files:</p><pre><code>bomb*        Custom bomb executable 
+bomb.c       Source code for main routine
+bomb-quiet*  A quiet version of bomb used for autograding
+ID           Identifies the user name assigned to this bomb
+phases.c     C source code for the bomb phases
+README       Lists bombID, user name, and email address
+solution.txt The solution for this bomb
+</code></pre><p>Result Server: Each time a student defuses a phase or explodes their
+bomb, the bomb sends an HTTP message (called an autoresult string) to
+the result server, which then appends the message to the scoreboard
+log. Each message contains a BombID, a phase, and an indication of the
+event that occurred. If the event was a defusion, the message also
+contains the &ldquo;defusing string&rdquo; that the student typed to defuse the
+phase.</p><p>Report Daemon: The report daemon periodically scans the scoreboard log
+and updates the Web scoreboard. For each bomb, it tallies the number
+of explosions, the last defused phase, validates each last defused
+phase using a quiet copy of the bomb, and computes a score for each
+student in a tab delimited text file called &ldquo;scores.txt.&rdquo; The update
+frequency is a configuration variable in Bomblab.pm.</p><p>Instructors and students view the scoreboard by pointing their
+browsers at: <code>http://$SERVER_NAME:$REQUESTD_PORT/scoreboard</code></p><h5 id=443-grading-the-online-bomb-lab>4.4.3. Grading the Online Bomb Lab
+<a class=anchor href=#443-grading-the-online-bomb-lab>#</a></h5><p>The online Bomb Lab is self-grading. At any point in time, the
+tab-delimited file (./bomblab/scores.txt) contains the most recent
+scores for each student. This file is created by the report daemon
+each time it generates a new scoreboard.</p><h5 id=444-additional-notes-on-the-online-bomb-lab>4.4.4. Additional Notes on the Online Bomb Lab
+<a class=anchor href=#444-additional-notes-on-the-online-bomb-lab>#</a></h5><ul><li><p>Since the request server and report daemon both need to execute
+bombs, you must include <code>$SERVER_NAME</code> in the list of legal machines in
+your <code>bomblab/src/config.h</code> file.</p></li><li><p>All of the servers and daemons are stateless, so you can stop (&ldquo;make
+stop&rdquo;) and start (&ldquo;make start&rdquo;) the lab as many times as you like
+without any ill effects. If you accidentally kill one of the daemons,
+or you modify a daemon, or the daemon dies for some reason, then use
+&ldquo;make stop&rdquo; to clean up, and then restart with &ldquo;make start&rdquo;. If your
+Linux box crashes or reboots, simply restart the daemons with &ldquo;make
+start&rdquo;.</p></li><li><p>Information and error messages from the servers are appended to the
+&ldquo;status log&rdquo; in <code>bomblab/log-status.txt</code>. Servers run quietly, so they
+can be started from initrc scripts at boot time.</p></li><li><p>See <code>src/README</code> for more information about the anatomy of bombs and
+how they are constructed. You don&rsquo;t need to understand any of this to
+offer the lab. It&rsquo;s provided only for completeness.</p></li><li><p>Before going live with the students, we like to check everything out
+by running some tests. We do this by typing</p></li></ul><pre><code>linux&gt; make cleanallfiles   
+linux&gt; make start
+</code></pre><p>Then we request a bomb for ourselves by pointing a Web browser at <code>http://$SERVER_NAME:$REQUESTD_PORT</code></p><p>After saving our bomb to disk, we untar it, copy it to a host in the
+approved list in src/config.h, and then explode and defuse it a couple
+of times to make sure that the explosions and diffusion are properly
+recorded on the scoreboard, which we check at <code>http://$SERVER_NAME:$REQUESTD_PORT/scoreboard</code></p><p>Once we&rsquo;re satisfied that everything is OK, we stop the lab</p><pre><code>linux&gt; make stop
+</code></pre><p>and then go live:</p><pre><code>linux&gt; make cleanallfiles
+linux&gt; make start
+</code></pre><p>Once we go live, we type &ldquo;make stop&rdquo; and &ldquo;make start&rdquo; as often as we
+need to, but we are careful never to type &ldquo;make cleanallfiles&rdquo; again.</p><h4 id=45-running-the-offline-bomb-lab>4.5. Running the Offline Bomb Lab
+<a class=anchor href=#45-running-the-offline-bomb-lab>#</a></h4><p>In this version of the lab, you build your own quiet bombs manually
+and then hand them out to the students. The students work on defusing
+their bombs offline (i.e., independently of any autograding service)
+and then handin their solution files to you, each of which you grade
+manually.</p><p>You can use the makebomb.pl script to build your own bombs
+manually. The makebomb.pl script also generates the bomb&rsquo;s solution.
+Type &ldquo;./makebomb.pl -h&rdquo; to see its arguments.</p><p>Option 1: The simplest approach for offering the offline Bomb Lab is
+to build a single generic bomb that every student attempts to defuse:</p><pre><code>linux&gt; ./makebomb.pl -s ./src -b ./bombs
+</code></pre><p>This will create a generic bomb and some other files in ./bombs/bomb0:</p><pre><code>bomb*        Generic bomb executable (handout to students)
+bomb.c       Source code for main routine (handout to students)
+bomb-quiet*  Ignore this
+ID           Ignore this
+phases.c     C source code for the bomb phases
+README       Ignore this    
+solution.txt The solution for this bomb 
+</code></pre><p>You will handout only two of these files to the students: <code>./bomb</code> and <code>./bomb.c</code></p><p>The students will handin their solution files, which you can validate
+by feeding to the bomb:</p><pre><code>linux&gt; cd bombs/bomb0
+linux&gt; ./bomb &lt; student_solution.txt
+</code></pre><p>This option is easy for the instructor, but we don&rsquo;t recommend it
+because it is too easy for the students to cheat.</p><p>Option 2. The other option for offering an offline lab is to use the
+makebomb.pl script to build a unique quiet custom bomb for each
+student:</p><pre><code>linux&gt; ./makebomb.pl -i &lt;n&gt; -s ./src -b ./bombs -l bomblab -u &lt;email&gt; -v &lt;uid&gt;
+</code></pre><p>This will create a quiet custom bomb in ./bombs/bomb<n> for the
+student whose email address is <email>and whose user name is <uid>:</p><pre><code>bomb*        Custom bomb executable (handout to student)
+bomb.c       Source code for main routine (handout to student)
+bomb-quiet*  Ignore this
+ID           Identifies the student associated with this bomb
+phases.c     C source code for the bomb phases
+README       Lists bomb number, student, and email address
+solution.txt The solution for this bomb
+</code></pre><p>You will handout four of these files to the student: bomb, bomb.c, ID,
+and README.</p><p>Each student will hand in their solution file, which you can validate
+by hand by running their custom bomb against their solution:</p><pre><code>linux&gt; cd ./bombs/bomb&lt;n&gt;
+linux&gt; ./bomb &lt; student_n_solution.txt
+</code></pre><p>The source code for the different phase variants is in <code>./src/phases/</code>.</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#_binary-bomb_-lab><em>Binary Bomb</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-bomb-terminology>3. Bomb Terminology</a></li><li><a href=#4-offering-the-bomb-lab>4. Offering the Bomb Lab</a></li></ul></li></ul></nav></div></aside></main></body></html>

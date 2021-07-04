@@ -1,0 +1,75 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Data Lab #  This is likely the first lab students should do. Quoting from the assignment write-up, the &ldquo;purpose of this assignment is to become more familiar with bit-level representations of integers and floating point numbers.&rdquo; Chapter Two is the chapter concerned with this area.
+Contents #   Files downloaded from CS:APP website as datalab-handout.tar, and listed below in the original README contents  Lab Assignment Write-Up #  csapp."><meta name=theme-color content="#FFFFFF"><meta property="og:title" content><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:url" content="http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/"><title>Data | uni' docs</title><link rel=manifest href=/uni/manifest.json><link rel=icon href=/uni/favicon.png type=image/x-icon><link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous><script defer src=/uni/flexsearch.min.js></script><script defer src=/uni/en.search.min.24b62ed8a57b0f1ef86c7924eea14f3f02f2a840a526a37613bae56b33b86528.js integrity="sha256-JLYu2KV7Dx74bHkk7qFPPwLyqEClJqN2E7rlazO4ZSg=" crossorigin=anonymous></script><link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/index.xml title="uni' docs"></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a href=/uni/><span>uni' docs</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><span>Books</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a><ul><li><span>Labs</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/ class=active>Data</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a><ul></ul></li></ul></li></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a><ul></ul></li><li><span>Databases</span><ul><li><a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a><ul></ul></li></ul></li><li><span>Operating Systems</span><ul><li><span>Linux</span><ul><li><a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a><ul></ul></li></ul></li></ul></li><li><span>Optimization</span><ul><li><a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/>Performance</a><ul><li><span>Jvm</span><ul><li><a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a><ul></ul></li></ul></li></ul></li><li><span>Tools</span><ul><li><span>Build</span><ul><li><span>Bazel</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a><ul></ul></li></ul></li><li><span>Docs</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a><ul></ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/uni/svg/menu.svg class=book-icon alt=Menu></label>
+<strong>Data</strong>
+<label for=toc-control><img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#_data_-lab><em>Data</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#0-files>0. Files:</a></li><li><a href=#1-modifying-bitsc-and-checking-it-for-compliance-with-dlc>1. Modifying bits.c and checking it for compliance with dlc</a></li><li><a href=#2-testing-with-btest>2. Testing with btest</a></li><li><a href=#3-helper-programs>3. Helper Programs</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=_data_-lab><em>Data</em> Lab
+<a class=anchor href=#_data_-lab>#</a></h2><p>This is likely the <strong>first</strong> lab students should do. Quoting from the assignment write-up,
+the &ldquo;purpose of this assignment is to become more familiar with bit-level representations of integers and floating point numbers.&rdquo;
+Chapter Two is the chapter concerned with this area.</p><h2 id=contents>Contents
+<a class=anchor href=#contents>#</a></h2><ul><li>Files downloaded from CS:APP website as <code>datalab-handout.tar</code>, and listed below in the original README contents</li></ul><h2 id=lab-assignment-write-up>Lab Assignment Write-Up
+<a class=anchor href=#lab-assignment-write-up>#</a></h2><p><a href=http://csapp.cs.cmu.edu/3e/datalab.pdf>csapp.cs.cmu.edu/3e/datalab.pdf</a>.</p><p>This write-up is very helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem(s).</p><h2 id=original-readmemd>Original <code>README.md</code>
+<a class=anchor href=#original-readmemd>#</a></h2><pre><code>***********************
+The CS:APP Data Lab
+Directions to Students
+***********************
+</code></pre><p>Your goal is to modify your copy of bits.c so that it passes all the
+tests in btest without violating any of the coding guidelines.</p><h3 id=0-files>0. Files:
+<a class=anchor href=#0-files>#</a></h3><ul><li><code>Makefile</code> - Makes btest, fshow, and ishow</li><li><code>README</code> - This file</li><li><code>bits.c</code> - The file you will be modifying and handing in</li><li><code>bits.h</code> - Header file</li><li><code>btest.c</code> - The main btest program<ul><li><code>btest.h</code> - Used to build btest</li><li><code>decl.c</code> - Used to build btest</li><li><code>tests.c</code> - Used to build btest</li><li><code>tests-header.c</code> - Used to build btest</li></ul></li><li><code>dlc*</code> - Rule checking compiler binary (data lab compiler)</li><li><code>driver.pl*</code> - Driver program that uses btest and dlc to autograde bits.c</li><li><code>Driverhdrs.pm</code> - Header file for optional &ldquo;Beat the Prof&rdquo; contest</li><li><code>fshow.c</code> - Utility for examining floating-point representations</li><li><code>ishow.c</code> - Utility for examining integer representations</li></ul><h3 id=1-modifying-bitsc-and-checking-it-for-compliance-with-dlc>1. Modifying bits.c and checking it for compliance with dlc
+<a class=anchor href=#1-modifying-bitsc-and-checking-it-for-compliance-with-dlc>#</a></h3><p><strong>IMPORTANT:</strong> Carefully read the instructions in the <code>bits.c</code> file before
+you start. These give the coding rules that you will need to follow if
+you want full credit.</p><p>Use the dlc compiler (./dlc) to automatically check your version of
+bits.c for compliance with the coding guidelines:</p><pre><code>   unix&gt; ./dlc bits.c
+</code></pre><p>dlc returns silently if there are no problems with your code.
+Otherwise it prints messages that flag any problems. Running dlc with
+the -e switch:</p><pre><code>    unix&gt; ./dlc -e bits.c  
+</code></pre><p>causes dlc to print counts of the number of operators used by each function.</p><p>Once you have a legal solution, you can test it for correctness using
+the ./btest program.</p><h3 id=2-testing-with-btest>2. Testing with btest
+<a class=anchor href=#2-testing-with-btest>#</a></h3><p>The Makefile in this directory compiles your version of bits.c with
+additional code to create a program (or test harness) named btest.</p><p>To compile and run the btest program, type:</p><pre><code>unix&gt; make btest
+unix&gt; ./btest [optional cmd line args]
+</code></pre><p>You will need to recompile btest each time you change your bits.c
+program. When moving from one platform to another, you will want to
+get rid of the old version of btest and generate a new one. Use the
+commands:</p><pre><code>unix&gt; make clean
+unix&gt; make btest
+</code></pre><p>Btest tests your code for correctness by running millions of test
+cases on each function. It tests wide swaths around well known corner
+cases such as Tmin and zero for integer puzzles, and zero, inf, and
+the boundary between denormalized and normalized numbers for floating
+point puzzles. When btest detects an error in one of your functions,
+it prints out the test that failed, the incorrect result, and the
+expected result, and then terminates the testing for that function.</p><p>Here are the command line options for btest:</p><pre><code>unix&gt; ./btest -h
+Usage: ./btest [-hg] [-r &lt;n&gt;] [-f &lt;name&gt; [-1|-2|-3 &lt;val&gt;]*] [-T &lt;time limit&gt;]
+    -1 &lt;val&gt;  Specify first function argument
+    -2 &lt;val&gt;  Specify second function argument
+    -3 &lt;val&gt;  Specify third function argument
+    -f &lt;name&gt; Test only the named function
+    -g        Format output for autograding with no error messages
+    -h        Print this message
+    -r &lt;n&gt;    Give uniform weight of n for all problems
+    -T &lt;lim&gt;  Set timeout limit to lim
+</code></pre><p><strong>Examples:</strong></p><p>Test all functions for correctness and print out error messages:
+<code>unix> ./btest</code></p><p>Test all functions in a compact form with no error messages:
+<code>unix> ./btest -g</code></p><p>Test function foo for correctness:
+<code>unix> ./btest -f foo</code></p><p>Test function foo for correctness with specific arguments:
+<code>unix> ./btest -f foo -1 27 -2 0xf</code></p><p>Btest does not check your code for compliance with the coding
+guidelines. Use dlc to do that.</p><h3 id=3-helper-programs>3. Helper Programs
+<a class=anchor href=#3-helper-programs>#</a></h3><p>We have included the ishow and fshow programs to help you decipher
+integer and floating point representations respectively. Each takes a
+single decimal or hex number as an argument. To build them type:</p><pre><code>unix&gt; make
+</code></pre><p>Example usages:</p><pre><code>unix&gt; ./ishow 0x27
+Hex = 0x00000027,	Signed = 39,	Unsigned = 39
+
+unix&gt; ./ishow 27
+Hex = 0x0000001b,	Signed = 27,	Unsigned = 27
+
+unix&gt; ./fshow 0x15213243
+Floating point value 3.255334057e-26
+Bit Representation 0x15213243, sign = 0, exponent = 0x2a, fraction = 0x213243
+Normalized.  +1.2593463659 X 2^(-85)
+
+linux&gt; ./fshow 15213243
+Floating point value 2.131829405e-38
+Bit Representation 0x00e822bb, sign = 0, exponent = 0x01, fraction = 0x6822bb
+Normalized.  +1.8135598898 X 2^(-126)
+</code></pre></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#_data_-lab><em>Data</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#0-files>0. Files:</a></li><li><a href=#1-modifying-bitsc-and-checking-it-for-compliance-with-dlc>1. Modifying bits.c and checking it for compliance with dlc</a></li><li><a href=#2-testing-with-btest>2. Testing with btest</a></li><li><a href=#3-helper-programs>3. Helper Programs</a></li></ul></li></ul></nav></div></aside></main></body></html>

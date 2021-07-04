@@ -1,0 +1,227 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Buffer Lab #   ⚠️ Note: This is the legacy 32-bit lab from CS:APP2e. It has been replaced by the Attack Lab. In the Buffer Lab, students modify the run-time behavior of a 32-bit x86 binary executable by exploiting a buffer overflow bug. This lab teaches the students about the stack discipline and teaches them about the danger of writing code that is vulnerable to buffer overflow attacks.
+ Contents #   Files downloaded from CS:APP website as buflab32-handout."><meta name=theme-color content="#FFFFFF"><meta property="og:title" content><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:url" content="http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/"><title>Buffer | uni' docs</title><link rel=manifest href=/uni/manifest.json><link rel=icon href=/uni/favicon.png type=image/x-icon><link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous><script defer src=/uni/flexsearch.min.js></script><script defer src=/uni/en.search.min.24b62ed8a57b0f1ef86c7924eea14f3f02f2a840a526a37613bae56b33b86528.js integrity="sha256-JLYu2KV7Dx74bHkk7qFPPwLyqEClJqN2E7rlazO4ZSg=" crossorigin=anonymous></script><link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/index.xml title="uni' docs"></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a href=/uni/><span>uni' docs</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><span>Books</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a><ul><li><span>Labs</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/ class=active>Buffer</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a><ul></ul></li></ul></li></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a><ul></ul></li><li><span>Databases</span><ul><li><a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a><ul></ul></li></ul></li><li><span>Operating Systems</span><ul><li><span>Linux</span><ul><li><a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a><ul></ul></li></ul></li></ul></li><li><span>Optimization</span><ul><li><a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/>Performance</a><ul><li><span>Jvm</span><ul><li><a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a><ul></ul></li></ul></li></ul></li><li><span>Tools</span><ul><li><span>Build</span><ul><li><span>Bazel</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a><ul></ul></li></ul></li><li><span>Docs</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a><ul></ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/uni/svg/menu.svg class=book-icon alt=Menu></label>
+<strong>Buffer</strong>
+<label for=toc-control><img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#_buffer_-lab><em>Buffer</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-buffer-bomb-terminology>3. Buffer Bomb Terminology</a></li><li><a href=#4-offering-the-buffer-lab>4. Offering the Buffer Lab</a></li><li><a href=#41-create-a-buffer-lab-directory>4.1. Create a Buffer Lab Directory</a></li><li><a href=#42-configure-the-buffer-lab>4.2 Configure the Buffer Lab</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=_buffer_-lab><em>Buffer</em> Lab
+<a class=anchor href=#_buffer_-lab>#</a></h2><blockquote><p>⚠️ <strong>Note:</strong> This is the legacy 32-bit lab from CS:APP2e. It has been replaced by the Attack Lab. In the Buffer Lab, students modify the run-time behavior of a 32-bit x86 binary executable by exploiting a buffer overflow bug. This lab teaches the students about the stack discipline and teaches them about the danger of writing code that is vulnerable to buffer overflow attacks.</p></blockquote><h2 id=contents>Contents
+<a class=anchor href=#contents>#</a></h2><ul><li>Files downloaded from CS:APP website as <code>buflab32-handout.tar</code>, and listed below in the original README contents</li></ul><p>I think the <code>bomb.c</code> file is <em>not</em> intended to be compiled and run, just read.</p><h2 id=lab-assignment-write-up>Lab Assignment Write-Up
+<a class=anchor href=#lab-assignment-write-up>#</a></h2><p><a href=http://csapp.cs.cmu.edu/3e/buflab32.pdf>csapp.cs.cmu.edu/3e/buflab32.pdf</a>.</p><p>This write-up is pretty helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem.</p><h2 id=original-readmemd>Original <code>README.md</code>
+<a class=anchor href=#original-readmemd>#</a></h2><p>This section is copied from <a href=http://csapp.cs.cmu.edu/3e/README-buflab32>csapp.cs.cmu.edu/3e/README-buflab32</a>.
+It was modified only to conform to standard Markdown formatting.</p><p>It is not particularly useful for people doing self-study, but is reproduced here anyway.</p><hr><pre><code>#####################################################################
+# CS:APP Buffer Lab
+# Directions to Instructors
+#
+# Copyright (c) 2002-2012, R. Bryant and D. O'Hallaron
+#
+######################################################################
+</code></pre><p>This directory contains the files that you will use to build and run
+the CS:APP Buffer Lab.</p><p>The purpose of the Buffer Lab is to help students develop a detailed
+understanding of the stack discipline on IA32 processors. It involves
+applying a series of buffer overflow attacks on an executable file.</p><p>This version of the lab has been specially modified to defeat the
+stack randomization techniques used by newer versions of Linux. It
+works by using mmap() and an assembly language insert to move the
+stack pointed at by %esp to an unused part of the heap.</p><h3 id=1-overview>1. Overview
+<a class=anchor href=#1-overview>#</a></h3><h4 id=11-buffer-bombs>1.1. Buffer Bombs
+<a class=anchor href=#11-buffer-bombs>#</a></h4><p>A &ldquo;buffer bomb&rdquo; is an executable bomb, called &ldquo;./bufbomb&rdquo;, that is
+solved using a buffer overflow attack (exploit). In this lab,
+students are asked to alter the behavior of a buffer bomb (called
+bufbomb) via five increasingly difficult levels of exploits.</p><p>The levels are called smoke (level 0), fizz (level 1), bang (level 2),
+boom (level 3), and kaboom (level 4), with smoke being the simplest
+and kaboom being the most difficult.</p><h4 id=12-solving-buffer-bombs>1.2. Solving Buffer Bombs
+<a class=anchor href=#12-solving-buffer-bombs>#</a></h4><p>Each exploit involves reading a sequence of bytes from standard input
+into a buffer stored on the stack. Students encode each exploit string
+as a sequence of hex digit pairs separated by whitespace, where each
+hex digit pair represents a byte in the exploit string. The program
+&ldquo;hex2raw&rdquo; converts these strings into a sequence of raw bytes, which
+can then fed to the buffer bomb:</p><pre><code>unix&gt; cat exploit.txt | ./hex2raw | ./bufbomb -u &lt;userid&gt;
+</code></pre><p>Each student works on an identical buffer bomb, but the solution to
+the individual phases is a function of each student&rsquo;s userid. Thus,
+students must develop the solution on their own and cannot use the
+solutions from other students.</p><p>The solution to each phase is unique for each student because it
+typically involves the manipulation on the runtime stack of a unique
+&ldquo;cookie&rdquo; computed from the userid by the &ldquo;makecookie&rdquo; program:</p><pre><code>unix&gt; ./makecookie bovik
+0x1005b2b7
+</code></pre><p>The lab writeup has extensive details on each phase and solution
+techniques.</p><h4 id=13-autograding-service>1.3. Autograding Service
+<a class=anchor href=#13-autograding-service>#</a></h4><p>We have provided the same stand-alone user-level autograding service
+used by the Bomb Lab to handle all aspects of the Buffer Lab for
+you. Students download their buffer bombs from a server. As the
+students work on their bombs, they can submit successful exploit
+strings to the server by running the buffer bomb with &ldquo;-s&rdquo; argument:</p><pre><code>unix&gt; cat exploit.txt | ./hex2raw | ./bufbomb -u &lt;userid&gt; -s
+</code></pre><p>The current results for each bomb are displayed on a Web &ldquo;scoreboard.&rdquo;
+As with the Bomb Lab there are no explicit handins and the lab is
+self-grading.</p><p>The autograding service consists of four user-level programs that run
+in the main ./buflab directory:</p><ul><li><p>Request Server. Students download their bombs and display the
+scoreboard by pointing a browser at a simple HTTP server called the
+&ldquo;request server.&rdquo;</p></li><li><p>Result Server. Each time a student submits an exploit string
+the buffer bomb sends a short HTTP message, called an &ldquo;autoresult
+string,&rdquo; to an HTTP &ldquo;result server,&rdquo; which simply appends the
+autoresult string to a &ldquo;scoreboard log file.&rdquo;</p></li><li><p>Report Daemon. The &ldquo;report daemon&rdquo; periodically scans the scoreboard
+log file. The report daemon finds the most recent exploit string
+submitted by each student for each phase, and validates these strings
+by applying them to a local copy of the buffer bomb (unlike the Bomb
+Lab, each student works on the same buffer bomb). It then updates the
+HTML scoreboard that summarizes phases that have been successfully
+solved for each bomb (identified by cookie to protect the student
+privacy), rank ordered by the number of solved levels.</p></li></ul><p>To avoid infinite loops during validation, the Report Daemon calls
+each bufbomb in autograding mode, using the -g flag. This causes the
+bomb to timeout after 5 seconds.</p><ul><li>Main daemon. The &ldquo;main daemon&rdquo; starts and nannies the request
+server, result server, and report deamon, ensuring that exactly one of
+these processes (and itself) is running at any point in time. If one
+of these processes dies for some reason, the main daemon detects this
+and automatically restarts it. The main daemon is the only program
+you actually need to run.</li></ul><h3 id=2-files>2. Files
+<a class=anchor href=#2-files>#</a></h3><p>The <code>./buflab</code> directory contains the following files:</p><ul><li>Makefile - For starting/stopping the lab and cleaning files</li><li>buflab-handout/ - Contains the files handed out to each student</li><li>buflab.pl* - Main daemon that nannies the other servers & daemons</li><li>Buflab.pm - Buflab configuration file</li><li>buflab-reportd.pl* - Report daemon that continuously updates scoreboard</li><li>buflab-requestd.pl* - Request server that serves bombs to students</li><li>buflab-resultd.pl* - Result server that gets autoresult strings from bombs</li><li>buflab-scoreboard.html - Real-time Web scoreboard</li><li>buflab-update.pl* - Helper to buflab-reportd.pl that updates scoreboard</li><li>handin/ - Most recent exploits from each student and each level</li><li>log-status.txt - Status log with msgs from various servers and daemons</li><li>log.txt - Scoreboard log of autoresults received from bombs</li><li>makebomb.pl* - Program that builds a buffer bomb</li><li>scores.txt - Summarizes current scoreboard scores for each student</li><li>src/ - The buffer bomb source files, including a master
+- solver in ./src/solve the automatically generates
+- a solution string for any userid and level.</li><li>writeup/ - Sample Latex Buffer Lab writeup</li></ul><h3 id=3-buffer-bomb-terminology>3. Buffer Bomb Terminology
+<a class=anchor href=#3-buffer-bomb-terminology>#</a></h3><p>Notifying Bomb: A buffer bomb can be compiled with a NOTIFY option
+that allows the student to submit successful exploit strings to the
+autograding service. Such bombs are called &ldquo;notifying bombs.&rdquo;</p><p>Quiet Bomb: A buffer bomb that is not a notifying bomb is called a
+&ldquo;quiet bomb.&rdquo;</p><p>Cookie: Unlike the Bomb Lab, each student works on the same
+binary. However, the solution to each phase is different for each
+student because the exploit string typically must contain a 32-bit
+&ldquo;cookie&rdquo; that is computed from the student&rsquo;s userid.</p><h3 id=4-offering-the-buffer-lab>4. Offering the Buffer Lab
+<a class=anchor href=#4-offering-the-buffer-lab>#</a></h3><p>As with the Bomb Lab, there are two basic flavors of the Buffer Lab:
+In the &ldquo;online&rdquo; version, the instructor uses the autograding service
+to handout buffer bombs to each student on demand (each student gets
+the same bomb program), and to automatically track their progress on
+the realtime scoreboard. In the &ldquo;offline&rdquo; version, the instructor
+builds, hands out, and grades the student bombs manually, without
+using the autograding service.</p><p>While both versions give the students a rich experience, we recommend
+the online version. It is clearly the most compelling and fun for the
+students, and the easiest for the instructor to grade. However, it
+requires that you keep the autograding service running non-stop,
+because handouts, grading, and reporting occur continuously for the
+duration of the lab. We&rsquo;ve made it very easy to run the service, but
+some instructors may be uncomfortable with this requirement and will
+opt instead for the offline version.</p><p>Here are the directions for offering both versions of the lab.</p><h3 id=41-create-a-buffer-lab-directory>4.1. Create a Buffer Lab Directory
+<a class=anchor href=#41-create-a-buffer-lab-directory>#</a></h3><p>Identify the generic Linux machine ($SERVER_NAME) where you will
+create the Buffer Lab directory (./buflab) and, if you are offering
+the online version, run the autograding service. You&rsquo;ll only need a
+user account on this machine. You don&rsquo;t need root access. Any desktop
+with an internet connection will do.</p><p>Each offering of the Buffer Lab starts with a clean new ./buflab
+directory on $SERVER_NAME. For example:</p><pre><code>linux&gt; tar xvf buflab.tar
+linux&gt; cd buflab
+linux&gt; make cleanallfiles
+</code></pre><h3 id=42-configure-the-buffer-lab>4.2 Configure the Buffer Lab
+<a class=anchor href=#42-configure-the-buffer-lab>#</a></h3><p>Configure the Buffer Lab by editing the following file:</p><p><code>./Buflab.pm</code> - This is the main configuration file. You will only need
+to modify or inspect a few variables in Section 1 of this file. Each
+variable is preceded by a descriptive comment. If you are offering the
+offline version, you can ignore all of these settings.</p><p>If you are offering the online version, you will also need to edit the
+following file:</p><p><code>./src/config.h</code> - This file lists the domain names of the hosts that
+notifying bombs are allowed to submit results from. Make sure you
+update this correctly, else you and your students won&rsquo;t be able to
+submit their results. You should include <code>$SERVER_NAME</code> in this list,
+along with any machines that your students will be submitting from.</p><h4 id=43-update-the-lab-writeup>4.3. Update the Lab Writeup
+<a class=anchor href=#43-update-the-lab-writeup>#</a></h4><p>Once you have updated the configuration files, modify the Latex lab
+writeup in <code>./writeup/buflab.tex</code> for your environment. Then type the
+following in the <code>./writeup</code> directory:</p><pre><code>unix&gt; make clean
+unix&gt; make 
+</code></pre><p>This will create ps and pdf versions of the writeup</p><h4 id=44-running-the-online-buffer-lab>4.4. Running the Online Buffer Lab
+<a class=anchor href=#44-running-the-online-buffer-lab>#</a></h4><h5 id=441-short-version>4.4.1. Short Version
+<a class=anchor href=#441-short-version>#</a></h5><p>From the <code>./buflab</code> directory:</p><p>(1) Reset the Buffer Lab from scratch by typing
+linux> make cleanallfiles</p><p>(2) Start the autograding service by typing
+linux> make start</p><p>(3) Stop the autograding service by typing
+linux> make stop</p><p>You can start and stop the autograding service as often as you like
+without losing any information. When in doubt &ldquo;make stop; make start&rdquo;
+will get everything in a stable state.</p><p>However, resetting the lab (&ldquo;make cleanallfiles&rdquo;) deletes all handin
+strings, status logs, and the scoreboard log. Do this only during
+debugging, or the very first time you start the lab for your students.</p><p>The ./src/solve directory contains a master solver script called
+./solve.pl that you can use to automatically generate a nicely
+commented solution exploit string for any userid and phase. See
+./src/solve/README for details.</p><p>The ./handin directory contains the most recent exploit string
+received from each userid and each phase</p><pre><code>&lt;userid&gt;-&lt;level&gt;-exploit.txt
+</code></pre><p>as well as a report showing the result from the validation</p><pre><code>&lt;userid&gt;-&lt;level&gt;-report.txt
+</code></pre><p>Students request bombs by pointing their browsers at
+http://$SERVER_NAME:$REQUESTD_PORT/</p><p>Students submit their successful exploit strings to the grading
+service by calling the bufbomb with the -s option:</p><pre><code>linux&gt; cat exploit_string | ./hex2raw | ./bufbomb -u bovik -s 	
+</code></pre><p>Students view the scoreboard by pointing their browsers at<br>http://$SERVER_NAME:$REQUESTD_PORT/scoreboard</p><h5 id=442-long-version>4.4.2. Long Version
+<a class=anchor href=#442-long-version>#</a></h5><p>(1) Resetting the Buffer Lab. &ldquo;make cleanallfiles&rdquo; resets the lab from
+scratch, deleting all data specific to a particular instance of the
+lab, such as the status log, the scoreboard log, and the handin
+file. Do this when you&rsquo;re ready for the lab to go &ldquo;live&rdquo; to the
+students.</p><p>Resetting is also useful while you&rsquo;re preparing the lab. Before the
+lab goes live, you&rsquo;ll want to request a few bombs for yourself, run
+them, defuse a few phases, explode a few phases, and make sure that
+the results are displayed properly on the scoreboard. If there is a
+problem (say because you forgot to update the list of machines the
+bombs are allowed to run in src/config.h) you can fix the
+configuration, reset the lab, and then request and run more test
+bombs.</p><p>CAUTION: If you reset the lab after it&rsquo;s live, you&rsquo;ll lose all your
+records of the students handins. You&rsquo;ll have to ask them to submit
+their results again.</p><p>(2) Starting the Buffer Lab. &ldquo;make start&rdquo; runs buflab.pl, the main
+daemon that starts and nannies the other programs in the service,
+checking their status every few seconds and restarting them if
+necessary:</p><p>(3) Stopping the Buffer Lab. &ldquo;make stop&rdquo; kills all of the running
+servers. You can start and stop the autograding service as often as
+you like without losing any information. When in doubt &ldquo;make stop;
+make start&rdquo; will get everything in a stable state.</p><p>Request Server: The request server is a simple special-purpose HTTP
+server that (1) builds and delivers buffer bombs to student browsers
+on demand, and (2) displays the current state of the real-time
+scoreboard.</p><p>A student requests a bomb from the request daemon by pointing their
+favorite browser at</p><pre><code>http://$SERVER_NAME:$REQUESTD_PORT/
+</code></pre><p>The request server makes the buflab-handout directory (if necessary),
+tars it up, and delivers the tar file to the browser. The student then
+saves the tar file to disk. When the student untars this file, it
+creates a directory (./buflab-handout) with the following three binary
+files:</p><pre><code>bufbomb*     Notifying custom bomb executable
+hex2raw*     Converts a hex-encoded exploit string to a byte stream
+makecookie*  Computes the cookie associated with a userid.
+</code></pre><p>The request server also makes sure that there are bufbomb, hex2raw,
+and makecookie binaries in the ./buflab/src directory.</p><p>Result Server: Each time a student submits an exploit string, the
+buffer bomb sends an HTTP &ldquo;autoresult string&rdquo; to the result server,
+which then appends the message to the scoreboard log. Each autoresult
+string contains the userid, level, and exploit string.</p><p>Report Daemon: The report daemon periodically scans the scoreboard log
+(log.txt) and updates the scoreboard (buflab-scoreboard.txt). For each
+userid, it validates the most recently received exploit string, and
+updates the scoreboard. The update frequency is a configuration
+variable in Buflab.pm.</p><p>Instructors and students view the scoreboard by pointing their
+browsers at:</p><pre><code>http://$SERVER_NAME:$REQUESTD_PORT/scoreboard 
+</code></pre><h5 id=443-grading-the-online-buffer-lab>4.4.3. Grading the Online Buffer Lab
+<a class=anchor href=#443-grading-the-online-buffer-lab>#</a></h5><p>The online Buffer Lab is self-grading. At any point in time, the
+tab-delimited file &ldquo;./buflab/scores.txt&rdquo; contains the most recent
+scores for each student. This file is created by the report daemon
+each time it generates a new scoreboard.</p><p>The autograding service also updates the ./buflab/handin directory,
+which contains information that will be very helpful to you when
+students have questions about their submissions, especially when
+they submit solutions that passed their bufbomb but failed when
+evaluated by the grading server (common for the nitro phase).</p><p>For each student (userid), it keeps the last exploit string they
+submitted for each phase (0-4) in a file called</p><pre><code>&lt;userid&gt;-&lt;level&gt;-exploit.txt
+</code></pre><p>along with a report file called</p><pre><code>&lt;userid&gt;-&lt;level&gt;-report.txt 
+</code></pre><p>that shows the output from the buffer bomb on the corresponding
+string.</p><p>Section 5 describes how to generate solutions for arbitrary userids
+and levels.</p><h5 id=444-additional-notes-on-the-online-buffer-lab>4.4.4. Additional Notes on the Online Buffer Lab
+<a class=anchor href=#444-additional-notes-on-the-online-buffer-lab>#</a></h5><ul><li><p>If you want to build your own notifying bomb and hand it out
+manually to your students (rather than having them use the request
+server), then you should use the &ldquo;./makebomb.pl&rdquo; script:</p><p>unix> ./makebomb.pl -n</p><p>This creates the three binaries, ./src/bufbomb, ./src/hex2raw, and
+./src/makecookie, and copies them to ./buflab-handout/, which you can
+then tar up and hand out to students.</p></li><li><p>All of the servers and daemons are stateless, so you can stop (&ldquo;make
+stop&rdquo;) and start (&ldquo;make start&rdquo;) the lab as many times as you like
+without any ill effects. If you accidentally kill one of the
+daemons, or you modify a daemon, or the daemon dies for some reason,
+then use &ldquo;make stop&rdquo; to clean up, and then restart with &ldquo;make
+start&rdquo;. If your Linux box crashes or reboots, simply restart the
+daemons with &ldquo;make start&rdquo;.</p></li><li><p>Information and error messages from the servers are appended to the
+status log in buflab/log-status.txt. Servers run quietly, so they
+can be started from initrc scripts at boot time.</p></li><li><p>Before going live with the students, we like to check everything out
+by running some tests. We do this by typing</p><p>linux> make cleanallfiles<br>linux> make start</p></li></ul><p>Then we request a buffer bomb for ourselves by pointing a Web browser at</p><pre><code>http://$SERVER_NAME:$REQUESTD_PORT
+</code></pre><p>After saving our bomb to disk, we untar it, copy it to a host in the
+approved list in src/config.h, and then solve and submit different
+phases for different fake userids to make sure that they are properly
+recorded on the scoreboard, which we check at</p><pre><code>http://$SERVER_NAME:$REQUESTD_PORT/scoreboard
+</code></pre><p>Once we&rsquo;re satisfied that everything is OK, we stop the lab</p><pre><code>linux&gt; make stop
+</code></pre><p>and then go live:</p><pre><code>linux&gt; make cleanallfiles
+linux&gt; make start
+</code></pre><p>Once we go live, we type &ldquo;make stop&rdquo; and &ldquo;make start&rdquo; as often as we
+need to, but we are careful never to type &ldquo;make cleanallfiles&rdquo; again.</p><h4 id=45-running-the-offline-buffer-lab>4.5. Running the Offline Buffer Lab
+<a class=anchor href=#45-running-the-offline-buffer-lab>#</a></h4><p>In this version of the lab, you build your own quiet buffer bombs
+manually and then hand them out to the students. The students work on
+solving their bombs offline (i.e., independently of any autograding
+service) and then handin their exploit strings for each phase to you,
+which you then grade manually.</p><p>Use the ./makebomb.pl script to build the quiet buffer bomb:</p><pre><code>unix&gt; ./makebomb.pl 
+</code></pre><p>This creates the three binaries ./src/bufbomb, ./src/hex2raw, and
+./src/makecookie, and copies them to the ./buflab-handout/ directory,
+which you can then tar up and hand out to students.</p><p>The students will handin their solution files, which you can validate
+manually by feeding to the bomb:</p><pre><code>unix&gt; cd src
+unix&gt; cat &lt;userid&gt;-&lt;level&gt;.txt | ./hex2raw | ./bufbomb
+</code></pre></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#_buffer_-lab><em>Buffer</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-buffer-bomb-terminology>3. Buffer Bomb Terminology</a></li><li><a href=#4-offering-the-buffer-lab>4. Offering the Buffer Lab</a></li><li><a href=#41-create-a-buffer-lab-directory>4.1. Create a Buffer Lab Directory</a></li><li><a href=#42-configure-the-buffer-lab>4.2 Configure the Buffer Lab</a></li></ul></li></ul></nav></div></aside></main></body></html>
