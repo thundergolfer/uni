@@ -57,6 +57,8 @@ def main(repo_root: str):
             pathlib.Path(root, "_index.md").touch()
 
     # TODO(Jonathon): Right now relative references to images in Markdown files do not work. Fix that.
+    # TODO(Jonathon): Have re-write all the links in the Markdown because otherwise they 404 on my personal website.
+    #                 Need to add uni/ prefix.
 
 
 if __name__ == "__main__":
