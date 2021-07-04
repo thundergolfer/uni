@@ -11,9 +11,14 @@ def main(repo_root: str):
     repo_readmes = list(repo_root_path.glob('**/readme.md')) + list(repo_root_path.glob('**/README.md'))
 
     for readme in repo_readmes:
+        if repo_root_path / "docs" in readme.parents:
+            print(f"Skipping: {readme}")
+            continue
+
         if ".devcontainer" in str(readme):
             print(f"Skipping: {readme}")
             continue
+
         dest = docs_root / readme.relative_to(repo_root_path).parent / "_index.md"
         if not dest.exists():
             dest.parent.mkdir(parents=True, exist_ok=True)
