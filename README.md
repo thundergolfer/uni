@@ -25,6 +25,7 @@ Currently, the contents of this mono-repo are broken down into the following top
 * [**Docs**](/docs) - Static-site documentation for monorepo. Served at https://uni.thundergolfer.com, or viewable locally (see readme instructions within folder).
 * [**Machine Learning**](/machine_learning) - H Y P E
 * [**Performance**](/performance) - Code for learning about how certain programs change in system resource usage under load. 
+* [**Operating Systems**](/operating_systems) - Code written to learn how UNIX (Linux, macOS) operating systems actually work.
 * [**Optimization**](/optimization) - Code written to learn how to solve optimization problems using code, particularly using the kinds of optimization algorithms used in Machine Learning.
 * [**third_party**](/third_party) - Code and configuration for managing third-party code/packages in Bazel, and not of interest in of itself.
 * [**Tools**](/tools) - Tooling code, scripts, and configuration, serving the repository's needs and not of interest in of itself.
