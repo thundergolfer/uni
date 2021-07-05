@@ -24,6 +24,7 @@ Currently, the contents of this mono-repo are broken down into the following top
 * [**Concurrency**](/concurrency) - Code written to learn how to solve concurrency problems/exercises using code.
 * [**Databases**](/databases) - SQL, mostly.
 * [**Docs**](/docs) - Static-site documentation for monorepo. Served at https://thundergolfer.com/uni, or viewable locally (see readme instructions within folder).
+* [**Languages**](/languages) - Code for learning the details of programming languages (C, C++, Java, Python, Rust).
 * [**Machine Learning**](/machine_learning) - H Y P E
 * [**Performance**](/performance) - Code for learning about how certain programs change in system resource usage under load. 
 * [**Operating Systems**](/operating_systems) - Code written to learn how UNIX (Linux, macOS) operating systems actually work.
