@@ -24,7 +24,7 @@ load("@rules_python//python:pip.bzl", "pip_install")
 
 pip_install(
    name = "pypi",
-   requirements = "//:requirements.txt",
+   requirements = "//third_party:requirements.txt",
    python_interpreter_target = "@python_interpreter//:python/install/bin/python3.8"
 )
 

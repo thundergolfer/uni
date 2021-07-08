@@ -5,6 +5,6 @@ py_binary(
     name = "visualizing_data",
     srcs = ["visualizing_data.py"],
     deps = [
-        #requirement("matplotlib")
+        requirement("matplotlib")
     ]
 )
