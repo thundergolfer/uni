@@ -21,6 +21,7 @@ Currently, the contents of this mono-repo are broken down into the following top
 * [**Algorithms**](/algorithms) - Code for Leetcode, mostly.
 * [**Books**](/books) - Code for all kinds of practical exercises in various great textbooks. Homework, practicals, exercises, labs, assignments, etc.
     * [Computer Systems: A Programmer's Perspective](/books/computer_systems_app)
+    * [Data Science From Scratch](/books/data_science_from_scratch) 
     * [Structure and Interpretation of Computer Programs](/books/sicp) 🚧
     * [The Algorithm Design Manual](/books/the_algorithm_design_manual)
 * [**Concurrency**](/concurrency) - Code written to learn how to solve concurrency problems/exercises using code.
