@@ -1,0 +1,13 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
+load("@pypi//:requirements.bzl", "requirement")
+
+py_binary(
+    name = "linear_algebra",
+    srcs = ["linear_algebra.py"],
+)
+
+py_test(
+    name = "test",
+    srcs = ["linear_algebra.py"],
+    main = "linear_algebra.py",
+)
