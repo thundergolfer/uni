@@ -20,11 +20,11 @@ jobs:
         # Bazel version to install e.g. 1.2.1, 2.0.0, ...
         version: 4.1.0 # optional, default is 2.0.0
 
-    - name: Set up Python 3.8
+    - name: Set up Python 3
       uses: actions/setup-python@v2
       with:
         # Semantic version range syntax or exact version of a Python version
-        python-version: '3.8'
+        python-version: '3.7'
 
     - name: Run tests
       run: bazel test //...
