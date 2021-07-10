@@ -85,6 +85,7 @@ friends_of_five = [
 
 assert friends_of_five == [4, 6, 7]
 
+
 class TestLinearAlgebra(unittest.TestCase):
     def test_shape(self):
         assert shape([[1, 2, 3], [4, 5, 6]]) == (2, 3)  # 2 rows, 3 columns
