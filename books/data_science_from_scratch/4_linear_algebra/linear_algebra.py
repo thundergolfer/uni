@@ -1,3 +1,4 @@
+import math
 import unittest
 from typing import List
 
@@ -35,17 +36,37 @@ def vector_sum(vectors: List[Vector]) -> Vector:
 
 def scalar_multiply(c: float, v: Vector) -> Vector:
     """Multiplies every element by c"""
-    return [
-        c * v_i
-        for v_i
-        in v
-    ]
+    return [c * v_i for v_i in v]
 
 
 def vector_mean(vectors: List[Vector]) -> Vector:
     """Computes the element-wise average"""
     n = len(vectors)
-    return scalar_multiply(1/n, vector_sum(vectors))
+    return scalar_multiply(1 / n, vector_sum(vectors))
+
+
+def dot(v: Vector, w: Vector) -> float:
+    """Computes v_1 * w_1 + ... + v_n * w_n"""
+    assert len(v) == len(w), "Vectors must be the same length"
+    return sum(v_i * w_i for v_i, w_i in zip(v, w))
+
+
+def sum_of_squares(v: Vector) -> float:
+    return dot(v, v)
+
+
+def magnitude(v: Vector) -> float:
+    """Returns the magnitude (or length) of vector v"""
+    return math.sqrt(dot(v, v))
+
+
+def squared_distance(v: Vector, w: Vector) -> float:
+    return sum_of_squares(subtract(v, w))
+
+
+def distance(v: Vector, w: Vector) -> float:
+    """Computes the distance between v and w"""
+    return magnitude(subtract(v, w))
 
 
 class TestLinearAlgebra(unittest.TestCase):
@@ -74,6 +95,17 @@ class TestLinearAlgebra(unittest.TestCase):
         v = [1.0, 1.0, 1.0]
         vectors = [v for _ in range(5)]
         assert vector_mean(vectors) == v
+
+    def test_dot(self):
+        one = [1.0, 2.0, 3.0]
+        two = [10.0, 1.0, 5.0]
+        expected = 10 + 2 + 15
+        assert dot(one, two) == expected
+
+        assert dot([1, 2, 3], [4, 5, 6]) == 32  # 1 * 4 + 2 * 5 + 3 * 5
+
+    def test_magnitude(self):
+        assert magnitude([3, 4]) == 5
 
 
 if __name__ == "__main__":

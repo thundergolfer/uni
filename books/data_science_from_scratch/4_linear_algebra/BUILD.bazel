@@ -7,7 +7,15 @@ py_binary(
 )
 
 py_test(
-    name = "test",
+    name = "linear_algebra_test",
     srcs = ["linear_algebra.py"],
     main = "linear_algebra.py",
+)
+
+py_test(
+    name = "matrices_test",
+    srcs = ["matrices.py"],
+    main = "matrices.py",
+    deps = [":linear_algebra"],
+    imports = ["books/data_science_from_scratch/4_linear_algebra"]
 )
