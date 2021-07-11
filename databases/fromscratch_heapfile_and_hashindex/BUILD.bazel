@@ -1,0 +1,16 @@
+load("@rules_java//java:defs.bzl", "java_library", "java_binary")
+
+java_binary(
+    name = "dbload",
+    srcs = glob(["src/main/java/*.java"], exclude=["dbquery.java", "hashload.java"]),
+)
+
+java_binary(
+    name = "dbquery",
+    srcs = glob(["src/main/java/*.java"], exclude=["hashload.java", "dbload.java"]),
+)
+
+java_binary(
+    name = "hashload",
+    srcs = glob(["src/main/java/*.java"], exclude=["dbquery.java", "dbload.java"]),
+)
