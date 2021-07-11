@@ -1,3 +1,5 @@
 books/computer_systems_app/labs/* linguist-vendored
 .devcontainer/* linguist-vendored
+.github/* linguist-vendored
+docs/* linguist-documentation
 tools/build/docs/technical-documentation-system/vendor/* linguist-vendored
