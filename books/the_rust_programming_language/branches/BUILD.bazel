@@ -1,0 +1,7 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+# 3.5 Control flow
+rust_binary(
+    name = "branches",
+    srcs = ["src/main.rs"],
+)
