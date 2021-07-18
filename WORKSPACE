@@ -177,3 +177,57 @@ rules_proto_toolchains()
 
 load("@io_bazel_rules_scala//scala:toolchains.bzl", "scala_register_toolchains")
 scala_register_toolchains()
+
+###########
+# RUST 🦀
+###########
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "rules_rust",
+    sha256 = "224ebaf1156b6f2d3680e5b8c25191e71483214957dfecd25d0f29b2f283283b",
+    strip_prefix = "rules_rust-a814d859845c420fd105c629134c4a4cb47ba3f8",
+    urls = [
+        # `main` branch as of 2021-06-15
+        "https://github.com/bazelbuild/rules_rust/archive/a814d859845c420fd105c629134c4a4cb47ba3f8.tar.gz",
+    ],
+)
+
+load("@rules_rust//rust:repositories.bzl", "rust_repositories")
+
+rust_repositories(version = "1.53.0", edition="2018")
+
+# Crate Universe
+load("//third_party/rules_rust:crate_universe_defaults.bzl", "DEFAULT_URL_TEMPLATE", "DEFAULT_SHA256_CHECKSUMS")
+
+load("@rules_rust//crate_universe:defs.bzl", "crate", "crate_universe")
+
+crate_universe(
+    name = "crates",
+    cargo_toml_files = [
+        "//books/the_rust_programming_language/guessing_game:Cargo.toml",
+    ],
+    resolver_download_url_template = DEFAULT_URL_TEMPLATE,
+    resolver_sha256s = DEFAULT_SHA256_CHECKSUMS,
+    # leave unset for default multi-platform support
+    supported_targets = [
+        "x86_64-apple-darwin",
+        "x86_64-unknown-linux-gnu",
+    ],
+    # [package.metadata.raze.xxx] lines in Cargo.toml files are ignored;
+    # the overrides need to be declared in the repo rule instead.
+    overrides = {
+        "example-sys": crate.override(
+            extra_build_script_env_vars = {"PATH": "/usr/bin"},
+        ),
+    },
+    # to use a lockfile, uncomment the following line,
+    # create an empty file in the location, and then build
+    # with REPIN=1 bazel build ...
+    #lockfile = "//:crate_universe.lock",
+)
+
+load("@crates//:defs.bzl", "pinned_rust_install")
+
+pinned_rust_install()
