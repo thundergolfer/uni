@@ -1,0 +1,33 @@
+load("@io_bazel_rules_scala//scala:scala.bzl", "scala_library", "scala_binary", "scala_repl")
+
+scala_library(
+    name = "gettingstarted",
+    srcs = ["GettingStarted.scala"]
+)
+
+scala_binary(
+    name = "MyModule",
+    main_class = "fpinscala.gettingstarted.MyModule",
+    srcs = ["GettingStarted.scala"],
+)
+
+scala_binary(
+    name = "FormatAbsAndFactorial",
+    main_class = "fpinscala.gettingstarted.FormatAbsAndFactorial",
+    srcs = ["GettingStarted.scala"],
+)
+
+# Exercise 2.1
+scala_binary(
+    name = "TestFib",
+    main_class = "fpinscala.gettingstarted.TestFib",
+    srcs = ["GettingStarted.scala"],
+)
+
+
+scala_repl(
+    name = "repl",
+    deps = [
+        ":gettingstarted",
+    ]
+)

@@ -122,6 +122,29 @@ register_toolchains("//tools/build/bazel/py_toolchain:py_toolchain")
 # Scala
 ###########
 
+# Avoid compiling protobuf.
+# See https://github.com/bazelbuild/rules_scala/issues/1254#issuecomment-882522899
+# for why this is being done.
+http_archive(
+    name = "rules_proto",
+    sha256 = "8e7d59a5b12b233be5652e3d29f42fba01c7cbab09f6b3a8d0a57ed6d1e9a0da",
+    strip_prefix = "rules_proto-7e4afce6fe62dbff0a4a03450143146f9f2d7488",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/7e4afce6fe62dbff0a4a03450143146f9f2d7488.tar.gz",
+        "https://github.com/bazelbuild/rules_proto/archive/7e4afce6fe62dbff0a4a03450143146f9f2d7488.tar.gz",
+    ],
+)
+
+load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
+
+# Declares @com_google_protobuf//:protoc pointing to released binary
+# This should stop building protoc during bazel build
+# See https://github.com/bazelbuild/rules_proto/pull/36
+rules_proto_dependencies()
+
+rules_proto_toolchains()
+
+
 skylib_version = "1.0.3"
 http_archive(
     name = "bazel_skylib",
