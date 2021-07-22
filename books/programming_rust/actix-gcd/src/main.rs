@@ -65,6 +65,14 @@ fn gcd(mut n: u64, mut m: u64) -> u64 {
     n
 }
 
+/// Parse a pair of floating-point numbers separated by a comma as a complex number.
+fn parse_complex(s: &str) -> Option<Complex<f64>> {
+    match parse_pair(s, ',') {
+        Some((re, im)) => Some(Complex { re, im }),
+        None => None
+    }
+}
+
 /// Parse the string `s` as a coordinate pair, like `"400x600"` or `"1.0,0.5".
 ///
 /// Specifically, `s` should have the form <left><sep><right>, where <sep> is the
@@ -83,6 +91,13 @@ fn parse_pair<T: FromStr>(s: &str, separator: char) -> Option<(T, T)> {
             }
         }
     }
+}
+
+#[test]
+fn test_parse_complex() {
+    assert_eq!(parse_complex("1.25,-0.0625"),
+               Some(Complex { re: 1.25, im: -0.0625 }));
+    assert_eq!(parse_complex(",-0.0625"), None);
 }
 
 #[test]
