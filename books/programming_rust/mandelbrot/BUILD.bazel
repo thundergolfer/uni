@@ -1,9 +1,15 @@
-load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_test")
 load("@crates//:defs.bzl", "crates_from")
 
 # Chapter 2: A Tour of Rust - Concurrency
 rust_binary(
     name = "mandelbrot",
+    srcs = ["src/main.rs"],
+    deps = crates_from(":Cargo.toml"),
+)
+
+rust_test(
+    name = "mandelbrot_test",
     srcs = ["src/main.rs"],
     deps = crates_from(":Cargo.toml"),
 )
