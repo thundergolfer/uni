@@ -1,0 +1,7 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+# 3.3 Functions
+rust_binary(
+    name = "functions",
+    srcs = ["src/main.rs"],
+)

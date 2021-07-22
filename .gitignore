@@ -66,3 +66,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Rust
+books/the_rust_programming_language/**/target/**
+books/the_rust_programming_language/**/main

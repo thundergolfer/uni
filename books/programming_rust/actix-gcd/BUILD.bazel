@@ -1,0 +1,11 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@crates//:defs.bzl", "crates_from")
+
+# Chapter 2: A Tour of Rust - Serving Pages to the Web
+rust_binary(
+    name = "actix-gcd",
+    srcs = ["src/main.rs"],
+    deps = crates_from(":Cargo.toml"),
+)
+
+exports_files(["Cargo.toml"])

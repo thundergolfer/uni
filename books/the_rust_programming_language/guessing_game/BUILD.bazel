@@ -1,0 +1,12 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@crates//:defs.bzl", "crate")
+load("@crates//:defs.bzl", "crates_from")
+
+# 2. Programming a guessing game.
+rust_binary(
+    name = "guessing_game",
+    srcs = ["src/main.rs"],
+    deps = crates_from(":Cargo.toml"),
+)
+
+exports_files(["Cargo.toml"])

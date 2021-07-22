@@ -1,0 +1,7 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+# 3.1 Variables and Mutability
+rust_binary(
+    name = "variables",
+    srcs = ["src/main.rs"],
+)
