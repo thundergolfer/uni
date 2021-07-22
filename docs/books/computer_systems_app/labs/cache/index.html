@@ -1,50 +1,387 @@
-<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Cache Lab #   Note: This lab must be run on a 64-bit x86-64 system.
+<!doctype html><html lang=en dir=ltr>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="Cache Lab #   Note: This lab must be run on a 64-bit x86-64 system.
  Contents #   Files downloaded from CS:APP website as cachelab-handout.tar, and listed below in the original README contents  Lab Assignment Write-Up #  csapp.cs.cmu.edu/3e/cachelab.pdf.
 This write-up is pretty helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem.
-Original README.md #  This section is copied from csapp."><meta name=theme-color content="#FFFFFF"><meta property="og:title" content><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:url" content="http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/"><title>Cache | uni' docs</title><link rel=manifest href=/uni/manifest.json><link rel=icon href=/uni/favicon.png type=image/x-icon><link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous><script defer src=/uni/flexsearch.min.js></script><script defer src=/uni/en.search.min.cda760aa4cc7f09061c42ba631205dfc12c91217813dbb45c86e12fbc20a8085.js integrity="sha256-zadgqkzH8JBhxCumMSBd/BLJEheBPbtFyG4S+8IKgIU=" crossorigin=anonymous></script><link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/index.xml title="uni' docs"></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
-<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a href=/uni/><span>uni' docs</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><span>Books</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a><ul><li><span>Labs</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/ class=active>Cache</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a><ul></ul></li></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/>Data Science From Scratch</a><ul><li><a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/2_a_crash_course_in_python/>2 a Crash Course in Python</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/fp_in_scala/>Fp in Scala</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a><ul></ul></li><li><span>Databases</span><ul><li><a href=http://thundergolfer.com/uni/docs/databases/fromscratch_heapfile_and_hashindex/>Fromscratch Heapfile and Hashindex</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a><ul></ul></li></ul></li><li><span>Operating Systems</span><ul><li><span>Linux</span><ul><li><a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a><ul></ul></li></ul></li></ul></li><li><span>Optimization</span><ul><li><a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/>Performance</a><ul><li><span>Jvm</span><ul><li><a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a><ul></ul></li></ul></li></ul></li><li><span>Tools</span><ul><li><span>Build</span><ul><li><span>Bazel</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a><ul></ul></li></ul></li><li><span>Docs</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a><ul></ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/uni/svg/menu.svg class=book-icon alt=Menu></label>
+Original README.md #  This section is copied from csapp.">
+<meta name=theme-color content="#FFFFFF"><meta property="og:title" content>
+<meta property="og:description" content>
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/">
+<title>Cache | uni' docs</title>
+<link rel=manifest href=/uni/manifest.json>
+<link rel=icon href=/uni/favicon.png type=image/x-icon>
+<link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous>
+<script defer src=/uni/flexsearch.min.js></script>
+<script defer src=/uni/en.search.min.cda760aa4cc7f09061c42ba631205dfc12c91217813dbb45c86e12fbc20a8085.js integrity="sha256-zadgqkzH8JBhxCumMSBd/BLJEheBPbtFyG4S+8IKgIU=" crossorigin=anonymous></script>
+<link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/index.xml title="uni' docs">
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a href=/uni/><span>uni' docs</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul>
+<li>
+<span>Books</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a>
+<ul>
+<li>
+<span>Labs</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/ class=active>Cache</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/>Data Science From Scratch</a>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/2_a_crash_course_in_python/>2 a Crash Course in Python</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/fp_in_scala/>Fp in Scala</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a>
+<ul>
+</ul>
+</li>
+<li>
+<span>Databases</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/databases/fromscratch_heapfile_and_hashindex/>Fromscratch Heapfile and Hashindex</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<span>Operating Systems</span>
+<ul>
+<li>
+<span>Linux</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<span>Optimization</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/performance/>Performance</a>
+<ul>
+<li>
+<span>Jvm</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<span>Tools</span>
+<ul>
+<li>
+<span>Build</span>
+<ul>
+<li>
+<span>Bazel</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<span>Docs</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=/uni/svg/menu.svg class=book-icon alt=Menu>
+</label>
 <strong>Cache</strong>
-<label for=toc-control><img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#_cache_-lab><em>Cache</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-building-the-lab>3. Building the Lab</a></li><li><a href=#4-handing-in-the-lab>4. Handing in the Lab</a></li><li><a href=#5-autograding-the-lab>5. Autograding the Lab</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=_cache_-lab><em>Cache</em> Lab
-<a class=anchor href=#_cache_-lab>#</a></h2><blockquote><p><strong>Note:</strong> This lab must be run on a 64-bit x86-64 system.</p></blockquote><h2 id=contents>Contents
-<a class=anchor href=#contents>#</a></h2><ul><li>Files downloaded from CS:APP website as <code>cachelab-handout.tar</code>, and listed below in the original README contents</li></ul><h2 id=lab-assignment-write-up>Lab Assignment Write-Up
-<a class=anchor href=#lab-assignment-write-up>#</a></h2><p><a href=http://csapp.cs.cmu.edu/3e/cachelab.pdf>csapp.cs.cmu.edu/3e/cachelab.pdf</a>.</p><p>This write-up is pretty helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem.</p><h2 id=original-readmemd>Original <code>README.md</code>
-<a class=anchor href=#original-readmemd>#</a></h2><p>This section is copied from <a href=http://csapp.cs.cmu.edu/3e/README-cachelab>csapp.cs.cmu.edu/3e/README-cachelab</a>.
-It was modified only to conform to standard Markdown formatting.</p><p>It is not particularly useful for people doing self-study, but is reproduced here anyway.</p><hr><pre><code>#####################################################################
+<label for=toc-control>
+<img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#_cache_-lab><em>Cache</em> Lab</a></li>
+<li><a href=#contents>Contents</a></li>
+<li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li>
+<li><a href=#original-readmemd>Original <code>README.md</code></a>
+<ul>
+<li><a href=#1-overview>1. Overview</a></li>
+<li><a href=#2-files>2. Files</a></li>
+<li><a href=#3-building-the-lab>3. Building the Lab</a></li>
+<li><a href=#4-handing-in-the-lab>4. Handing in the Lab</a></li>
+<li><a href=#5-autograding-the-lab>5. Autograding the Lab</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</aside>
+</header>
+<article class=markdown><h2 id=_cache_-lab>
+<em>Cache</em> Lab
+<a class=anchor href=#_cache_-lab>#</a>
+</h2>
+<blockquote>
+<p><strong>Note:</strong> This lab must be run on a 64-bit x86-64 system.</p>
+</blockquote>
+<h2 id=contents>
+Contents
+<a class=anchor href=#contents>#</a>
+</h2>
+<ul>
+<li>Files downloaded from CS:APP website as <code>cachelab-handout.tar</code>, and listed below in the original README contents</li>
+</ul>
+<h2 id=lab-assignment-write-up>
+Lab Assignment Write-Up
+<a class=anchor href=#lab-assignment-write-up>#</a>
+</h2>
+<p><a href=http://csapp.cs.cmu.edu/3e/cachelab.pdf>csapp.cs.cmu.edu/3e/cachelab.pdf</a>.</p>
+<p>This write-up is pretty helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem.</p>
+<h2 id=original-readmemd>
+Original <code>README.md</code>
+<a class=anchor href=#original-readmemd>#</a>
+</h2>
+<p>This section is copied from <a href=http://csapp.cs.cmu.edu/3e/README-cachelab>csapp.cs.cmu.edu/3e/README-cachelab</a>.
+It was modified only to conform to standard Markdown formatting.</p>
+<p>It is not particularly useful for people doing self-study, but is reproduced here anyway.</p>
+<hr>
+<pre><code>#####################################################################
 # CS:APP Cache Lab
 # Directions to Instructors
 #
 # Copyright (c) 2013, R. Bryant and D. O'Hallaron, All rights reserved.
 ######################################################################
 </code></pre><p>This directory contains the files that you will need to run the CS:APP
-cache lab, which develops the student&rsquo;s understanding of caches.</p><h3 id=1-overview>1. Overview
-<a class=anchor href=#1-overview>#</a></h3><p>In this lab, the student works on two C files called csim.c and
+cache lab, which develops the student&rsquo;s understanding of caches.</p>
+<h3 id=1-overview>
+1. Overview
+<a class=anchor href=#1-overview>#</a>
+</h3>
+<p>In this lab, the student works on two C files called csim.c and
 trans.c. There are two parts: Part (a) involves implementing a cache
 simulator in csim.c. Part (b) involves writing a function that
 computes the transpose of a given matrix in trans.c, with the goal of
-minimizing the number misses on a simulated cache.</p><p>Each time a student with login &ldquo;foo&rdquo; compiles their work, the Makefile
+minimizing the number misses on a simulated cache.</p>
+<p>Each time a student with login &ldquo;foo&rdquo; compiles their work, the Makefile
 automatically generates a handin file, called foo-handin.tar, that
 contains the csim.c and trans.c file. Students hand this tar file in
-to the instructor.</p><p>The driver program (driver.py) evaluates the correctness of the cache
+to the instructor.</p>
+<p>The driver program (driver.py) evaluates the correctness of the cache
 simulator in csim.c, and the performance and correctness of the
-transpose functions in trans.c. See the writeup for details.</p><p>Requirements:</p><ul><li>The lab must be done on a 64-bit x86-64 system.</li><li>The driver requires a version of Valgrind (<a href=http://valgrind.org>http://valgrind.org</a>) that
-supports the &ldquo;&ndash;tool=lackey&rdquo; option.</li></ul><h3 id=2-files>2. Files
-<a class=anchor href=#2-files>#</a></h3><ul><li>Makefile Builds the entire lab</li><li>README This file</li><li>grade/ Autograding scripts for the instructor</li><li>src/ Source code of this lab</li><li>cachelab-handout/ Handout directory that goes to the students. This directory
+transpose functions in trans.c. See the writeup for details.</p>
+<p>Requirements:</p>
+<ul>
+<li>The lab must be done on a 64-bit x86-64 system.</li>
+<li>The driver requires a version of Valgrind (<a href=http://valgrind.org>http://valgrind.org</a>) that
+supports the &ldquo;&ndash;tool=lackey&rdquo; option.</li>
+</ul>
+<h3 id=2-files>
+2. Files
+<a class=anchor href=#2-files>#</a>
+</h3>
+<ul>
+<li>Makefile Builds the entire lab</li>
+<li>README This file</li>
+<li>grade/ Autograding scripts for the instructor</li>
+<li>src/ Source code of this lab</li>
+<li>cachelab-handout/ Handout directory that goes to the students. This directory
 is completely generated from files in the src directory
-Never put any hard state in this directory.</li><li>cachelab-handout.tar Tar file of handout directory that goes out to the students.</li><li>writeup/ Latex writeup about the lab. Modify to reflect your
-environment.</li></ul><h3 id=3-building-the-lab>3. Building the Lab
-<a class=anchor href=#3-building-the-lab>#</a></h3><p>To build the default version of the lab, modify the Latex lab writeup
+Never put any hard state in this directory.</li>
+<li>cachelab-handout.tar Tar file of handout directory that goes out to the students.</li>
+<li>writeup/ Latex writeup about the lab. Modify to reflect your
+environment.</li>
+</ul>
+<h3 id=3-building-the-lab>
+3. Building the Lab
+<a class=anchor href=#3-building-the-lab>#</a>
+</h3>
+<p>To build the default version of the lab, modify the Latex lab writeup
 in <code>./writeup/cachelab.tex</code> for your environment. Then type the following
-in the current directory:</p><pre><code>    unix&gt; make clean
+in the current directory:</p>
+<pre><code>    unix&gt; make clean
     unix&gt; make
-</code></pre><p>This will build the cachelab-handout/ directory and its
+</code></pre>
+<p>This will build the cachelab-handout/ directory and its
 cachelab-handout.tar archive that you can handout to students.
-The command:</p><pre><code>unix&gt; make dist DEST=&lt;DIR&gt;
-</code></pre><p>will copy the tarfile and copies of the writeup to directory <dir>,
-where the students can access it.</p><h3 id=4-handing-in-the-lab>4. Handing in the Lab
-<a class=anchor href=#4-handing-in-the-lab>#</a></h3><p>Each time a student with login &ldquo;foo&rdquo; compiles their work, the Makefile
+The command:</p>
+<pre><code>unix&gt; make dist DEST=&lt;DIR&gt;
+</code></pre>
+<p>will copy the tarfile and copies of the writeup to directory <dir>,
+where the students can access it.</p>
+<h3 id=4-handing-in-the-lab>
+4. Handing in the Lab
+<a class=anchor href=#4-handing-in-the-lab>#</a>
+</h3>
+<p>Each time a student with login &ldquo;foo&rdquo; compiles their work, the Makefile
 automatically generates a handin file called <code>foo-handin.tar</code>. If you
 want to autograde the handins, collect all of the student handin tar
-files in the <code>./grade/handin</code> directory.</p><h3 id=5-autograding-the-lab>5. Autograding the Lab
-<a class=anchor href=#5-autograding-the-lab>#</a></h3><p>You can run the driver program manually on each student&rsquo;s handin, or
+files in the <code>./grade/handin</code> directory.</p>
+<h3 id=5-autograding-the-lab>
+5. Autograding the Lab
+<a class=anchor href=#5-autograding-the-lab>#</a>
+</h3>
+<p>You can run the driver program manually on each student&rsquo;s handin, or
 you can use the autograding scripts in ./grade to automatically grade
-each of the .tar files in the handin/ directory.</p><p>See ./grade/README for instructions.</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#_cache_-lab><em>Cache</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-building-the-lab>3. Building the Lab</a></li><li><a href=#4-handing-in-the-lab>4. Handing in the Lab</a></li><li><a href=#5-autograding-the-lab>5. Autograding the Lab</a></li></ul></li></ul></nav></div></aside></main></body></html>
+each of the .tar files in the handin/ directory.</p>
+<p>See ./grade/README for instructions.</p>
+</article>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+</footer>
+<div class=book-comments>
+</div>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#_cache_-lab><em>Cache</em> Lab</a></li>
+<li><a href=#contents>Contents</a></li>
+<li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li>
+<li><a href=#original-readmemd>Original <code>README.md</code></a>
+<ul>
+<li><a href=#1-overview>1. Overview</a></li>
+<li><a href=#2-files>2. Files</a></li>
+<li><a href=#3-building-the-lab>3. Building the Lab</a></li>
+<li><a href=#4-handing-in-the-lab>4. Handing in the Lab</a></li>
+<li><a href=#5-autograding-the-lab>5. Autograding the Lab</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</aside>
+</main>
+</body>
+</html>

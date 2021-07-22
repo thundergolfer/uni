@@ -1,11 +1,346 @@
-<!doctype html><html lang=en dir=ltr><head><meta name=generator content="Hugo 0.85.0"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="uni'   A mono-repo containing code I&rsquo;ve written or studied for self-education purposes.
+<!doctype html><html lang=en dir=ltr>
+<head>
+<meta name=generator content="Hugo 0.86.0">
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="uni'   A mono-repo containing code I&rsquo;ve written or studied for self-education purposes.
 Contents #  Currently, the contents of this mono-repo are broken down into the following top-level concerns:
- Algorithms - Code for Leetcode, mostly. Books - Code for all kinds of practical exercises in various great textbooks. Homework, practicals, exercises, labs, assignments, etc.  Computer Systems: A Programmer&rsquo;s Perspective Structure and Interpretation of Computer Programs 🚧 The Algorithm Design Manual   Concurrency - Code written to learn how to solve concurrency problems/exercises using code."><meta name=theme-color content="#FFFFFF"><meta property="og:title" content><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:url" content="http://thundergolfer.com/uni/"><title>| uni' docs</title><link rel=manifest href=/uni/manifest.json><link rel=icon href=/uni/favicon.png type=image/x-icon><link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous><script defer src=/uni/flexsearch.min.js></script><script defer src=/uni/en.search.min.cda760aa4cc7f09061c42ba631205dfc12c91217813dbb45c86e12fbc20a8085.js integrity="sha256-zadgqkzH8JBhxCumMSBd/BLJEheBPbtFyG4S+8IKgIU=" crossorigin=anonymous></script><link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/index.xml title="uni' docs"></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
-<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a href=/uni/><span>uni' docs</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><span>Books</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a><ul><li><span>Labs</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a><ul></ul></li></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/>Data Science From Scratch</a><ul><li><a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/2_a_crash_course_in_python/>2 a Crash Course in Python</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/fp_in_scala/>Fp in Scala</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a><ul></ul></li><li><span>Databases</span><ul><li><a href=http://thundergolfer.com/uni/docs/databases/fromscratch_heapfile_and_hashindex/>Fromscratch Heapfile and Hashindex</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a><ul></ul></li></ul></li><li><span>Operating Systems</span><ul><li><span>Linux</span><ul><li><a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a><ul></ul></li></ul></li></ul></li><li><span>Optimization</span><ul><li><a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/>Performance</a><ul><li><span>Jvm</span><ul><li><a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a><ul></ul></li></ul></li></ul></li><li><span>Tools</span><ul><li><span>Build</span><ul><li><span>Bazel</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a><ul></ul></li></ul></li><li><span>Docs</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a><ul></ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/uni/svg/menu.svg class=book-icon alt=Menu></label>
-<strong></strong><label for=toc-control><img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#contents>Contents</a></li><li><a href=#setup>Setup</a><ul><li><a href=#prerequisites>Prerequisites</a></li></ul></li><li><a href=#development>Development</a><ul><li><a href=#build>Build</a></li><li><a href=#test>Test</a></li></ul></li></ul></nav></aside></header><article class=markdown><h1 align=center><code>uni'</code></h1><p align=center><a href=https://github.com/thundergolfer/uni/actions/><img src=https://github.com/thundergolfer/uni/workflows/CI/badge.svg></a></p><hr><p>A mono-repo containing code I&rsquo;ve written or studied for self-education purposes.</p><h2 id=contents>Contents
-<a class=anchor href=#contents>#</a></h2><p>Currently, the contents of this mono-repo are broken down into the following top-level concerns:</p><ul><li><a href=/algorithms><strong>Algorithms</strong></a> - Code for Leetcode, mostly.</li><li><a href=/books><strong>Books</strong></a> - Code for all kinds of practical exercises in various great textbooks. Homework, practicals, exercises, labs, assignments, etc.<ul><li><a href=/books/computer_systems_app>Computer Systems: A Programmer&rsquo;s Perspective</a></li><li><a href=/books/sicp>Structure and Interpretation of Computer Programs</a> 🚧</li><li><a href=/books/the_algorithm_design_manual>The Algorithm Design Manual</a></li></ul></li><li><a href=/concurrency><strong>Concurrency</strong></a> - Code written to learn how to solve concurrency problems/exercises using code.</li><li><a href=/databases><strong>Databases</strong></a> - SQL, mostly.</li><li><a href=/docs><strong>Docs</strong></a> - Static-site documentation for monorepo. Served at <a href=https://thundergolfer.com/uni,>https://thundergolfer.com/uni,</a> or viewable locally (see readme instructions within folder).</li><li><a href=/machine_learning><strong>Machine Learning</strong></a> - H Y P E</li><li><a href=/performance><strong>Performance</strong></a> - Code for learning about how certain programs change in system resource usage under load.</li><li><a href=/operating_systems><strong>Operating Systems</strong></a> - Code written to learn how UNIX (Linux, macOS) operating systems actually work.</li><li><a href=/optimization><strong>Optimization</strong></a> - Code written to learn how to solve optimization problems using code, particularly using the kinds of optimization algorithms used in Machine Learning.</li><li><a href=/third_party><strong>third_party</strong></a> - Code and configuration for managing third-party code/packages in Bazel, and not of interest in of itself.</li><li><a href=/tools><strong>Tools</strong></a> - Tooling code, scripts, and configuration, serving the repository&rsquo;s needs and not of interest in of itself.</li></ul><h2 id=setup>Setup
-<a class=anchor href=#setup>#</a></h2><h3 id=prerequisites>Prerequisites
-<a class=anchor href=#prerequisites>#</a></h3><ol><li><a href=https://nixos.org/>Nix</a> - Provide a hermetic developer environment. Runs properly on my machine, runs properly on everyone else&rsquo;s. At least, that&rsquo;s the idea.</li><li><a href=https://direnv.net/>Direnv</a> - Integrate with Nix&rsquo;s <code>nix-shell</code> to provide hermetic developer environment.</li><li><a href=https://github.com/target/lorri><code>lorri</code></a></li><li><a href=https://bazel.build/>Bazel</a> - build everything fast, and correctly, no matter the language.</li><li><a href=https://github.com/facebook/zstd><code>zstd</code></a> - Required during install of Bazel Python toolchain on OSX.</li></ol><p>Importantly, the following components are included in the repo&rsquo;s Nix environment specification:</p><ul><li><em>Python 3</em></li><li><em>Racket</em> lang, used in <a href=/books/sicp><code>books/sicp</code></a></li></ul><h2 id=development>Development
-<a class=anchor href=#development>#</a></h2><h3 id=build>Build
-<a class=anchor href=#build>#</a></h3><p><code>bazel build //...</code></p><h3 id=test>Test
-<a class=anchor href=#test>#</a></h3><p><code>bazel test //...</code></p></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#contents>Contents</a></li><li><a href=#setup>Setup</a><ul><li><a href=#prerequisites>Prerequisites</a></li></ul></li><li><a href=#development>Development</a><ul><li><a href=#build>Build</a></li><li><a href=#test>Test</a></li></ul></li></ul></nav></div></aside></main></body></html>
+ Algorithms - Code for Leetcode, mostly. Books - Code for all kinds of practical exercises in various great textbooks. Homework, practicals, exercises, labs, assignments, etc.  Computer Systems: A Programmer&rsquo;s Perspective Structure and Interpretation of Computer Programs 🚧 The Algorithm Design Manual   Concurrency - Code written to learn how to solve concurrency problems/exercises using code.">
+<meta name=theme-color content="#FFFFFF"><meta property="og:title" content>
+<meta property="og:description" content>
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://thundergolfer.com/uni/">
+<title> | uni' docs</title>
+<link rel=manifest href=/uni/manifest.json>
+<link rel=icon href=/uni/favicon.png type=image/x-icon>
+<link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous>
+<script defer src=/uni/flexsearch.min.js></script>
+<script defer src=/uni/en.search.min.cda760aa4cc7f09061c42ba631205dfc12c91217813dbb45c86e12fbc20a8085.js integrity="sha256-zadgqkzH8JBhxCumMSBd/BLJEheBPbtFyG4S+8IKgIU=" crossorigin=anonymous></script>
+<link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/index.xml title="uni' docs">
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a href=/uni/><span>uni' docs</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul>
+<li>
+<span>Books</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a>
+<ul>
+<li>
+<span>Labs</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/>Data Science From Scratch</a>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/2_a_crash_course_in_python/>2 a Crash Course in Python</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/books/fp_in_scala/>Fp in Scala</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a>
+<ul>
+</ul>
+</li>
+<li>
+<span>Databases</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/databases/fromscratch_heapfile_and_hashindex/>Fromscratch Heapfile and Hashindex</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<span>Operating Systems</span>
+<ul>
+<li>
+<span>Linux</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<span>Optimization</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/performance/>Performance</a>
+<ul>
+<li>
+<span>Jvm</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<span>Tools</span>
+<ul>
+<li>
+<span>Build</span>
+<ul>
+<li>
+<span>Bazel</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a>
+<ul>
+</ul>
+</li>
+<li>
+<a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<span>Docs</span>
+<ul>
+<li>
+<a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a>
+<ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=/uni/svg/menu.svg class=book-icon alt=Menu>
+</label>
+<strong></strong>
+<label for=toc-control>
+<img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents>
+<ul>
+<li><a href=#contents>Contents</a></li>
+<li><a href=#setup>Setup</a>
+<ul>
+<li><a href=#prerequisites>Prerequisites</a></li>
+</ul>
+</li>
+<li><a href=#development>Development</a>
+<ul>
+<li><a href=#build>Build</a></li>
+<li><a href=#test>Test</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</aside>
+</header>
+<article class=markdown><h1 align=center><code>uni'</code></h1>
+<p align=center>
+<a href=https://github.com/thundergolfer/uni/actions/>
+<img src=https://github.com/thundergolfer/uni/workflows/CI/badge.svg>
+</a>
+</p>
+<hr>
+<p>A mono-repo containing code I&rsquo;ve written or studied for self-education purposes.</p>
+<h2 id=contents>
+Contents
+<a class=anchor href=#contents>#</a>
+</h2>
+<p>Currently, the contents of this mono-repo are broken down into the following top-level concerns:</p>
+<ul>
+<li><a href=/algorithms><strong>Algorithms</strong></a> - Code for Leetcode, mostly.</li>
+<li><a href=/books><strong>Books</strong></a> - Code for all kinds of practical exercises in various great textbooks. Homework, practicals, exercises, labs, assignments, etc.
+<ul>
+<li><a href=/books/computer_systems_app>Computer Systems: A Programmer&rsquo;s Perspective</a></li>
+<li><a href=/books/sicp>Structure and Interpretation of Computer Programs</a> 🚧</li>
+<li><a href=/books/the_algorithm_design_manual>The Algorithm Design Manual</a></li>
+</ul>
+</li>
+<li><a href=/concurrency><strong>Concurrency</strong></a> - Code written to learn how to solve concurrency problems/exercises using code.</li>
+<li><a href=/databases><strong>Databases</strong></a> - SQL, mostly.</li>
+<li><a href=/docs><strong>Docs</strong></a> - Static-site documentation for monorepo. Served at <a href=https://thundergolfer.com/uni,>https://thundergolfer.com/uni,</a> or viewable locally (see readme instructions within folder).</li>
+<li><a href=/machine_learning><strong>Machine Learning</strong></a> - H Y P E</li>
+<li><a href=/performance><strong>Performance</strong></a> - Code for learning about how certain programs change in system resource usage under load.</li>
+<li><a href=/operating_systems><strong>Operating Systems</strong></a> - Code written to learn how UNIX (Linux, macOS) operating systems actually work.</li>
+<li><a href=/optimization><strong>Optimization</strong></a> - Code written to learn how to solve optimization problems using code, particularly using the kinds of optimization algorithms used in Machine Learning.</li>
+<li><a href=/third_party><strong>third_party</strong></a> - Code and configuration for managing third-party code/packages in Bazel, and not of interest in of itself.</li>
+<li><a href=/tools><strong>Tools</strong></a> - Tooling code, scripts, and configuration, serving the repository&rsquo;s needs and not of interest in of itself.</li>
+</ul>
+<h2 id=setup>
+Setup
+<a class=anchor href=#setup>#</a>
+</h2>
+<h3 id=prerequisites>
+Prerequisites
+<a class=anchor href=#prerequisites>#</a>
+</h3>
+<ol>
+<li><a href=https://nixos.org/>Nix</a> - Provide a hermetic developer environment. Runs properly on my machine, runs properly on everyone else&rsquo;s. At least, that&rsquo;s the idea.</li>
+<li><a href=https://direnv.net/>Direnv</a> - Integrate with Nix&rsquo;s <code>nix-shell</code> to provide hermetic developer environment.</li>
+<li><a href=https://github.com/target/lorri><code>lorri</code></a></li>
+<li><a href=https://bazel.build/>Bazel</a> - build everything fast, and correctly, no matter the language.</li>
+<li><a href=https://github.com/facebook/zstd><code>zstd</code></a> - Required during install of Bazel Python toolchain on OSX.</li>
+</ol>
+<p>Importantly, the following components are included in the repo&rsquo;s Nix environment specification:</p>
+<ul>
+<li><em>Python 3</em></li>
+<li><em>Racket</em> lang, used in <a href=/books/sicp><code>books/sicp</code></a></li>
+</ul>
+<h2 id=development>
+Development
+<a class=anchor href=#development>#</a>
+</h2>
+<h3 id=build>
+Build
+<a class=anchor href=#build>#</a>
+</h3>
+<p><code>bazel build //...</code></p>
+<h3 id=test>
+Test
+<a class=anchor href=#test>#</a>
+</h3>
+<p><code>bazel test //...</code></p>
+</article>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+</footer>
+<div class=book-comments>
+</div>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#contents>Contents</a></li>
+<li><a href=#setup>Setup</a>
+<ul>
+<li><a href=#prerequisites>Prerequisites</a></li>
+</ul>
+</li>
+<li><a href=#development>Development</a>
+<ul>
+<li><a href=#build>Build</a></li>
+<li><a href=#test>Test</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</aside>
+</main>
+</body>
+</html>
