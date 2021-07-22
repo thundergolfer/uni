@@ -21,7 +21,8 @@ Currently, the contents of this mono-repo are broken down into the following top
     * [Computer Systems: A Programmer's Perspective](/books/computer_systems_app)
     * [Data Science From Scratch](/books/data_science_from_scratch)
     * [Functional Programming in Scala](/books/fp_in_scala)  
-    * [Structure and Interpretation of Computer Programs](/books/sicp) 🚧
+    * [Programming Rust](/books/programming_rust)
+    * [Structure and Interpretation of Computer Programs](/books/sicp)
     * [The Algorithm Design Manual](/books/the_algorithm_design_manual)
     * [The Rust Programming Language](/books/the_rust_programming_language)
 * [**Concurrency**](/concurrency) - Code written to learn how to solve concurrency problems/exercises using code.

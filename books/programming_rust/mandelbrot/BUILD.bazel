@@ -1,10 +1,9 @@
 load("@rules_rust//rust:defs.bzl", "rust_binary")
-load("@crates//:defs.bzl", "crate")
 load("@crates//:defs.bzl", "crates_from")
 
-# 2. Programming a guessing game.
+# Chapter 2: A Tour of Rust - Concurrency
 rust_binary(
-    name = "guessing_game",
+    name = "mandelbrot",
     srcs = ["src/main.rs"],
     deps = crates_from(":Cargo.toml"),
 )

@@ -207,6 +207,8 @@ crate_universe(
     name = "crates",
     cargo_toml_files = [
         "//books/the_rust_programming_language/guessing_game:Cargo.toml",
+        "//books/programming_rust/actix-gcd:Cargo.toml",
+        "//books/programming_rust/mandelbrot:Cargo.toml",
     ],
     resolver_download_url_template = DEFAULT_URL_TEMPLATE,
     resolver_sha256s = DEFAULT_SHA256_CHECKSUMS,

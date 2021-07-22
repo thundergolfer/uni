@@ -1,0 +1,12 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_test")
+
+# Chapter 2: A Tour of Rust
+rust_binary(
+    name = "hello",
+    srcs = ["src/main.rs"],
+)
+
+rust_test(
+    name = "hello_test",
+    srcs = ["src/main.rs"],
+)
