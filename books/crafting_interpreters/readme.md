@@ -17,7 +17,9 @@ Textbook code is available at https://github.com/munificent/craftinginterpreters
 
 #### Usage
 
-At the moment you can run the `jlox` exe in 'repl' mode: 
+At the moment all my JLox implementation can do is scan/lex Lox and print out the tokens. 
+
+You can run the `jlox` exe in 'repl' mode: 
 
 ```bash
 bazel run //books/crafting_interpreters/jlox/lox:Lox
