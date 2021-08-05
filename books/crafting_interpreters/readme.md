@@ -10,3 +10,28 @@ own folder.
 
 * [`jlox`](./jlox) (Java Implementation)
 * [`clox`](./clox) (C Implementation)
+
+Textbook code is available at https://github.com/munificent/craftinginterpreters/.
+
+### `jlox` 
+
+#### Usage
+
+At the moment you can run the `jlox` exe in 'repl' mode: 
+
+```bash
+bazel run //books/crafting_interpreters/jlox/lox:Lox
+> var foo = 12;
+VAR var null
+IDENTIFIER foo null
+EQUAL = null
+NUMBER 123 123.0
+SEMICOLON ; null
+EOF  null
+```
+
+Or you can pass it a file: 
+
+```bash
+bazel run //books/crafting_interpreters/jlox/lox:Lox -- foo.lox
+```
