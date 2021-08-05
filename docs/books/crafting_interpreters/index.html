@@ -5,7 +5,7 @@
 <meta name=description content="Crafting Interpreters #   by Robert Nystrom (@munificentbob)
  I worked on the 1st Print Edition. Unlike a lot of the other books worked on in this monorepo, the code doesn&rsquo;t follow a chapter-by-chapter structure, as it&rsquo;s not appropriate in this case.
 This book covers off two implementations of a programming language called Lox, and each gets its own folder.
- jlox (Java Implementation) clox (C Implementation)  ">
+ jlox (Java Implementation) clox (C Implementation)  Textbook code is available at https://github.">
 <meta name=theme-color content="#FFFFFF"><meta property="og:title" content>
 <meta property="og:description" content>
 <meta property="og:type" content="website">
@@ -15,7 +15,7 @@ This book covers off two implementations of a programming language called Lox, a
 <link rel=icon href=/uni/favicon.png type=image/x-icon>
 <link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous>
 <script defer src=/uni/flexsearch.min.js></script>
-<script defer src=/uni/en.search.min.20b4eb98850c2029d2581abe1e131a65be0c6bd28e4cfe3c879918df59072cc8.js integrity="sha256-ILTrmIUMICnSWBq+HhMaZb4Ma9KOTP48h5kY31kHLMg=" crossorigin=anonymous></script>
+<script defer src=/uni/en.search.min.2b306b07b85e1288fcff89cb5a4ea78f12a733f653f54d4d3bcba78fcd8b651c.js integrity="sha256-KzBrB7heEoj8/4nLWk6njxKnM/ZT9U1NO8unj82LZRw=" crossorigin=anonymous></script>
 <link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/books/crafting_interpreters/index.xml title="uni' docs">
 </head>
 <body dir=ltr>
@@ -244,7 +244,11 @@ This book covers off two implementations of a programming language called Lox, a
 <aside class="hidden clearfix">
 <nav id=TableOfContents>
 <ul>
-<li><a href=#_crafting-interpreters_httpscraftinginterpreterscom><a href=https://craftinginterpreters.com/><em>Crafting Interpreters</em></a></a></li>
+<li><a href=#_crafting-interpreters_httpscraftinginterpreterscom><a href=https://craftinginterpreters.com/><em>Crafting Interpreters</em></a></a>
+<ul>
+<li><a href=#jlox><code>jlox</code></a></li>
+</ul>
+</li>
 </ul>
 </nav>
 </aside>
@@ -264,7 +268,27 @@ own folder.</p>
 <li><a href=./jlox><code>jlox</code></a> (Java Implementation)</li>
 <li><a href=./clox><code>clox</code></a> (C Implementation)</li>
 </ul>
-</article>
+<p>Textbook code is available at <a href=https://github.com/munificent/craftinginterpreters/>https://github.com/munificent/craftinginterpreters/</a>.</p>
+<h3 id=jlox>
+<code>jlox</code>
+<a class=anchor href=#jlox>#</a>
+</h3>
+<h4 id=usage>
+Usage
+<a class=anchor href=#usage>#</a>
+</h4>
+<p>At the moment you can run the <code>jlox</code> exe in &lsquo;repl&rsquo; mode:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>bazel run //books/crafting_interpreters/jlox/lox:Lox
+&gt; var foo <span style=color:#f92672>=</span> 12;
+VAR var null
+IDENTIFIER foo null
+EQUAL <span style=color:#f92672>=</span> null
+NUMBER <span style=color:#ae81ff>123</span> 123.0
+SEMICOLON ; null
+EOF  null
+</code></pre></div><p>Or you can pass it a file:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>bazel run //books/crafting_interpreters/jlox/lox:Lox -- foo.lox
+</code></pre></div></article>
 <footer class=book-footer>
 <div class="flex flex-wrap justify-between">
 </div>
@@ -278,7 +302,11 @@ own folder.</p>
 <div class=book-toc-content>
 <nav id=TableOfContents>
 <ul>
-<li><a href=#_crafting-interpreters_httpscraftinginterpreterscom><a href=https://craftinginterpreters.com/><em>Crafting Interpreters</em></a></a></li>
+<li><a href=#_crafting-interpreters_httpscraftinginterpreterscom><a href=https://craftinginterpreters.com/><em>Crafting Interpreters</em></a></a>
+<ul>
+<li><a href=#jlox><code>jlox</code></a></li>
+</ul>
+</li>
 </ul>
 </nav>
 </div>
