@@ -19,6 +19,7 @@ Currently, the contents of this mono-repo are broken down into the following top
 * [**Algorithms**](/algorithms) - Code for Leetcode, mostly.
 * [**Books**](/books) - Code for all kinds of practical exercises in various great textbooks. Homework, practicals, exercises, labs, assignments, etc.
     * [Computer Systems: A Programmer's Perspective](/books/computer_systems_app)
+    * [Crafting Interpreters](/books/crafting_interpreters)
     * [Data Science From Scratch](/books/data_science_from_scratch)
     * [Functional Programming in Scala](/books/fp_in_scala)  
     * [Programming Rust](/books/programming_rust)
