@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
+main() {
+  bazel build --ui_event_filters=-info,-stdout,-stderr --noshow_progress \
+    //books/crafting_interpreters/jlox/tool:GenerateAst
+  "$REPO_ROOT"/bazel-bin/books/crafting_interpreters/jlox/tool/GenerateAst "$@"
+}
+
+main "$@"
