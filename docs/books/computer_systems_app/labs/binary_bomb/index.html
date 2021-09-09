@@ -286,7 +286,7 @@ Original <code>README.md</code>
 It was modified only to conform to standard Markdown formatting.</p>
 <p>It is not particularly useful for people doing self-study, but is reproduced here anyway.</p>
 <hr>
-<pre><code>#######################################################
+<pre tabindex=0><code>#######################################################
 # CS:APP Bomb Lab
 # Directions to Instructors
 #
@@ -468,7 +468,7 @@ correctly, else you and your students won&rsquo;t be able to run your bombs.</p>
 <p>Once you have updated the configuration files, modify the Latex lab
 writeup in ./writeup/bomblab.tex for your environment. Then type the
 following in the ./writeup directory:</p>
-<pre><code>unix&gt; make clean
+<pre tabindex=0><code>unix&gt; make clean
 unix&gt; make
 </code></pre><p>This will create ps and pdf versions of the writeup</p>
 <h4 id=44-running-the-online-bomb-lab>
@@ -535,13 +535,13 @@ tars up a notifying custom bomb with bombID=n, and delivers the tar
 file to the browser. The student then saves the tar file to disk. When
 the student untars this file, it creates a directory (./bomb<n>) with
 the following four files:</p>
-<pre><code>bomb*        Notifying custom bomb executable
+<pre tabindex=0><code>bomb*        Notifying custom bomb executable
 bomb.c       Source code for the main bomb routine
 ID           Identifies the student associated with this bomb
 README       Lists bomb number, student, and email address
 </code></pre><p>The request server also creates a directory (bomblab/bombs/bomb<n>)
 that contains the following files:</p>
-<pre><code>bomb*        Custom bomb executable 
+<pre tabindex=0><code>bomb*        Custom bomb executable 
 bomb.c       Source code for main routine
 bomb-quiet*  A quiet version of bomb used for autograding
 ID           Identifies the user name assigned to this bomb
@@ -605,7 +605,7 @@ offer the lab. It&rsquo;s provided only for completeness.</p>
 by running some tests. We do this by typing</p>
 </li>
 </ul>
-<pre><code>linux&gt; make cleanallfiles   
+<pre tabindex=0><code>linux&gt; make cleanallfiles   
 linux&gt; make start
 </code></pre><p>Then we request a bomb for ourselves by pointing a Web browser at <code>http://$SERVER_NAME:$REQUESTD_PORT</code></p>
 <p>After saving our bomb to disk, we untar it, copy it to a host in the
@@ -613,9 +613,9 @@ approved list in src/config.h, and then explode and defuse it a couple
 of times to make sure that the explosions and diffusion are properly
 recorded on the scoreboard, which we check at <code>http://$SERVER_NAME:$REQUESTD_PORT/scoreboard</code></p>
 <p>Once we&rsquo;re satisfied that everything is OK, we stop the lab</p>
-<pre><code>linux&gt; make stop
+<pre tabindex=0><code>linux&gt; make stop
 </code></pre><p>and then go live:</p>
-<pre><code>linux&gt; make cleanallfiles
+<pre tabindex=0><code>linux&gt; make cleanallfiles
 linux&gt; make start
 </code></pre><p>Once we go live, we type &ldquo;make stop&rdquo; and &ldquo;make start&rdquo; as often as we
 need to, but we are careful never to type &ldquo;make cleanallfiles&rdquo; again.</p>
@@ -633,9 +633,9 @@ manually. The makebomb.pl script also generates the bomb&rsquo;s solution.
 Type &ldquo;./makebomb.pl -h&rdquo; to see its arguments.</p>
 <p>Option 1: The simplest approach for offering the offline Bomb Lab is
 to build a single generic bomb that every student attempts to defuse:</p>
-<pre><code>linux&gt; ./makebomb.pl -s ./src -b ./bombs
+<pre tabindex=0><code>linux&gt; ./makebomb.pl -s ./src -b ./bombs
 </code></pre><p>This will create a generic bomb and some other files in ./bombs/bomb0:</p>
-<pre><code>bomb*        Generic bomb executable (handout to students)
+<pre tabindex=0><code>bomb*        Generic bomb executable (handout to students)
 bomb.c       Source code for main routine (handout to students)
 bomb-quiet*  Ignore this
 ID           Ignore this
@@ -645,17 +645,17 @@ solution.txt The solution for this bomb
 </code></pre><p>You will handout only two of these files to the students: <code>./bomb</code> and <code>./bomb.c</code></p>
 <p>The students will handin their solution files, which you can validate
 by feeding to the bomb:</p>
-<pre><code>linux&gt; cd bombs/bomb0
+<pre tabindex=0><code>linux&gt; cd bombs/bomb0
 linux&gt; ./bomb &lt; student_solution.txt
 </code></pre><p>This option is easy for the instructor, but we don&rsquo;t recommend it
 because it is too easy for the students to cheat.</p>
 <p>Option 2. The other option for offering an offline lab is to use the
 makebomb.pl script to build a unique quiet custom bomb for each
 student:</p>
-<pre><code>linux&gt; ./makebomb.pl -i &lt;n&gt; -s ./src -b ./bombs -l bomblab -u &lt;email&gt; -v &lt;uid&gt;
+<pre tabindex=0><code>linux&gt; ./makebomb.pl -i &lt;n&gt; -s ./src -b ./bombs -l bomblab -u &lt;email&gt; -v &lt;uid&gt;
 </code></pre><p>This will create a quiet custom bomb in ./bombs/bomb<n> for the
 student whose email address is <email> and whose user name is <uid>:</p>
-<pre><code>bomb*        Custom bomb executable (handout to student)
+<pre tabindex=0><code>bomb*        Custom bomb executable (handout to student)
 bomb.c       Source code for main routine (handout to student)
 bomb-quiet*  Ignore this
 ID           Identifies the student associated with this bomb
@@ -666,7 +666,7 @@ solution.txt The solution for this bomb
 and README.</p>
 <p>Each student will hand in their solution file, which you can validate
 by hand by running their custom bomb against their solution:</p>
-<pre><code>linux&gt; cd ./bombs/bomb&lt;n&gt;
+<pre tabindex=0><code>linux&gt; cd ./bombs/bomb&lt;n&gt;
 linux&gt; ./bomb &lt; student_n_solution.txt
 </code></pre><p>The source code for the different phase variants is in <code>./src/phases/</code>.</p>
 </article>
