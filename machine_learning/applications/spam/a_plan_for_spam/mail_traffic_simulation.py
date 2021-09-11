@@ -64,8 +64,6 @@ def simulate_senders():
         for i, example in enumerate(raw_enron_dataset):
             # NOTE: Encoding maybe should be encoding="latin-1"
             server.sendmail(sender_email, "foo@canva.com", example.email.encode("utf-8"))
-            if i == 10:
-                exit(0)
 
 
 if __name__ == "__main__":
