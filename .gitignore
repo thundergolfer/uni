@@ -67,6 +67,12 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Python
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Rust
 books/the_rust_programming_language/**/target/**
 books/the_rust_programming_language/**/main

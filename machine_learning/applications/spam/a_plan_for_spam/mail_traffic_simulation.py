@@ -4,6 +4,7 @@ and the receiving of emails.
 """
 
 import argparse
+import json
 import smtpd
 import smtplib
 import sys
@@ -16,10 +17,6 @@ from typing import Tuple
 
 ServerAddr = Tuple[str, int]
 
-# python -m smtpd -c DebuggingServer -n localhost:1025
-
-# server.process_message()
-
 
 class MessageTransferAgentServer(smtpd.DebuggingServer):
     def __init__(self, localaddr, remoteaddr):
@@ -29,6 +26,8 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
         print("TODO - Store user email in mailboxes")
         print("TODO - Log event")
         print("TODO - Mailboxes need to be read")
+        # TODO - Maybe this module should just write the emails to mailboxes on disk,
+        #        and some other module simulates the clients that read the mailboxes from disk.
         super().process_message(
             peer,
             mailfrom,
@@ -49,9 +48,24 @@ def simulate_senders():
     # senders (including spammers) direct traffic at our fraud-detecting SMTP server.
     mail_server_addr = config.mail_server_addr
     sender_email = "jonathon@canva.com"
+
+    enron_raw_dataset_path = (
+        "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/a_plan_for_spam/"
+        "datasets/enron/processed_raw_dataset.json"
+    )
+
+    from datasets.enron.dataset import RawEnronDataset, deserialize_dataset
+
+    raw_enron_dataset = deserialize_dataset(enron_raw_dataset_path)
+
     with smtplib.SMTP(mail_server_addr[0], mail_server_addr[1]) as server:
         server.ehlo()
-        server.sendmail(sender_email, "foo@canva.com", "subject: Hello World\nThis is me.")
+
+        for i, example in enumerate(raw_enron_dataset):
+            # NOTE: Encoding maybe should be encoding="latin-1"
+            server.sendmail(sender_email, "foo@canva.com", example.email.encode("utf-8"))
+            if i == 10:
+                exit(0)
 
 
 if __name__ == "__main__":
