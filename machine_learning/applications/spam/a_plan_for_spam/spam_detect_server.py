@@ -38,7 +38,7 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
         except ValueError:
             logging.error("Failed to parse POST data.")
             # TODO(Jonathon): Fix this error handling
-            result = 'error'
+            result = "error"
         self.send_response(200)
         self.end_headers()
         self.wfile.write(f"{result}\n".encode("utf-8"))
@@ -46,7 +46,7 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
 
 def start() -> None:
     logging.info("Starting spam-detection API server.")
-    addr = config.spam_detection_api_addr
+    addr = config.spam_detect_api_addr
     server = http.server.HTTPServer(addr, SpamDetectionHandler)
     server.serve_forever()
 

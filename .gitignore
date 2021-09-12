@@ -72,6 +72,9 @@ dkms.conf
 __pycache__/
 *.py[cod]
 *$py.class
+# Pytest
+pytest.ini
+pytestdebug.log
 
 # Rust
 books/the_rust_programming_language/**/target/**

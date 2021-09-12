@@ -63,11 +63,13 @@ def simulate_senders():
 
         for i, example in enumerate(raw_enron_dataset):
             # NOTE: Encoding maybe should be encoding="latin-1"
-            server.sendmail(sender_email, "foo@canva.com", example.email.encode("utf-8"))
+            server.sendmail(
+                sender_email, "foo@canva.com", example.email.encode("utf-8")
+            )
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description="Process some integers.")
     parser.add_argument("mode", choices=["senders", "receivers"])
     args = parser.parse_args()
 
@@ -79,4 +81,3 @@ if __name__ == "__main__":
         simulate_receivers()
     else:
         raise AssertionError(f"{args.mode} is an illegal mode value.")
-

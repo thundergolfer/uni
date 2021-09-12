@@ -9,7 +9,7 @@ import shutil
 import tarfile
 import urllib.request
 
-from typing import Sequence, Union
+from typing import List, Sequence, Union
 
 from dataset import Example, RawEnronDataset
 
@@ -23,9 +23,7 @@ enron_dataset_files = {
 }
 
 
-
-
-def _download_and_extract_dataset(destination_root_path: str):
+def _download_and_extract_dataset(destination_root_path: pathlib.Path):
     logging.info("Downloading raw enron dataset.")
     for key, files in enron_dataset_files.items():
         for value in files:
@@ -60,7 +58,7 @@ def main(argv: Union[Sequence[str], None] = None) -> int:
     if not args.skip_download:
         _download_and_extract_dataset(destination_root_path=destination_root_path)
 
-    ds: RawEnronDataset = []
+    ds: List[Example] = []
     for pth in destination_root_path.glob('**/*'):
         if pth.is_dir() or str(pth).endswith("tar.gz"):
             continue
