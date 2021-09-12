@@ -26,6 +26,19 @@ SpamClassifier = Callable[[Email], Prediction]
 Dataset = Generator[dataset.Example, None, None]
 TrainingFunc = Callable[[Dataset], Any]
 ModelBuilder = Callable[[Dataset, Optional[TrainingFunc]], SpamClassifier]
+# A Classifier is produced by supplying [Dataset AND TrainingFunc] OR [Classifier]
+# How to model this? Passing no Dataset and no TrainingFunc to a builder, which just returns
+# the Classifier? 
+# You could do the builder as some kind of functional pipeline. A step in the pipeline can
+# modify the Dataset, modify the TrainingFunc, or modify the Classifier. The resulting modifications
+# are passed down to the next step. If the Classifier
+# isn't present, a step must produce the Classifier. 
+# That's probably hella overcomplicated though.
+#
+# def build_classifier(
+#     steps: Callable[[Dataset, TrainingFunc, Optional[SpamClassifier]], [Dataset, TrainingFunc, Optional[SpamClassifier]]]
+#     final: Callable[[Dataset, TrainingFunc, Optional[SpamClassifier]], SpamClassifier],
+# ): ...
 
 MODEL_REGISTRY_FILENAME = "registry.json"
 
