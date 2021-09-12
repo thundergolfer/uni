@@ -8,7 +8,7 @@
 This code is for education, both of myself and others who care to engage with it. As such,
 it has understanding-oriented rules.
 
-1. 'From scratch'. No libraries or frameworks. Write a basic version of what's needed.
+1. 'From scratch'. No 3rd-party libraries or frameworks (stdlib OK). Write a basic version of what's needed.
 2. Run locally. Let's avoid the pain and added complexity of Docker, Kubernetes, AWS, etc.
 3. End-to-end, deliver business value. Don't build only the model. The model is not an application.
 
