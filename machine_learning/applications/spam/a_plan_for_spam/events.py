@@ -4,10 +4,10 @@ the application, and the event clients that are used to emit them.
 """
 import uuid
 import enum
-from typing import Callable, Generic, Mapping, NamedTuple, Union, TypeVar
+from typing import Callable, NamedTuple, Optional, Union
 
 UUID = str
-Property = Union[str, int, float, UUID]
+Property = Union[str, int, float, bool, UUID]
 
 
 # Want event types to be globally unique.
@@ -27,6 +27,7 @@ class EmailSpamFilteredProperties(NamedTuple):
 class SpamPredictedEventProperties(NamedTuple):
     spam_detect_model_tag: str
     confidence: float
+    spam: bool
 
 
 class Event(NamedTuple):
@@ -78,10 +79,12 @@ class SpamDetectAPIEventPublisher:
         self,
         *,
         spam_detect_model_tag: str,
+        spam: bool,
         confidence: float,
     ):
         props = SpamPredictedEventProperties(
             spam_detect_model_tag=spam_detect_model_tag,
+            spam=spam,
             confidence=confidence,
         )
         event = Event(
@@ -91,3 +94,19 @@ class SpamDetectAPIEventPublisher:
             properties=props,
         )
         self.emit_event(event)
+
+
+def emit_to_console(event: Event) -> None:
+    print(event)
+
+
+def build_event_emitter(
+    to_console: bool, to_file: bool, log_file_path: Optional[str]
+) -> Emitter:
+    def emit(
+        event: Event,
+    ):
+        if to_console:
+            emit_to_console(event)
+
+    return emit

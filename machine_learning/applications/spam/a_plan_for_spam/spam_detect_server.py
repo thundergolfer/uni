@@ -9,10 +9,27 @@ import http.server
 import json
 import logging
 
+import events
 import config
 
 logging.basicConfig(format=config.logging_format_str)
 logging.getLogger().setLevel(logging.DEBUG)
+
+
+logging.info("Building spam-detection API event publisher.")
+emit_event_func = events.build_event_emitter(
+    to_console=True, to_file=False, log_file_path=None
+)
+event_publisher = events.SpamDetectAPIEventPublisher(emit_event=emit_event_func)
+
+
+def detect_spam():
+    # TODO(Jonathon): load and call model
+    event_publisher.emit_spam_predicted_event(
+        spam_detect_model_tag="foo",
+        spam=False,
+        confidence=-1,
+    )
 
 
 class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
@@ -35,6 +52,7 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
             # TODO(Jonathon): Actually handle a POST JSON body with email data
             num = json.loads(data)["number"]
             result = int(num) ** 2
+            detect_spam()
         except ValueError:
             logging.error("Failed to parse POST data.")
             # TODO(Jonathon): Fix this error handling
@@ -46,6 +64,7 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
 
 def start() -> None:
     logging.info("Starting spam-detection API server.")
+
     addr = config.spam_detect_api_addr
     server = http.server.HTTPServer(addr, SpamDetectionHandler)
     server.serve_forever()

@@ -51,6 +51,7 @@ def test_spam_detect_api_event_publisher():
 
     event_publisher.emit_spam_predicted_event(
         spam_detect_model_tag="foo_model_123",
+        spam=False,
         confidence=0.5,
     )
 
