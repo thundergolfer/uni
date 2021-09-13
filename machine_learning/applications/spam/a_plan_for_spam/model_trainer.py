@@ -28,11 +28,11 @@ TrainingFunc = Callable[[Dataset], Any]
 ModelBuilder = Callable[[Dataset, Optional[TrainingFunc]], SpamClassifier]
 # A Classifier is produced by supplying [Dataset AND TrainingFunc] OR [Classifier]
 # How to model this? Passing no Dataset and no TrainingFunc to a builder, which just returns
-# the Classifier? 
+# the Classifier?
 # You could do the builder as some kind of functional pipeline. A step in the pipeline can
 # modify the Dataset, modify the TrainingFunc, or modify the Classifier. The resulting modifications
 # are passed down to the next step. If the Classifier
-# isn't present, a step must produce the Classifier. 
+# isn't present, a step must produce the Classifier.
 # That's probably hella overcomplicated though.
 #
 # def build_classifier(
@@ -76,7 +76,7 @@ def bad_words_spam_classifier(email: Email) -> Prediction:
     for word in bad_words:
         if word in tokens_set:
             bad_words_count += 1
-    return bad_words_count > max_bad_words
+    return 1.0 if bad_words_count > max_bad_words else 0.0
 
 
 def serialize_classifier(
@@ -92,7 +92,7 @@ def store_classifier(
     classifier_func: SpamClassifier,
     classifier_destination_root: pathlib.Path,
     current_git_commit_hash: str,
-) -> None:
+) -> pathlib.Path:
     logging.info("Storing spam classifier to model registry.")
 
     serialized_classifier = serialize_classifier(classifier_func)
@@ -132,6 +132,7 @@ def store_classifier(
         classifier_destination_root=classifier_destination_root,
     )
     logging.info("Done! Classifier model stored 📦.")
+    return classifier_dest_path
 
 
 def classifier_name_from_function(classifier_func: SpamClassifier) -> str:
@@ -201,6 +202,40 @@ def store_classifier_registry_metadata(
         classifier_destination_root / MODEL_REGISTRY_FILENAME, "w"
     ) as model_registry_f:
         json.dump(model_registry_metadata_dict, model_registry_f, indent=4)
+
+
+def load_serialized_classifier(
+    *,
+    classifier_sha256_hash: str,
+    classifier_destination_root: pathlib.Path,
+) -> SpamClassifier:
+    # TODO: Check registry first???
+
+    def check_integrity(*, expected_hash: str, actual_hash: str) -> None:
+        if not expected_hash == actual_hash:
+            err_msg = f"Shasum integrity check failure. Expected '{expected_hash}' but got '{actual_hash}'"
+            raise ValueError(err_msg)
+
+    expected_prefix = "sha256."
+    if not classifier_sha256_hash.startswith(expected_prefix):
+        raise ValueError(
+            f"Classifier sha256 hashes are expected to start with the prefix '{expected_prefix}"
+        )
+
+    classifier_path = classifier_destination_root / classifier_sha256_hash
+    with open(classifier_path, "rb") as f:
+        classifier_bytes = f.read()
+
+    hash_base = hashlib.sha256(classifier_bytes).hexdigest().upper()
+    loaded_classifier_hash = f"sha256.{hash_base}"
+
+    check_integrity(
+        expected_hash=classifier_sha256_hash,
+        actual_hash=loaded_classifier_hash,
+    )
+    import pickle
+
+    return pickle.loads(classifier_bytes)
 
 
 def main(argv: Union[Sequence[str], None] = None) -> int:
