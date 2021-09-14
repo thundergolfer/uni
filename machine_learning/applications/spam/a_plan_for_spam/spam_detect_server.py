@@ -23,7 +23,9 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 logging.info("Building spam-detection API event publisher.")
 emit_event_func = events.build_event_emitter(
-    to_console=True, to_file=False, log_file_path=None
+    to_console=True,
+    to_file=True,
+    log_root_path=config.logging_file_path_root,
 )
 event_publisher = events.SpamDetectAPIEventPublisher(emit_event=emit_event_func)
 

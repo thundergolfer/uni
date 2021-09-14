@@ -56,3 +56,30 @@ def test_spam_detect_api_event_publisher():
     )
 
     assert len(event_log) == 1
+
+
+def test_building_console_based_event_emitter(capsys):
+    emit_func = events.build_event_emitter(
+        to_console=True,
+        to_file=False,
+        log_root_path=None,
+    )
+    test_event = events.Event(
+        type=events.EventTypes.SPAM_PREDICTED,
+        source="TEST_FAKE_SOURCE",
+        id="fake_uuid4",
+        properties=events.SpamPredictedEventProperties(
+            spam_detect_model_tag="test_fake_model_tag",
+            spam=False,
+            confidence=0.2,
+        ),
+    )
+
+    emit_func(event=test_event)
+    out, err = capsys.readouterr()
+    expected = (
+        '{"type": "spam_predicted", "source": "TEST_FAKE_SOURCE", "id": "fake_uuid4", "properties": ['
+        '"test_fake_model_tag", 0.2, false]}\n'
+    )
+    assert expected == out
+    assert "" == err

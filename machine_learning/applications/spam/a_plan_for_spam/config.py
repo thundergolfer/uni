@@ -6,5 +6,6 @@ spam_detect_model_tag = (
 )
 
 logging_format_str = "%(asctime)s %(levelname)s %(message)s"
+logging_file_path_root = "logs/"
 
 spam_model_serialization_destination = "models/"

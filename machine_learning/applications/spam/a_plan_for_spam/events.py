@@ -2,9 +2,11 @@
 The events module defines the schema'd events that flow through
 the application, and the event clients that are used to emit them.
 """
-import uuid
+import json
 import enum
-from typing import Callable, NamedTuple, Optional, Union
+import pathlib
+import uuid
+from typing import Any, Callable, Dict, NamedTuple, Optional, Union
 
 UUID = str
 Property = Union[str, int, float, bool, UUID]
@@ -96,17 +98,42 @@ class SpamDetectAPIEventPublisher:
         self.emit_event(event)
 
 
-def emit_to_console(event: Event) -> None:
+def emit_to_console(event: str) -> None:
     print(event)
 
 
+def emit_to_log_file(
+    event_type: str,
+    event: str,
+    log_root_path: pathlib.Path,
+) -> None:
+    log_filename = f"{event_type}.log"
+    event_log_path = log_root_path / log_filename
+    with open(event_log_path, "a") as f:
+        f.write(event)
+        f.write("\n")
+
+
 def build_event_emitter(
-    to_console: bool, to_file: bool, log_file_path: Optional[str]
+    to_console: bool, to_file: bool, log_root_path: Optional[str]
 ) -> Emitter:
     def emit(
         event: Event,
     ):
+        serialized_event = json.dumps(event._asdict())
         if to_console:
-            emit_to_console(event)
+            emit_to_console(serialized_event)
+        if to_file:
+            if not log_root_path:
+                raise ValueError(
+                    "Must provide 'log_root_path' when sending events to log file."
+                )
+            log_root = pathlib.Path(log_root_path)
+            event_type: str = event.type.value
+            emit_to_log_file(
+                event_type=event_type,
+                event=serialized_event,
+                log_root_path=log_root,
+            )
 
     return emit
