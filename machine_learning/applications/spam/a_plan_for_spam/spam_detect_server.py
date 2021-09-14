@@ -8,9 +8,14 @@ by the model trainer.
 import http.server
 import json
 import logging
+import pathlib
 
 import events
 import config
+import model_trainer
+
+# B/C: https://stackoverflow.com/a/27733727/4885590
+from model_trainer import bad_words_spam_classifier
 
 logging.basicConfig(format=config.logging_format_str)
 logging.getLogger().setLevel(logging.DEBUG)
@@ -23,13 +28,28 @@ emit_event_func = events.build_event_emitter(
 event_publisher = events.SpamDetectAPIEventPublisher(emit_event=emit_event_func)
 
 
-def detect_spam():
-    # TODO(Jonathon): load and call model
-    event_publisher.emit_spam_predicted_event(
-        spam_detect_model_tag="foo",
-        spam=False,
-        confidence=-1,
+def load_spam_detecter() -> model_trainer.SpamClassifier:
+    tag = config.spam_detect_model_tag
+    classifier_dest_root = pathlib.Path(config.spam_model_serialization_destination)
+    return model_trainer.load_serialized_classifier(
+        classifier_sha256_hash=tag,
+        classifier_destination_root=classifier_dest_root,
     )
+
+
+spam_classifier = load_spam_detecter()
+
+
+def detect_spam(email: model_trainer.Email) -> bool:
+    spam_decision_threshold = 0.99
+    prediction = spam_classifier(email=email)
+    is_spam = prediction > spam_decision_threshold
+    event_publisher.emit_spam_predicted_event(
+        spam_detect_model_tag=config.spam_detect_model_tag,
+        spam=is_spam,
+        confidence=prediction,
+    )
+    return is_spam
 
 
 class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
@@ -43,7 +63,7 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
         """
         Handle a post request by returning the square of the number.
 
-        curl --verbose --data "3" localhost:8080/
+        curl --verbose --data '{"number": 3}' localhost:8080/
         """
         logging.info("Handling POST request.")
         length = int(self.headers.get("Content-Length"))
@@ -52,7 +72,11 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
             # TODO(Jonathon): Actually handle a POST JSON body with email data
             num = json.loads(data)["number"]
             result = int(num) ** 2
-            detect_spam()
+            is_spam = detect_spam(email="foo bar foo")
+            if is_spam:
+                logging.info("SPAM!")
+            else:
+                logging.info("HAM")
         except ValueError:
             logging.error("Failed to parse POST data.")
             # TODO(Jonathon): Fix this error handling
