@@ -5,13 +5,30 @@ API to detect Spam email and filter it out of client's inboxes.
 
 import asyncore
 import http
+import json
+import logging
 import smtpd
+import urllib.request
 
 import config
+import events
 
 from typing import Tuple
 
 ServerAddr = Tuple[str, int]
+
+
+logging.basicConfig(format=config.logging_format_str)
+logging.getLogger().setLevel(logging.DEBUG)
+
+
+logging.info("Building mail-server event publisher.")
+emit_event_func = events.build_event_emitter(
+    to_console=True,
+    to_file=True,
+    log_root_path=config.logging_file_path_root,
+)
+event_publisher = events.MailServerEventPublisher(emit_event=emit_event_func)
 
 
 class FilteringServer(smtpd.DebuggingServer):
@@ -35,9 +52,6 @@ class FilteringServer(smtpd.DebuggingServer):
             )
 
     def filter(self):
-        import urllib.request
-        import json
-
         body = {"number": 12}
         spam_detect_api_url = ":".join(
             [str(component) for component in config.spam_detect_api_addr]
@@ -50,6 +64,11 @@ class FilteringServer(smtpd.DebuggingServer):
         req.add_header("Content-Length", str(len(data_b)))
         response = urllib.request.urlopen(req, data_b)
         print(response)
+        event_publisher.emit_email_spam_filtered(
+            email_id="FAKE FAKE",
+            spam_detect_model_tag=config.spam_detect_model_tag,
+            confidence=0.0,
+        )
         return False
 
 

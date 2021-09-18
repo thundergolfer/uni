@@ -2,20 +2,21 @@
 Simulates both the sending of emails (by spammers and non-spammers)
 and the receiving of emails.
 """
-
 import argparse
-import json
-import smtpd
-import smtplib
-import sys
 import asyncore
+import logging
+import smtplib
 import smtpd
+import time
 
 import config
 
 from typing import Tuple
 
 ServerAddr = Tuple[str, int]
+
+logging.basicConfig(format=config.logging_format_str)
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 class MessageTransferAgentServer(smtpd.DebuggingServer):
@@ -66,6 +67,9 @@ def simulate_senders():
             server.sendmail(
                 sender_email, "foo@canva.com", example.email.encode("utf-8")
             )
+            time.sleep(0.5)  # Otherwise this sends emails really quickly.
+            if i % 100 == 0:
+                logging.info(f"Sent {i} emails.")
 
 
 if __name__ == "__main__":
@@ -74,10 +78,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.mode == "senders":
-        print("Starting simulation of email traffic senders.")
+        logging.info("Starting simulation of email traffic senders.")
         simulate_senders()
     elif args.mode == "receivers":
-        print("Starting simulation of email traffic receivers (end users).")
+        logging.info("Starting simulation of email traffic receivers (end users).")
         simulate_receivers()
     else:
         raise AssertionError(f"{args.mode} is an illegal mode value.")

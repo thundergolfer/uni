@@ -13,8 +13,10 @@ adequate performance.
 import argparse
 import enum
 import logging
+import os
 import pathlib
 import sys
+import time
 
 import config
 
@@ -29,8 +31,34 @@ class Subcommands(enum.Enum):
     START = "start"
 
 
+def run_command_in_new_terminal(command: str, working_dir: str) -> None:
+    os.system(
+        f"osascript -e "
+        f'\'tell application "Terminal" to do script "cd {working_dir} && {command}"\''
+    )
+
+
 def start() -> None:
     logging.info("Starting application...")
+    run_command_in_new_terminal(
+        command="python3 mail_server.py",
+        working_dir=str(pathlib.Path(__file__).parent),
+    )
+    time.sleep(0.5)
+    run_command_in_new_terminal(
+        command="python3 spam_detect_server.py",
+        working_dir=str(pathlib.Path(__file__).parent),
+    )
+    time.sleep(0.5)
+    run_command_in_new_terminal(
+        command="python3 mail_traffic_simulation.py senders",
+        working_dir=str(pathlib.Path(__file__).parent),
+    )
+    time.sleep(0.5)
+    run_command_in_new_terminal(
+        command="python3 metrics_server.py",
+        working_dir=str(pathlib.Path(__file__).parent),
+    )
 
 
 def cleanup() -> None:
@@ -57,6 +85,12 @@ def main(argv: Union[Sequence[str], None] = None) -> int:
         parser.print_help(sys.stderr)
     elif args.subparser_name == Subcommands.CLEANUP.value:
         args.func()
+    elif args.subparser_name == Subcommands.START.value:
+        args.func()
+    else:
+        raise AssertionError(
+            f"Expected {args.subparser_name} to be one of {Subcommands}."
+        )
 
     print("Done ✅")
     return 0
