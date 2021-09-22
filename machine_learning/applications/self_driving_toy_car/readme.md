@@ -34,6 +34,12 @@ ssh pi@192.168.1.100
 
 It prompts for a password, which for the `pi` user is `raspberry` (⚠ security risk to leave default pw)️.
 
+The terminal looks like:
+
+```
+(env) pi@donkey-c98b3c:~ $
+```
+
 
 ### Useful documentation
 
