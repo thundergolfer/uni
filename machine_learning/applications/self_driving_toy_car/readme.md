@@ -23,9 +23,16 @@ cd "$(git rev-parse --show-toplevel)/machine_learning/applications/self_driving_
 source .venv/bin/activate
 ```
 
-#### Logging onto the Donker Car
+#### Logging onto the Donkey Car
 
-TODO - You must be able to get onto the car via SSH. 
+I first had to go through this setup to get the Raspberry Pi available on my WiFi. Then
+it was just a matter of grabbing the IP address and running:
+
+```
+ssh pi@192.168.1.100
+``` 
+
+It prompts for a password, which for the `pi` user is `raspberry` (⚠ security risk to leave default pw)️.
 
 
 ### Useful documentation
