@@ -5,6 +5,8 @@ where 'performance' is here understood to concern:
 
 - Memory usage
 - CPU usage
-- Network performance
+- Disk usage
+- Network performance & usage
 - Concurrency & throughput
 - Latency
+
