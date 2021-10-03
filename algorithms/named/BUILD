@@ -17,9 +17,37 @@ java_test(
 )
 
 java_test(
+    name = "BFS",
+    srcs = ["BFS.java"],
+    test_class = "algorithms.named.BFS",
+    deps = [
+        "//third_party:junit4",
+    ],
+)
+
+java_test(
+    name = "DFS",
+    srcs = ["DFS.java"],
+    test_class = "algorithms.named.DFS",
+    deps = [
+        "//third_party:junit4",
+    ],
+)
+
+
+java_test(
     name = "LinkedList",
     srcs = ["LinkedList.java"],
     test_class = "algorithms.named.LinkedList",
+    deps = [
+        "//third_party:junit4",
+    ],
+)
+
+java_test(
+    name = "TopologicalSort",
+    srcs = ["TopologicalSort.java"],
+    test_class = "algorithms.named.TopologicalSort",
     deps = [
         "//third_party:junit4",
     ],
