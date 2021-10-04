@@ -22,5 +22,7 @@ sha2 = "0.8"
 crc32fast = "*"
 mysql = "*"
 
+# TODO(Jonathon): Figure out how to do platform-specific deps in rules_rust,
+# and then bring this code into the repo's Bazel workspace.
 [target.'cfg(target_os = "linux")'.dependencies]
 rio = "0.9.3"
