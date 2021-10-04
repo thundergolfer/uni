@@ -37,7 +37,7 @@ ______
 86,400 seconds per day.
 
 
-`86,400 * 10^6 RPS ~= 9 * 10^3 * 10^6 ~= 9 * 10^9` requests a day.
+`86,400 * 10^5 RPS ~= 9 * 10^4 * 10^5 ~= 9 * 10^9` requests a day.
 
 **How many log lines per request?:** `10`
 
