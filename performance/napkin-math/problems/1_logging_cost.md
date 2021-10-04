@@ -4,7 +4,7 @@
 
 ### Problem #1: How much will the storage of logs cost for a standard, monolithic 100,000 RPS web application?
 
-**Hints**
+#### Hints
 
 You can find many numbers you might need on `sirupsen/base-rates`. 
 If you don’t, consider submitting a PR! I hope for that repo to grow to be the canonical source for system’s napkin math. 
