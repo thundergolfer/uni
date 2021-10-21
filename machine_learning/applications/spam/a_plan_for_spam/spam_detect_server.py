@@ -44,7 +44,7 @@ spam_classifier = load_spam_detecter()
 
 def detect_spam(email: model_trainer.Email) -> bool:
     spam_decision_threshold = 0.99
-    prediction = spam_classifier(email=email)
+    prediction = spam_classifier(email)
     is_spam = prediction > spam_decision_threshold
     event_publisher.emit_spam_predicted_event(
         spam_detect_model_tag=config.spam_detect_model_tag,

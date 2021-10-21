@@ -50,4 +50,6 @@ The application code is all pure-Python (stdlib only), but testing uses `pytest`
 
 #### Type-checking
 
-`TODO`
+At the moment, I haven't got a virtualenv so `mypy` is installed to system. 🤮
+
+`mypy --namespace-packages *.py`

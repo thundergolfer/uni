@@ -33,7 +33,7 @@ class SpamPredictedEventProperties(NamedTuple):
 
 
 class Event(NamedTuple):
-    type: str
+    type: EventTypes
     source: str
     id: UUID
     properties: Union[EmailSpamFilteredProperties, SpamPredictedEventProperties]

@@ -9,14 +9,16 @@ import os
 import pathlib
 import time
 
-from typing import Callable
+from typing import Callable, Deque, Protocol
 
 # The queues really shouldn't become very large. A low max
 # helps us surface bugs.
 QUEUE_MAX_LEN = 1000
-EMAIL_SPAM_FILTERED_METRIC_QUEUE = collections.deque(maxlen=QUEUE_MAX_LEN)
+EMAIL_SPAM_FILTERED_METRIC_QUEUE: Deque = collections.deque(maxlen=QUEUE_MAX_LEN)
 
-CounterMetricFunc = Callable[[str, int], None]
+
+class CounterMetricFunc(Protocol):
+    def __call__(self, *, event_str: str, epoch_instant: int) -> None: ...
 
 
 def build_email_spam_filtered_counter_function(
