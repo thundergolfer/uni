@@ -79,6 +79,15 @@ def bad_words_spam_classifier(email: Email) -> Prediction:
     return 1.0 if bad_words_count > max_bad_words else 0.0
 
 
+# TODO(Jonathon): Calculate N most popular non-stop-words to use as spam indicators.
+# This is basically a smarter version of `bad_words_spam_classifier`, which assumes
+# a fixed set of words are always indicators of spam, ignorant of the available dataset.
+def build_top_spam_words_classifier(ds: Dataset) -> SpamClassifier:
+    def classifier(email: Email) -> Prediction:
+        return 0.0
+    return classifier
+
+
 def serialize_classifier(
     classifier_func: SpamClassifier,
 ) -> bytes:
