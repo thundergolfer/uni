@@ -1,0 +1,13 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
+
+py_binary(
+    name = "naive_bayes",
+    srcs = ["naive_bayes.py"],
+)
+
+py_test(
+    name = "naive_bayes_test",
+    srcs = ["naive_bayes.py"],
+    main = "naive_bayes.py",
+)
+
