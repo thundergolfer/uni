@@ -10,6 +10,7 @@ import smtpd
 import time
 
 import config
+import events
 
 from typing import Tuple
 
@@ -17,6 +18,14 @@ ServerAddr = Tuple[str, int]
 
 logging.basicConfig(format=config.logging_format_str)
 logging.getLogger().setLevel(logging.DEBUG)
+
+logging.info("Building mail-traffic-simulation event publisher.")
+emit_event_func = events.build_event_emitter(
+    to_console=True,
+    to_file=True,
+    log_root_path=config.logging_file_path_root,
+)
+event_publisher = events.MailTrafficSimulationEventPublisher(emit_event=emit_event_func)
 
 
 class MessageTransferAgentServer(smtpd.DebuggingServer):
@@ -26,6 +35,9 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
         print("TODO - Store user email in mailboxes")
         print("TODO - Log event")
+        event_publisher.emit_email_viewed_event(
+            email_id="FAKE EMAIL ID",
+        )
         print("TODO - Mailboxes need to be read")
         # TODO - Maybe this module should just write the emails to mailboxes on disk,
         #        and some other module simulates the clients that read the mailboxes from disk.

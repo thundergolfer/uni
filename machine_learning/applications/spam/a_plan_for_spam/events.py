@@ -16,8 +16,19 @@ Property = Union[str, int, float, bool, UUID]
 # Maintaining a enum is an OK way to at least prevent
 # the use of string literals which may conflict (but only at runtime)
 class EventTypes(str, enum.Enum):
+    EMAIL_MARKED_SPAM = "email_marked_spam"
     EMAIL_SPAM_FILTERED = "email_spam_filtered"
+    EMAIL_VIEWED = "email_viewed"
     SPAM_PREDICTED = "spam_predicted"
+
+
+class EmailViewedProperties(NamedTuple):
+    email_id: UUID
+
+
+class EmailMarkedSpamProperties(NamedTuple):
+    email_id: UUID
+    user_id: str
 
 
 class EmailSpamFilteredProperties(NamedTuple):
@@ -36,7 +47,12 @@ class Event(NamedTuple):
     type: EventTypes
     source: str
     id: UUID
-    properties: Union[EmailSpamFilteredProperties, SpamPredictedEventProperties]
+    properties: Union[
+        EmailSpamFilteredProperties,
+        EmailMarkedSpamProperties,
+        EmailViewedProperties,
+        SpamPredictedEventProperties,
+    ]
 
 
 Emitter = Callable[[Event], None]
@@ -91,6 +107,46 @@ class SpamDetectAPIEventPublisher:
         )
         event = Event(
             type=EventTypes.SPAM_PREDICTED,
+            source=self.source,
+            id=str(uuid.uuid4()),
+            properties=props,
+        )
+        self.emit_event(event)
+
+
+class MailTrafficSimulationEventPublisher:
+    def __init__(self, emit_event: Emitter):
+        self.source = "mail_traffic_simulation"
+        self.emit_event = emit_event
+
+    def emit_email_marked_spam_event(
+        self,
+        *,
+        email_id: str,
+        user_id: str,
+    ):
+        props = EmailMarkedSpamProperties(
+            email_id=email_id,
+            user_id=user_id,
+        )
+        event = Event(
+            type=EventTypes.EMAIL_VIEWED,
+            source=self.source,
+            id=str(uuid.uuid4()),
+            properties=props,
+        )
+        self.emit_event(event)
+
+    def emit_email_viewed_event(
+        self,
+        *,
+        email_id: str,
+    ):
+        props = EmailViewedProperties(
+            email_id=email_id,
+        )
+        event = Event(
+            type=EventTypes.EMAIL_VIEWED,
             source=self.source,
             id=str(uuid.uuid4()),
             properties=props,

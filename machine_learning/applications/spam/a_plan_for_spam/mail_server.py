@@ -8,6 +8,7 @@ import http
 import json
 import logging
 import smtpd
+import smtplib
 import urllib.request
 
 import config
@@ -31,7 +32,7 @@ emit_event_func = events.build_event_emitter(
 event_publisher = events.MailServerEventPublisher(emit_event=emit_event_func)
 
 
-class FilteringServer(smtpd.DebuggingServer):
+class FilteringServer(smtpd.PureProxy):
     def __init__(self, localaddr, remoteaddr):
         super(FilteringServer, self).__init__(localaddr, remoteaddr)
 
@@ -43,13 +44,17 @@ class FilteringServer(smtpd.DebuggingServer):
         except http.client.HTTPException as err:
             breakpoint()
         if not filter_email:
-            super().process_message(
-                peer,
-                mailfrom,
-                rcpttos,
-                data,
-                **kwargs,
-            )
+            # I don't call smtpd.PurProxy's process_message() method because it's
+            # janky. If I pass bytes for `data` it breaks because it tries to split
+            # those bytes using '\n', a string. If I pass a string, it passes that
+            # string to smtplib.sendmail which can only handle ascii strings, and the
+            # enron dataset emails aren't ascii.
+            s = smtplib.SMTP()
+            s.connect(self._remoteaddr[0], self._remoteaddr[1])
+            try:
+                s.sendmail(mailfrom, rcpttos, data.encode())
+            finally:
+                s.quit()
 
     def filter(self):
         body = {"number": 12}
@@ -73,10 +78,10 @@ class FilteringServer(smtpd.DebuggingServer):
 
 
 def serve():
-    print("Starting (spam-detecting) mail server.")
+    logging.info("Starting (spam-detecting) mail server.")
     localaddr: ServerAddr = config.mail_server_addr
     remoteaddr: ServerAddr = config.mail_receiver_addr
-    server = FilteringServer(localaddr, remoteaddr)
+    _server = FilteringServer(localaddr, remoteaddr)
     asyncore.loop()
 
 
