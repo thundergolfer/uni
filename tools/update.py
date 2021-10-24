@@ -28,7 +28,14 @@ def main(repo_root: str):
     # Clean
     shutil.rmtree(docs_root)
 
-    repo_readmes = list(repo_root_path.glob('**/readme.md')) + list(repo_root_path.glob('**/README.md'))
+    repo_root_path.glob('**/README.md')
+    dest = repo_root_path / "docs" / "source" / "content" / "_index.md"
+    if not dest.exists():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(repo_root_path / "README.md", dest)
+    add_frontmatter_prefix_to_file(dest)
+
+    repo_readmes = list(repo_root_path.glob('**/readme.md'))
     for readme in repo_readmes:
         # TODO(Jonathon): Clean this repetitive hack code up.
         if repo_root_path / "docs" in readme.parents:
