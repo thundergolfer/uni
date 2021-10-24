@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_test")
 load("@rules_python//python:defs.bzl", "py_binary", "py_test")
 
 py_binary(
@@ -17,4 +18,13 @@ py_test(
     main = "matrices.py",
     deps = [":linear_algebra"],
     imports = ["books/data_science_from_scratch/4_linear_algebra"]
+)
+
+java_test(
+    name = "LinearAlgebra",
+    srcs = ["LinearAlgebra.java"],
+    test_class = "books.data_science_from_scratch.linear_algebra.LinearAlgebra",
+    deps = [
+        "//third_party:junit4",
+    ],
 )
