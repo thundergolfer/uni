@@ -34,3 +34,24 @@ Spam.
 
 TODO
 
+### Usage
+
+`python3 agent.py start`
+
+Will open multiple terminal windows running the various parts of the system.
+
+Be aware, they may open up all on top of each other, making it look like just one opened.
+
+### Development
+
+#### Testing
+
+The application code is all pure-Python (stdlib only), but testing uses `pytest`. 
+
+`TODO`
+
+#### Type-checking
+
+At the moment, I haven't got a virtualenv so `mypy` is installed to system. 🤮
+
+`mypy --namespace-packages *.py`
