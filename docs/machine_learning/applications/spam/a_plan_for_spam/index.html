@@ -14,7 +14,7 @@
 <link rel=icon href=/uni/favicon.png type=image/x-icon>
 <link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous>
 <script defer src=/uni/flexsearch.min.js></script>
-<script defer src=/uni/en.search.min.39193328403b9be42b5394d6f32ad33053ac481fe668262768b4113b47e57ba2.js integrity="sha256-ORkzKEA7m+QrU5TW8yrTMFOsSB/maCYnaLQRO0fle6I=" crossorigin=anonymous></script>
+<script defer src=/uni/en.search.min.19449d76db9239cfbb22024e1a513056d996a3b2c1682876063b2903239d7f02.js integrity="sha256-GUSddtuSOc+7IgJOGlEwVtmWo7LBaCh2BjspAyOdfwI=" crossorigin=anonymous></script>
 <link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/index.xml title="uni' docs">
 </head>
 <body dir=ltr>
@@ -288,6 +288,8 @@
 <li><a href=#rules>Rules</a></li>
 <li><a href=#business-problem>Business Problem</a></li>
 <li><a href=#system-overview>System overview</a></li>
+<li><a href=#usage>Usage</a></li>
+<li><a href=#development>Development</a></li>
 </ul>
 </li>
 </ul>
@@ -341,6 +343,29 @@ Diagram
 <a class=anchor href=#diagram>#</a>
 </h4>
 <p>TODO</p>
+<h3 id=usage>
+Usage
+<a class=anchor href=#usage>#</a>
+</h3>
+<p><code>python3 agent.py start</code></p>
+<p>Will open multiple terminal windows running the various parts of the system.</p>
+<p>Be aware, they may open up all on top of each other, making it look like just one opened.</p>
+<h3 id=development>
+Development
+<a class=anchor href=#development>#</a>
+</h3>
+<h4 id=testing>
+Testing
+<a class=anchor href=#testing>#</a>
+</h4>
+<p>The application code is all pure-Python (stdlib only), but testing uses <code>pytest</code>.</p>
+<p><code>TODO</code></p>
+<h4 id=type-checking>
+Type-checking
+<a class=anchor href=#type-checking>#</a>
+</h4>
+<p>At the moment, I haven&rsquo;t got a virtualenv so <code>mypy</code> is installed to system. 🤮</p>
+<p><code>mypy --namespace-packages *.py</code></p>
 </article>
 <footer class=book-footer>
 <div class="flex flex-wrap justify-between">
@@ -360,6 +385,8 @@ Diagram
 <li><a href=#rules>Rules</a></li>
 <li><a href=#business-problem>Business Problem</a></li>
 <li><a href=#system-overview>System overview</a></li>
+<li><a href=#usage>Usage</a></li>
+<li><a href=#development>Development</a></li>
 </ul>
 </li>
 </ul>
