@@ -1,0 +1,147 @@
+@import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500';
+
+body {
+    margin: 0 auto;
+    max-width: 90vw;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    line-height: 1.5;
+    padding: 4em 1em;
+}
+
+body {
+    color: #555;
+}
+
+h1,
+h2,
+strong {
+    color: #333;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h2 {
+    margin-top: 1em;
+    padding-top: 1em;
+    font-size: 2em;
+}
+
+p {
+    font-size: 1.25em;
+}
+
+img, .card, .card__face, .card__face--back, .card__face--front {
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: #888;
+    border-style: solid;
+}
+
+img {
+    transition: all .2s ease-in-out;
+}
+
+img:hover {
+    transform: scale(1.02);
+}
+
+code,
+pre {
+    background: #eee;
+}
+
+code {
+    padding: 2px 4px;
+    vertical-align: text-bottom;
+}
+
+pre {
+    padding: 1em;
+}
+
+a {
+    color: #e81c4f;
+}
+
+footer {
+    margin-top: 2em;
+    font-size: 1.5em;
+}
+
+/* Source: https://css-tricks.com/full-browser-width-bars/#using-pseudo-elements */
+.full-width {
+    position: relative; /* for the child pseudo-elements */
+    /* negative offset = section padding */
+    margin: 0 -30px;
+    /* add back section padding value */
+    padding: 0.25rem 30px;
+    background: linear-gradient(#fff, #F5F5FA);;
+}
+
+.full-width:before, .full-width:after {
+    content: "";
+    position: absolute;
+    /* fill vertically */
+    top: 0;
+    bottom: 0;
+    width: 9600px;
+    right: 100%;
+    background: linear-gradient(#fff, #F5F5FA);
+}
+
+.full-width:after {
+    width: 9600px;
+    left: 100%;
+    background: linear-gradient(#fff, #F5F5FA);
+}
+
+.terminal {
+    min-width: 40%;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    flex: 1;
+}
+.terminal .top {
+    background: #E8E6E8;
+    color: black;
+    padding: 5px;
+    border-radius: 5px 5px 0 0;
+}
+.terminal .btns {
+    position: absolute;
+    top: 7px;
+    left: 5px;
+}
+.terminal .circle {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    border-radius: 15px;
+    margin-left: 2px;
+    border-width: 1px;
+    border-style: solid;
+}
+.title{
+    text-align: center;
+}
+
+.red { background: #EC6A5F; border-color: #D04E42; }
+.green { background: #64CC57; border-color: #4EA73B; }
+.yellow{ background: #F5C04F; border-color: #D6A13D; }
+
+.clear{clear: both;}
+
+.terminal .body {
+    background: black;
+    color: #7AFB4C;
+    padding: 8px;
+    overflow: auto;
+}
+
+.space {
+    margin: 25px;
+}
+
+.shadow { box-shadow: 0px 0px 10px rgba(0,0,0,.4)}
