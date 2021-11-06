@@ -2,20 +2,6 @@
 
 // NOTE: 'React' and 'ReactDOM' are globals available because they're exposed by <script> tags in index.html.
 
-const Hit = ({ hit }) => {
-    // You can link to a specific time in a podcast by appending '#t=100' to an original_download_link, which is an .mp3 URL.
-    // This provides a cheap way to link from transcript timestamps to the corresponding audio.
-    let start = Math.round(hit.start);
-    return (
-        <div className={"hit"}>
-            <p>{hit.snippet}</p>
-            <span style={{display: "block", marginBottom: "1%"}}><em>{hit.speakers.join(", ")}</em></span>
-            <span style={{color: "rgba(103,114,229, 0.8)", marginBottom: "1%"}}><a rel="noopener noreferrer" target="_blank" href={hit.episode_url}>{hit.episode_title}</a></span>
-            {start >= 0 ? <span className={"listen-btn"}><a rel="noopener noreferrer" target="_blank" href={`${hit.original_download_link}#t=${start}`}>🎧 Listen</a></span> : null}
-        </div>
-    );
-};
-
 /**
  * A terminal pane that simulates 'tailing' a log file's output.
  *
@@ -27,16 +13,35 @@ const TerminalPane = ({title, contents}) => {
     const [index, setIndex] = React.useState(0);
     const [currentLine, setCurrentLine] = React.useState(contents[0]);
     const [visibleLines, setVisibleLines] = React.useState([]);
+    const messagesEndRef = React.useRef(null);
+
+    // TODO(Jonathon): Don't use > 100% of vertical width. Currently auto-scroll does scroll jacking if the
+    // user tries to scroll up.
+    const scrollToBottom = () => {
+        // Firefox supports smooth scrolling many elements, but Chrome has a bug and only my
+        // last (bottom) pane scrolls!
+        // Ref: https://stackoverflow.com/questions/49318497/google-chrome-simultaneously-smooth-scrollintoview-with-more-elements-doesn
+        const scrollBehavior = navigator.userAgent.indexOf("Firefox") !== -1 ? "smooth" : "instant";
+        messagesEndRef.current.scrollIntoView({ behavior: scrollBehavior });
+    };
+    React.useEffect(scrollToBottom, [index]);
 
     React.useEffect(() => {
         setCurrentLine(contents[index]);
-        setVisibleLines(oldArray => [...oldArray, contents[index]]);
+        if (index === 0) {
+            // Reset the array to beginning.
+            setVisibleLines([contents[index]]);
+        } else {
+            setVisibleLines(oldArray => [...oldArray, contents[index]]);
+        }
     }, [index]);
 
     React.useEffect(() => {
+        const timeout = index !== contents.length - 1 ?
+            ((contents[index+1].timestamp - currentLine.timestamp) * 1000) : 1000;
         const interval = setTimeout(() => {
             setIndex(index === contents.length - 1 ? 0 : index + 1);
-        }, (contents[index+1].timestamp - currentLine.timestamp) * 1000); // timeout is in milliseconds
+        }, timeout); // timeout is in milliseconds
     }, [currentLine]);
 
     return (
@@ -52,6 +57,7 @@ const TerminalPane = ({title, contents}) => {
           <pre className="body">
               {/*{JSON.stringify(contents)}*/}
               {visibleLines.map(c => <p>{c.line}</p>)}
+              <div ref={messagesEndRef} />
           </pre>
       </div>
     );
@@ -59,7 +65,7 @@ const TerminalPane = ({title, contents}) => {
 
 const App = () => {
     const fakeLogs = [
-        {timestamp: 2, line: "bees cities racoon ladies men women weights bees creator girls foofighters foofighters foofighters girls man"},
+        {timestamp: 2, line: "START bees cities racoon ladies men women weights bees creator girls foofighters foofighters foofighters girls man"},
         {timestamp: 3, line: "a lanes bees tyler journalists movies hell weights creator tyler tyler plants stock market men women"},
         {timestamp: 4, line: "bytes heaven racoon fooo girls weights a the tyler a fair a fair women plants"},
         {timestamp: 5, line: "hell a foofighters men the hell foofighters girls the fooo fair lanes hell weights weights"},
@@ -98,7 +104,7 @@ const App = () => {
         {timestamp: 53, line: "fooo movies tyler women stock market ladies men men creator plants weights weights ladies a women"},
         {timestamp: 55, line: "fooo journalists creator bytes fooo cities heaven fooo weights girls heaven stock market heaven racoon weights"},
         {timestamp: 59, line: "foofighters women women fair movies movies weights stock market fair tyler racoon racoon men bytes bees"},
-        {timestamp: 60, line: "plants tyler a creator movies foofighters houses weights tyler racoon the fooo fair racoon man"},
+        {timestamp: 60, line: "END plants tyler a creator movies foofighters houses weights tyler racoon the fooo fair racoon man"},
     ];
 
     const panes = [

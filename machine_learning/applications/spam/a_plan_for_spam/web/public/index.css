@@ -97,6 +97,7 @@ footer {
     background: linear-gradient(#fff, #F5F5FA);
 }
 
+/* TODO(Jonathon): panes should be a fixed height. they shouldn't vary when content within changes. */
 .terminal {
     max-height: 25vh;
     min-width: 40%;
@@ -106,6 +107,7 @@ footer {
 }
 
 .terminal .body {
+    min-height: 90%;
     max-height: 90%;
     background: black;
     color: #7AFB4C;
