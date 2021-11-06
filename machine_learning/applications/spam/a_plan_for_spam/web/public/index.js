@@ -16,12 +16,21 @@ const Hit = ({ hit }) => {
     );
 };
 
-const Pane = ({title, contents}) => {
+/**
+ * A terminal pane that simulates 'tailing' a log file's output.
+ *
+ * @param title - String shown as the terminal window title
+ * @param contents - Array of form [{timestamp: x, line: "foo ..."}, ...]
+ * @returns {JSX.Element}
+ */
+const TerminalPane = ({title, contents}) => {
     const [index, setIndex] = React.useState(0);
     const [currentLine, setCurrentLine] = React.useState(contents[0]);
+    const [visibleLines, setVisibleLines] = React.useState([]);
 
     React.useEffect(() => {
         setCurrentLine(contents[index]);
+        setVisibleLines(oldArray => [...oldArray, contents[index]]);
     }, [index]);
 
     React.useEffect(() => {
@@ -42,8 +51,7 @@ const Pane = ({title, contents}) => {
           </div>
           <pre className="body">
               {/*{JSON.stringify(contents)}*/}
-              {/*{contents.map(c => <p>{c.line}</p>)}*/}
-              {currentLine.line}
+              {visibleLines.map(c => <p>{c.line}</p>)}
           </pre>
       </div>
     );
@@ -105,7 +113,7 @@ const App = () => {
         <div>
             <div style={{display: "flex", gap: "20px", flexBasis: "100%", flexWrap: "wrap"}}>
                 {
-                    panes.map(pane => <Pane title={pane} contents={fakeLogs}/>)
+                    panes.map(pane => <TerminalPane title={pane} contents={fakeLogs}/>)
                 }
             </div>
 
