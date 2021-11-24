@@ -44,7 +44,7 @@ class FilteringServer(smtpd.PureProxy):
         except http.client.HTTPException as err:
             breakpoint()
         if not filter_email:
-            # I don't call smtpd.PurProxy's process_message() method because it's
+            # I don't call smtpd.PureProxy's process_message() method because it's
             # janky. If I pass bytes for `data` it breaks because it tries to split
             # those bytes using '\n', a string. If I pass a string, it passes that
             # string to smtplib.sendmail which can only handle ascii strings, and the
@@ -52,7 +52,7 @@ class FilteringServer(smtpd.PureProxy):
             s = smtplib.SMTP()
             s.connect(self._remoteaddr[0], self._remoteaddr[1])
             try:
-                s.sendmail(mailfrom, rcpttos, data.encode())
+                s.sendmail(mailfrom, rcpttos, data)
             finally:
                 s.quit()
 

@@ -44,25 +44,28 @@ def start() -> None:
         command="python3 mail_server.py",
         working_dir=str(pathlib.Path(__file__).parent),
     )
-    time.sleep(0.5)
+    time.sleep(1)
+
     run_command_in_new_terminal(
         command="python3 spam_detect_server.py",
         working_dir=str(pathlib.Path(__file__).parent),
     )
-    time.sleep(0.5)
-    run_command_in_new_terminal(
-        command="python3 mail_traffic_simulation.py senders",
-        working_dir=str(pathlib.Path(__file__).parent),
-    )
-    time.sleep(0.5)
+    time.sleep(1)
+
     run_command_in_new_terminal(
         command="python3 metrics_server.py",
         working_dir=str(pathlib.Path(__file__).parent),
     )
 
-    time.sleep(0.5)
+    time.sleep(1)
     run_command_in_new_terminal(
         command="python3 mail_traffic_simulation.py receivers",
+        working_dir=str(pathlib.Path(__file__).parent),
+    )
+    time.sleep(1)
+
+    run_command_in_new_terminal(
+        command="python3 mail_traffic_simulation.py senders",
         working_dir=str(pathlib.Path(__file__).parent),
     )
 
