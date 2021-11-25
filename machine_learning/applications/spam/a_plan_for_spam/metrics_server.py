@@ -18,7 +18,8 @@ EMAIL_SPAM_FILTERED_METRIC_QUEUE: Deque = collections.deque(maxlen=QUEUE_MAX_LEN
 
 
 class CounterMetricFunc(Protocol):
-    def __call__(self, *, event_str: str, epoch_instant: int) -> None: ...
+    def __call__(self, *, event_str: str, epoch_instant: int) -> None:
+        ...
 
 
 def build_email_spam_filtered_counter_function(

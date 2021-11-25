@@ -6,6 +6,7 @@ import argparse
 import asyncore
 import hashlib
 import logging
+import pathlib
 import random
 import smtplib
 import smtpd
@@ -34,7 +35,7 @@ def hash_email_contents(email: bytes) -> str:
     return hashlib.sha256(email).hexdigest().upper()
 
 
-enron_raw_dataset_path = (
+enron_raw_dataset_path = pathlib.Path(
     "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/a_plan_for_spam/"
     "datasets/enron/processed_raw_dataset.json"
 )
@@ -43,8 +44,7 @@ from datasets.enron.dataset import RawEnronDataset, deserialize_dataset
 raw_enron_dataset = deserialize_dataset(enron_raw_dataset_path)
 enron_email_classifications_map = {
     hash_email_contents(example.email.encode("utf-8")): example.spam
-    for example
-    in raw_enron_dataset
+    for example in raw_enron_dataset
 }
 
 
@@ -73,7 +73,9 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
             # Weirdly some dots are getting dropped...
             # Can find email by searching for 'PayPal Email ID PP243'.
             # breakpoint()
-            logging.error("Received email was not matched against a known hash. Should never happen.")
+            logging.error(
+                "Received email was not matched against a known hash. Should never happen."
+            )
         elif is_spam:
             print("USER DETECTED SPAM!!")
             event_publisher.emit_email_marked_spam_event(

@@ -14,7 +14,17 @@ import re
 import subprocess
 from collections import defaultdict
 
-from typing import Any, Callable, Dict, Iterable, NamedTuple, Optional, Union, Sequence, Set
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    NamedTuple,
+    Optional,
+    Union,
+    Sequence,
+    Set,
+)
 
 import config
 from datasets.enron import dataset
@@ -88,6 +98,7 @@ def bad_words_spam_classifier(email: Email) -> Prediction:
 def build_top_spam_words_classifier(ds: Dataset) -> SpamClassifier:
     def classifier(email: Email) -> Prediction:
         return 0.0
+
     return classifier
 
 
@@ -141,6 +152,7 @@ def train_naive_bayes_classifier(ds: Dataset, k: float = 0.5) -> SpamClassifier:
         prob_if_spam = math.exp(log_prob_if_spam)
         prob_if_ham = math.exp(log_prob_if_ham)
         return prob_if_spam / (prob_if_spam + prob_if_ham)
+
     return classify
 
 
