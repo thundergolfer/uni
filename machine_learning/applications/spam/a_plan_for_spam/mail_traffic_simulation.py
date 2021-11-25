@@ -4,6 +4,7 @@ and the receiving of emails.
 """
 import argparse
 import asyncore
+import hashlib
 import logging
 import smtplib
 import smtpd
@@ -28,26 +29,64 @@ emit_event_func = events.build_event_emitter(
 event_publisher = events.MailTrafficSimulationEventPublisher(emit_event=emit_event_func)
 
 
+def hash_email_contents(email: bytes) -> str:
+    return hashlib.sha256(email).hexdigest().upper()
+
+
+enron_raw_dataset_path = (
+    "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/a_plan_for_spam/"
+    "datasets/enron/processed_raw_dataset.json"
+)
+from datasets.enron.dataset import RawEnronDataset, deserialize_dataset
+
+raw_enron_dataset = deserialize_dataset(enron_raw_dataset_path)
+enron_email_classifications_map = {
+    hash_email_contents(example.email.encode("utf-8")): example.spam
+    for example
+    in raw_enron_dataset
+}
+
+
 class MessageTransferAgentServer(smtpd.DebuggingServer):
     def __init__(self, localaddr, remoteaddr):
         super(MessageTransferAgentServer, self).__init__(localaddr, remoteaddr)
 
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
-        print("TODO - Store user email in mailboxes")
-        print("TODO - Log event")
         event_publisher.emit_email_viewed_event(
             email_id="FAKE EMAIL ID",
         )
-        print("TODO - Mailboxes need to be read")
         # TODO - Maybe this module should just write the emails to mailboxes on disk,
         #        and some other module simulates the clients that read the mailboxes from disk.
-        super().process_message(
-            peer,
-            mailfrom,
-            rcpttos,
-            data,
-            **kwargs,
-        )
+        is_spam = enron_email_classifications_map.get(hash_email_contents(email=data))
+        if is_spam is None:
+            print("WOOPS, shouldn't happen")
+            # This is the first miss:
+            #
+            # 33,34c33,34
+            # < .Style1 {font-family: Arial, Helvetica, sans-serif}
+            # < .Style2 {font-size: 13px}
+            # ---
+            # > ...Style1 {font-family: Arial, Helvetica, sans-serif}
+            # > ...Style2 {font-size: 13px}
+            #
+            # Weirdly some dots are getting dropped...
+            # Can find email by searching for 'PayPal Email ID PP243'.
+            breakpoint()
+        elif is_spam:
+            print("USER DETECTED SPAM!!")
+            event_publisher.emit_email_marked_spam_event(
+                email_id="FAKE EMAIL ID",
+                rcpttos=rcpttos,
+                mailfrom=mailfrom,
+            )
+        else:
+            super().process_message(
+                peer,
+                mailfrom,
+                rcpttos,
+                data,
+                **kwargs,
+            )
 
 
 def simulate_receivers():
@@ -61,15 +100,6 @@ def simulate_senders():
     # senders (including spammers) direct traffic at our fraud-detecting SMTP server.
     mail_server_addr = config.mail_server_addr
     sender_email = "jonathon@canva.com"
-
-    enron_raw_dataset_path = (
-        "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/a_plan_for_spam/"
-        "datasets/enron/processed_raw_dataset.json"
-    )
-
-    from datasets.enron.dataset import RawEnronDataset, deserialize_dataset
-
-    raw_enron_dataset = deserialize_dataset(enron_raw_dataset_path)
 
     with smtplib.SMTP(mail_server_addr[0], mail_server_addr[1]) as server:
         server.ehlo()

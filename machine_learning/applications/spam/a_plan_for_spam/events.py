@@ -6,7 +6,7 @@ import json
 import enum
 import pathlib
 import uuid
-from typing import Any, Callable, Dict, NamedTuple, Optional, Union
+from typing import Callable, List, NamedTuple, Optional, Union
 
 UUID = str
 Property = Union[str, int, float, bool, UUID]
@@ -28,7 +28,8 @@ class EmailViewedProperties(NamedTuple):
 
 class EmailMarkedSpamProperties(NamedTuple):
     email_id: UUID
-    user_id: str
+    mailfrom: str
+    rcpttos: List[str]
 
 
 class EmailSpamFilteredProperties(NamedTuple):
@@ -123,14 +124,16 @@ class MailTrafficSimulationEventPublisher:
         self,
         *,
         email_id: str,
-        user_id: str,
+        rcpttos: List[str],
+        mailfrom: str,
     ):
         props = EmailMarkedSpamProperties(
             email_id=email_id,
-            user_id=user_id,
+            rcpttos=rcpttos,
+            mailfrom=mailfrom,
         )
         event = Event(
-            type=EventTypes.EMAIL_VIEWED,
+            type=EventTypes.EMAIL_MARKED_SPAM,
             source=self.source,
             id=str(uuid.uuid4()),
             properties=props,
