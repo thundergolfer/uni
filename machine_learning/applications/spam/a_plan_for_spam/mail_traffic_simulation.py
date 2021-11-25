@@ -6,6 +6,7 @@ import argparse
 import asyncore
 import hashlib
 import logging
+import random
 import smtplib
 import smtpd
 import time
@@ -59,7 +60,7 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
         #        and some other module simulates the clients that read the mailboxes from disk.
         is_spam = enron_email_classifications_map.get(hash_email_contents(email=data))
         if is_spam is None:
-            print("WOOPS, shouldn't happen")
+            # TODO
             # This is the first miss:
             #
             # 33,34c33,34
@@ -71,7 +72,8 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
             #
             # Weirdly some dots are getting dropped...
             # Can find email by searching for 'PayPal Email ID PP243'.
-            breakpoint()
+            # breakpoint()
+            logging.error("Received email was not matched against a known hash. Should never happen.")
         elif is_spam:
             print("USER DETECTED SPAM!!")
             event_publisher.emit_email_marked_spam_event(
@@ -104,12 +106,17 @@ def simulate_senders():
     with smtplib.SMTP(mail_server_addr[0], mail_server_addr[1]) as server:
         server.ehlo()
 
+        # Shuffle the dataset because by default the Enron dataset is sorted by
+        # classification.
+        fixed_random_seed = 1842
+        random.Random(fixed_random_seed).shuffle(raw_enron_dataset)
+
         for i, example in enumerate(raw_enron_dataset):
             # NOTE: Encoding maybe should be encoding="latin-1"
             server.sendmail(
                 sender_email, "foo@canva.com", example.email.encode("utf-8")
             )
-            time.sleep(0.5)  # Otherwise this sends emails really quickly.
+            time.sleep(0.3)  # Otherwise this sends emails really quickly.
             if i % 100 == 0:
                 logging.info(f"Sent {i} emails.")
 
