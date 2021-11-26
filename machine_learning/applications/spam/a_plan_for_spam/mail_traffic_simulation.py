@@ -4,6 +4,9 @@ and the receiving of emails.
 """
 import argparse
 import asyncore
+import email
+import email.policy
+import email.utils
 import hashlib
 import logging
 import pathlib
@@ -15,7 +18,7 @@ import time
 import config
 import events
 
-from typing import Tuple
+from typing import Optional, Tuple
 
 ServerAddr = Tuple[str, int]
 
@@ -29,6 +32,20 @@ emit_event_func = events.build_event_emitter(
     log_root_path=config.logging_file_path_root,
 )
 event_publisher = events.MailTrafficSimulationEventPublisher(emit_event=emit_event_func)
+
+
+def extract_email_header_field(*, email_bytes: bytes, field_name: str) -> Optional[str]:
+    e_msg = email.message_from_bytes(email_bytes, policy=email.policy.SMTPUTF8)
+    return e_msg.get(field_name)
+
+
+def extract_email_from(email_bytes: bytes) -> Optional[str]:
+    from_val = extract_email_header_field(email_bytes=email_bytes, field_name="From")
+    if not from_val:
+        return from_val
+    # Parse 'name-addr' format. https://datatracker.ietf.org/doc/html/rfc5322#section-3.4
+    parsed_from = email.utils.parseaddr(from_val)
+    return parsed_from[1]  # Ignore display name, if any. Grab email address.
 
 
 def hash_email_contents(email: bytes) -> str:
@@ -114,6 +131,7 @@ def simulate_senders():
         random.Random(fixed_random_seed).shuffle(raw_enron_dataset)
 
         for i, example in enumerate(raw_enron_dataset):
+            sender_email = extract_email_from(email_bytes=example.email.encode("utf-8"))
             # NOTE: Encoding maybe should be encoding="latin-1"
             server.sendmail(
                 sender_email, "foo@canva.com", example.email.encode("utf-8")
