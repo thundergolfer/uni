@@ -40,10 +40,11 @@ def test_end_to_end(tmp_path):
     time.sleep(1)
 
     senders_simulator_proc.join()
+    # The servers processes will never return on their own.
     mail_server_proc.terminate()
     spam_detect_server_proc.terminate()
     metrics_server_proc.terminate()
-    receivers_simulator_proc.terminate()  # TODO: change to join()
+    receivers_simulator_proc.terminate()
 
     # Mail sender process must have exit successfully.
     assert senders_simulator_proc.exitcode == 0
