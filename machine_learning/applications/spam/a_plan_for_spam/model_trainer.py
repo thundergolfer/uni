@@ -104,7 +104,7 @@ def build_top_spam_words_classifier(ds: Dataset) -> SpamClassifier:
 
 def tokenize(text: str) -> Set[str]:
     text = text.lower()
-    all_words = re.findall("[a-z0-9]+", text)  # extract the words, and
+    all_words = re.findall("[a-z0-9]+", text)  # extract the words
     return set(all_words)
 
 

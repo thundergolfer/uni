@@ -4,6 +4,7 @@ API to detect Spam email and filter it out of client's inboxes.
 """
 
 import asyncore
+import hashlib
 import http
 import json
 import logging
@@ -32,12 +33,16 @@ emit_event_func = events.build_event_emitter(
 event_publisher = events.MailServerEventPublisher(emit_event=emit_event_func)
 
 
+def hash_email_contents(email: bytes) -> str:
+    return hashlib.sha256(email).hexdigest().upper()
+
+
 class FilteringServer(smtpd.PureProxy):
     def __init__(self, localaddr, remoteaddr):
         super(FilteringServer, self).__init__(localaddr, remoteaddr)
 
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
-        print("Call fraud API ---")
+        logging.info("Call fraud API ---")
         filter_email = False
         try:
             filter_email = self.filter()
@@ -56,7 +61,8 @@ class FilteringServer(smtpd.PureProxy):
             finally:
                 s.quit()
 
-    def filter(self):
+    def filter(self, email_bytes: bytes) -> bool:
+        email_hash_id = hash_email_contents(email=email_bytes)
         body = {"number": 12}
         spam_detect_api_url = ":".join(
             [str(component) for component in config.spam_detect_api_addr]
@@ -70,7 +76,7 @@ class FilteringServer(smtpd.PureProxy):
         response = urllib.request.urlopen(req, data_b)
         print(response)
         event_publisher.emit_email_spam_filtered(
-            email_id="FAKE FAKE",
+            email_id=email_hash_id,
             spam_detect_model_tag=config.spam_detect_model_tag,
             confidence=0.0,
         )

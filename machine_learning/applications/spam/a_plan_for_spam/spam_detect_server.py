@@ -9,10 +9,13 @@ import http.server
 import json
 import logging
 import pathlib
+import uuid
 
 import events
 import config
 import model_trainer
+
+from typing import NamedTuple
 
 # B/C: https://stackoverflow.com/a/27733727/4885590
 from model_trainer import bad_words_spam_classifier
@@ -30,6 +33,12 @@ emit_event_func = events.build_event_emitter(
 event_publisher = events.SpamDetectAPIEventPublisher(emit_event=emit_event_func)
 
 
+class DetectionResult(NamedTuple):
+    is_spam: bool
+    detection_id: str
+    confidence: float
+
+
 def load_spam_detector() -> model_trainer.SpamClassifier:
     tag = config.spam_detect_model_tag
     classifier_dest_root = pathlib.Path(config.spam_model_serialization_destination)
@@ -41,16 +50,22 @@ def load_spam_detector() -> model_trainer.SpamClassifier:
 
 def detect_spam(
     spam_classifier: model_trainer.SpamClassifier, email: model_trainer.Email
-) -> bool:
+) -> DetectionResult:
     spam_decision_threshold = 0.99
     prediction = spam_classifier(email)
     is_spam = prediction > spam_decision_threshold
+    detection_id = (
+        f"spam-dtctn-{uuid.uuid4()}"  # simple, but has excessive amount of entropy.
+    )
     event_publisher.emit_spam_predicted_event(
         spam_detect_model_tag=config.spam_detect_model_tag,
         spam=is_spam,
         confidence=prediction,
+        detection_id=detection_id,
     )
-    return is_spam
+    return DetectionResult(
+        is_spam=is_spam, detection_id=detection_id, confidence=prediction
+    )
 
 
 class NoDetectionHandler(http.server.SimpleHTTPRequestHandler):
@@ -77,39 +92,58 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
         self.spam_classifier = load_spam_detector()
         super().__init__(*args, **kwargs)
 
-    def do_HEAD(self):
+    def do_HEAD(self) -> None:
         self.send_error(405)
 
-    def do_GET(self):
+    def do_GET(self) -> None:
         self.send_error(405)
 
-    def do_POST(self):
+    def do_POST(self) -> None:
         """
-        Handle a post request by returning the square of the number.
+        Handle a POST request containing an email that needs to be classified as spam or ham.
 
-        curl --verbose --data '{"number": 3}' localhost:8080/
+        Example request:
+
+        curl localhost:8080/ \
+          -X POST \
+          -H 'Content-Type: application/json' \
+          -d '{
+            "email": "< full utf-8 text contents of email >"
+          }'
+
+        Example response:
+
+          {
+            "object": "spam_detection",
+            "id": "spam-dtctn-2euVa1kmKUuLpSX600M41125Mo9NI",
+            "label": False,
+            "confidence": 0.59
+          }
         """
         logging.info("Handling POST request.")
         length = int(self.headers.get("Content-Length"))
         data = self.rfile.read(length)
         try:
-            # TODO(Jonathon): Actually handle a POST JSON body with email data
-            num = json.loads(data)["number"]
-            result = int(num) ** 2
-            is_spam = detect_spam(
-                spam_classifier=self.spam_classifier, email="foo bar foo"
-            )
-            if is_spam:
+            email = json.loads(data)["email"]
+            result = detect_spam(spam_classifier=self.spam_classifier, email=email)
+            if result.is_spam:
                 logging.info("SPAM!")
             else:
                 logging.info("HAM")
+            response = {
+                "object": "spam_detection",
+                "id": result.detection_id,
+                "label": result.is_spam,
+                "confidence": result.confidence,
+            }
         except ValueError:
             logging.error("Failed to parse POST data.")
             # TODO(Jonathon): Fix this error handling
-            result = "error"
+            response = {"error": True}
         self.send_response(200)
+        self.send_header("Content-Type", "application/json")
         self.end_headers()
-        self.wfile.write(f"{result}\n".encode("utf-8"))
+        self.wfile.write(json.dumps(response).encode("utf-8"))
 
 
 def serve(testing=False) -> None:

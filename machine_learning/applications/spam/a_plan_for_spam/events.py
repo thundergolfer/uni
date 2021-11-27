@@ -42,6 +42,7 @@ class SpamPredictedEventProperties(NamedTuple):
     spam_detect_model_tag: str
     confidence: float
     spam: bool
+    detection_id: str
 
 
 class Event(NamedTuple):
@@ -100,11 +101,13 @@ class SpamDetectAPIEventPublisher:
         spam_detect_model_tag: str,
         spam: bool,
         confidence: float,
+        detection_id: str,
     ):
         props = SpamPredictedEventProperties(
             spam_detect_model_tag=spam_detect_model_tag,
             spam=spam,
             confidence=confidence,
+            detection_id=detection_id,
         )
         event = Event(
             type=EventTypes.SPAM_PREDICTED,
