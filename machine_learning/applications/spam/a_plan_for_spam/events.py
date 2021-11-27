@@ -61,7 +61,7 @@ Emitter = Callable[[Event], None]
 
 
 # NOTE: Code like this gets repetitive, and so you'd typically generate it, possibly
-#       from Interface Definition Language (IDL)
+#       using an Interface Definition Language (IDL)
 
 
 class MailServerEventPublisher:
