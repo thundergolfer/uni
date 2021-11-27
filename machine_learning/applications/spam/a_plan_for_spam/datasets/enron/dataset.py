@@ -1,7 +1,7 @@
 import json
 import pathlib
 
-from typing import NamedTuple, Sequence
+from typing import NamedTuple, MutableSequence
 
 
 class Example(NamedTuple):
@@ -9,7 +9,7 @@ class Example(NamedTuple):
     spam: bool
 
 
-RawEnronDataset = Sequence[Example]
+RawEnronDataset = MutableSequence[Example]
 
 
 def deserialize_dataset(dataset_path: pathlib.Path) -> RawEnronDataset:

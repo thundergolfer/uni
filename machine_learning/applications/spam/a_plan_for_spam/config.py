@@ -1,3 +1,5 @@
+import os
+
 mail_server_addr = ("localhost", 1024)
 mail_receiver_addr = ("localhost", 1025)
 spam_detect_api_addr = ("localhost", 8080)
@@ -6,6 +8,6 @@ spam_detect_model_tag = (
 )
 
 logging_format_str = "%(asctime)s %(levelname)s %(message)s"
-logging_file_path_root = "logs/"
+logging_file_path_root = os.environ.get("LOGGING_FILE_PATH_ROOT") or "logs/"
 
 spam_model_serialization_destination = "models/"

@@ -13,6 +13,7 @@ import pathlib
 import random
 import smtplib
 import smtpd
+import sys
 import time
 
 import config
@@ -110,19 +111,44 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
             )
 
 
-def simulate_receivers():
+def simulate_receivers() -> None:
     localaddr: ServerAddr = config.mail_receiver_addr
     remoteaddr: ServerAddr = config.mail_server_addr
     _server = MessageTransferAgentServer(localaddr, remoteaddr)
     asyncore.loop()
 
 
-def simulate_senders():
+class RetryableSMTP(smtplib.SMTP):
+    max_retries = 3
+
+    def __init__(self, *args, **kwargs):
+        self.retries = 0
+        self.wait_seconds = 1
+        host = kwargs["host"]
+        port = kwargs["port"]
+        while self.retries < self.max_retries:
+            try:
+                super().__init__(*args, **kwargs)
+                return
+            except ConnectionRefusedError as e:
+                logging.warning(f"Connection refused to mail server {host}:{port}")
+                logging.warning(
+                    f"Retry {self.retries+1}/{self.max_retries} on SMTP connection."
+                )
+                time.sleep(self.wait_seconds)
+                if self.retries + 1 == self.max_retries:
+                    raise e
+                self.retries += 1
+
+
+def simulate_senders(*, max_emails) -> None:
+    logging.info(f"Will simulate sending of at most {max_emails} emails.")
     # senders (including spammers) direct traffic at our fraud-detecting SMTP server.
     mail_server_addr = config.mail_server_addr
-    sender_email = "jonathon@canva.com"
 
-    with smtplib.SMTP(mail_server_addr[0], mail_server_addr[1]) as server:
+    with RetryableSMTP(
+        host=mail_server_addr[0], port=mail_server_addr[1], timeout=30
+    ) as server:
         server.ehlo()
 
         # Shuffle the dataset because by default the Enron dataset is sorted by
@@ -131,7 +157,14 @@ def simulate_senders():
         random.Random(fixed_random_seed).shuffle(raw_enron_dataset)
 
         for i, example in enumerate(raw_enron_dataset):
+            if i == max_emails:
+                return
             sender_email = extract_email_from(email_bytes=example.email.encode("utf-8"))
+            if not sender_email:
+                logging.warning(
+                    "Invalid email. Could not find sender. Skipping invalid email..."
+                )
+                continue
             # NOTE: Encoding maybe should be encoding="latin-1"
             server.sendmail(
                 sender_email, "foo@canva.com", example.email.encode("utf-8")
@@ -144,11 +177,12 @@ def simulate_senders():
 def main(argv: Union[Sequence[str], None] = None) -> int:
     parser = argparse.ArgumentParser(description="Process some integers.")
     parser.add_argument("mode", choices=["senders", "receivers"])
-    args = parser.parse_args()
+    parser.add_argument("--max-emails", type=int, default=10 ** 6)
+    args = parser.parse_args(argv)
 
     if args.mode == "senders":
         logging.info("Starting simulation of email traffic senders.")
-        simulate_senders()
+        simulate_senders(max_emails=args.max_emails)
     elif args.mode == "receivers":
         logging.info("Starting simulation of email traffic receivers (end users).")
         simulate_receivers()

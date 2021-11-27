@@ -53,6 +53,25 @@ def detect_spam(
     return is_spam
 
 
+class NoDetectionHandler(http.server.SimpleHTTPRequestHandler):
+    def do_POST(self):
+        logging.info("Handling POST request.")
+        length = int(self.headers.get("Content-Length"))
+        data = self.rfile.read(length)
+        try:
+            # TODO(Jonathon): Actually handle a POST JSON body with email data
+            num = json.loads(data)["number"]
+            result = int(num) ** 2
+            logging.info("No-op handler. Default to assuming NOT spam.")
+        except ValueError:
+            logging.error("Failed to parse POST data.")
+            # TODO(Jonathon): Fix this error handling
+            result = "error"
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(f"{result}\n".encode("utf-8"))
+
+
 class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         self.spam_classifier = load_spam_detector()
@@ -93,11 +112,15 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(f"{result}\n".encode("utf-8"))
 
 
-def serve() -> None:
+def serve(testing=False) -> None:
     logging.info("Starting spam-detection API server.")
 
     addr = config.spam_detect_api_addr
-    server = http.server.HTTPServer(addr, SpamDetectionHandler)
+    server = (
+        http.server.HTTPServer(addr, SpamDetectionHandler)
+        if not testing
+        else http.server.HTTPServer(addr, NoDetectionHandler)
+    )
     server.serve_forever()
 
 
