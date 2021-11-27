@@ -45,7 +45,7 @@ class FilteringServer(smtpd.PureProxy):
         logging.info("Call fraud API ---")
         filter_email = False
         try:
-            filter_email = self.filter()
+            filter_email = self.filter(email_bytes=data)
         except http.client.HTTPException as err:
             breakpoint()
         if not filter_email:
@@ -63,7 +63,7 @@ class FilteringServer(smtpd.PureProxy):
 
     def filter(self, email_bytes: bytes) -> bool:
         email_hash_id = hash_email_contents(email=email_bytes)
-        body = {"number": 12}
+        body = {"email": email_bytes.decode("utf-8")}
         spam_detect_api_url = ":".join(
             [str(component) for component in config.spam_detect_api_addr]
         )
@@ -74,13 +74,14 @@ class FilteringServer(smtpd.PureProxy):
         data_b = data.encode("utf-8")
         req.add_header("Content-Length", str(len(data_b)))
         response = urllib.request.urlopen(req, data_b)
-        print(response)
+        response_data = json.loads(response.read())
+        # TODO(Jonathon): Ummmm what? Send event regardless of spam/ham outcome?
         event_publisher.emit_email_spam_filtered(
             email_id=email_hash_id,
             spam_detect_model_tag=config.spam_detect_model_tag,
-            confidence=0.0,
+            confidence=response_data["confidence"],
         )
-        return False
+        return response_data["label"]
 
 
 def serve():

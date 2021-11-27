@@ -74,17 +74,22 @@ class NoDetectionHandler(http.server.SimpleHTTPRequestHandler):
         length = int(self.headers.get("Content-Length"))
         data = self.rfile.read(length)
         try:
-            # TODO(Jonathon): Actually handle a POST JSON body with email data
-            num = json.loads(data)["number"]
-            result = int(num) ** 2
+            _ = json.loads(data)["email"]
             logging.info("No-op handler. Default to assuming NOT spam.")
+            dummy_response = {
+                "object": "spam_detection",
+                "id": "spam-dtctn-1234567890",
+                "label": False,
+                "confidence": 1.0,
+            }
         except ValueError:
             logging.error("Failed to parse POST data.")
             # TODO(Jonathon): Fix this error handling
-            result = "error"
+            dummy_response = {"error": True}
         self.send_response(200)
+        self.send_header("Content-Type", "application/json")
         self.end_headers()
-        self.wfile.write(f"{result}\n".encode("utf-8"))
+        self.wfile.write(json.dumps(dummy_response).encode("utf-8"))
 
 
 class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
