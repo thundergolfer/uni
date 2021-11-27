@@ -18,7 +18,7 @@ import time
 import config
 import events
 
-from typing import Optional, Tuple
+from typing import Optional, Sequence, Union, Tuple
 
 ServerAddr = Tuple[str, int]
 
@@ -141,7 +141,7 @@ def simulate_senders():
                 logging.info(f"Sent {i} emails.")
 
 
-if __name__ == "__main__":
+def main(argv: Union[Sequence[str], None] = None) -> int:
     parser = argparse.ArgumentParser(description="Process some integers.")
     parser.add_argument("mode", choices=["senders", "receivers"])
     args = parser.parse_args()
@@ -154,3 +154,8 @@ if __name__ == "__main__":
         simulate_receivers()
     else:
         raise AssertionError(f"{args.mode} is an illegal mode value.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

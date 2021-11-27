@@ -65,7 +65,7 @@ def follow(log_path: pathlib.Path):
         yield line
 
 
-if __name__ == "__main__":
+def run() -> None:
     time.sleep(2)  # Wait for logs to become available
     # NOTE: Testing with 'echo "$(date +%s)" >> foo.txt'
     log_path = pathlib.Path(
@@ -73,5 +73,9 @@ if __name__ == "__main__":
     )
     log_lines = follow(log_path=log_path)
     func = build_email_spam_filtered_counter_function(metric_window_size_secs=30)
-    for l in log_lines:
-        func(event_str=l, epoch_instant=int(time.time()))
+    for log_ln in log_lines:
+        func(event_str=log_ln, epoch_instant=int(time.time()))
+
+
+if __name__ == "__main__":
+    run()
