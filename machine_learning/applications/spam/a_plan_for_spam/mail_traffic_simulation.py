@@ -54,8 +54,8 @@ def hash_email_contents(email: bytes) -> str:
 
 
 enron_raw_dataset_path = pathlib.Path(
-    "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/a_plan_for_spam/"
-    "datasets/enron/processed_raw_dataset.json"
+    config.datasets_path_root,
+    "enron/processed_raw_dataset.json",
 )
 from datasets.enron.dataset import RawEnronDataset, deserialize_dataset
 
