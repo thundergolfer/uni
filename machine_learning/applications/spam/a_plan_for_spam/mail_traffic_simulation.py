@@ -71,14 +71,15 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
         super(MessageTransferAgentServer, self).__init__(localaddr, remoteaddr)
 
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
+        email_hash_id = hash_email_contents(email=data)
         event_publisher.emit_email_viewed_event(
-            email_id="FAKE EMAIL ID",
+            email_id=email_hash_id,
         )
         # TODO - Maybe this module should just write the emails to mailboxes on disk,
         #        and some other module simulates the clients that read the mailboxes from disk.
-        is_spam = enron_email_classifications_map.get(hash_email_contents(email=data))
+        is_spam = enron_email_classifications_map.get(email_hash_id)
         if is_spam is None:
-            # TODO
+            # TODO(Jonathon):
             # This is the first miss:
             #
             # 33,34c33,34
@@ -95,9 +96,9 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
                 "Received email was not matched against a known hash. Should never happen."
             )
         elif is_spam:
-            print("USER DETECTED SPAM!!")
+            logging.info("User marked email as spam.")
             event_publisher.emit_email_marked_spam_event(
-                email_id="FAKE EMAIL ID",
+                email_id=email_hash_id,
                 rcpttos=rcpttos,
                 mailfrom=mailfrom,
             )
