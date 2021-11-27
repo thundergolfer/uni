@@ -30,7 +30,7 @@ emit_event_func = events.build_event_emitter(
 event_publisher = events.SpamDetectAPIEventPublisher(emit_event=emit_event_func)
 
 
-def load_spam_detecter() -> model_trainer.SpamClassifier:
+def load_spam_detector() -> model_trainer.SpamClassifier:
     tag = config.spam_detect_model_tag
     classifier_dest_root = pathlib.Path(config.spam_model_serialization_destination)
     return model_trainer.load_serialized_classifier(
@@ -39,10 +39,9 @@ def load_spam_detecter() -> model_trainer.SpamClassifier:
     )
 
 
-spam_classifier = load_spam_detecter()
-
-
-def detect_spam(email: model_trainer.Email) -> bool:
+def detect_spam(
+    spam_classifier: model_trainer.SpamClassifier, email: model_trainer.Email
+) -> bool:
     spam_decision_threshold = 0.99
     prediction = spam_classifier(email)
     is_spam = prediction > spam_decision_threshold
@@ -54,7 +53,35 @@ def detect_spam(email: model_trainer.Email) -> bool:
     return is_spam
 
 
+class NoDetectionHandler(http.server.SimpleHTTPRequestHandler):
+    def do_POST(self):
+        logging.info("Handling POST request.")
+        length = int(self.headers.get("Content-Length"))
+        data = self.rfile.read(length)
+        try:
+            # TODO(Jonathon): Actually handle a POST JSON body with email data
+            num = json.loads(data)["number"]
+            result = int(num) ** 2
+            is_spam = False
+            if is_spam:
+                logging.info("SPAM!")
+            else:
+                logging.info("HAM")
+            logging.info("No-op handler. Default to assuming NOT spam.")
+        except ValueError:
+            logging.error("Failed to parse POST data.")
+            # TODO(Jonathon): Fix this error handling
+            result = "error"
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(f"{result}\n".encode("utf-8"))
+
+
 class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self.spam_classifier = load_spam_detector()
+        super().__init__(*args, **kwargs)
+
     def do_HEAD(self):
         self.send_error(405)
 
@@ -74,7 +101,9 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
             # TODO(Jonathon): Actually handle a POST JSON body with email data
             num = json.loads(data)["number"]
             result = int(num) ** 2
-            is_spam = detect_spam(email="foo bar foo")
+            is_spam = detect_spam(
+                spam_classifier=self.spam_classifier, email="foo bar foo"
+            )
             if is_spam:
                 logging.info("SPAM!")
             else:
@@ -88,13 +117,17 @@ class SpamDetectionHandler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(f"{result}\n".encode("utf-8"))
 
 
-def start() -> None:
+def serve(testing=False) -> None:
     logging.info("Starting spam-detection API server.")
 
     addr = config.spam_detect_api_addr
-    server = http.server.HTTPServer(addr, SpamDetectionHandler)
+    server = (
+        http.server.HTTPServer(addr, SpamDetectionHandler)
+        if not testing
+        else http.server.HTTPServer(addr, NoDetectionHandler)
+    )
     server.serve_forever()
 
 
 if __name__ == "__main__":
-    start()
+    serve()
