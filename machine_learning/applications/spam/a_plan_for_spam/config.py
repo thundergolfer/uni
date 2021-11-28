@@ -13,3 +13,4 @@ logging_file_path_root = os.environ.get("LOGGING_FILE_PATH_ROOT") or "logs/"
 spam_model_serialization_destination = "models/"
 
 datasets_path_root = "datasets/"
+dataset_subpath = "enron/processed_raw_dataset.json"

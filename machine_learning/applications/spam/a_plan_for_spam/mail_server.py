@@ -61,6 +61,9 @@ class FilteringServer(smtpd.PureProxy):
             finally:
                 s.quit()
 
+    # TODO(Jonathon): Don't filter message in mail server. Apply anti-spam headers like
+    # Microsoft Outlook does:
+    # https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers?view=o365-worldwide
     def filter(self, email_bytes: bytes) -> bool:
         email_hash_id = hash_email_contents(email=email_bytes)
         body = {"email": email_bytes.decode("utf-8")}
@@ -82,6 +85,20 @@ class FilteringServer(smtpd.PureProxy):
             confidence=response_data["confidence"],
         )
         return response_data["label"]
+
+
+# TODO(Jonathon): Error that crashes mail server:
+#
+# error: uncaptured python exception, closing channel
+# <smtpd.SMTPChannel connected ('::1', 52340, 0, 0) at 0x108f1fd60>
+# (<class 'email.errors.HeaderParseError'>:expected addr-spec or obs-route but found ' > size=2867'
+# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asyncore.py|read|83]
+# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asyncore.py|handle_read_event|420]
+# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asynchat.py|handle_read|171]
+# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtpd.py|found_terminator|359]
+# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtpd.py|smtp_MAIL|525]
+# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtpd.py|_getaddr|449]
+# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/email/_header_value_parser.py|get_angle_addr|1722])
 
 
 def serve():

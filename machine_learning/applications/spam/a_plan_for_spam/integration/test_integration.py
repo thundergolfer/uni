@@ -10,6 +10,10 @@ import spam_detect_server
 import mail_traffic_simulation
 
 
+# TODO(Jonathon): Should be able to read in a small Enron-like dataset during
+#                 integration testing. Would at least make the tests run faster.
+
+
 def test_end_to_end(tmp_path):
     os.environ["LOGGING_FILE_PATH_ROOT"] = str(tmp_path)
 
