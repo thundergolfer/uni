@@ -88,8 +88,6 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
         event_publisher.emit_email_viewed_event(
             email_id=message_id,
         )
-        # TODO - Maybe this module should just write the emails to mailboxes on disk,
-        #        and some other module simulates the clients that read the mailboxes from disk.
         current_example = self.filtered_enron_dataset_map.get(message_id)
         if current_example is None:
             # TODO(Jonathon):
