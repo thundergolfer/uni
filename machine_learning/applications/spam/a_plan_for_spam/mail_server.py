@@ -67,12 +67,10 @@ class AntiSpamServer(smtpd.PureProxy):
 
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
         logging.info("Call fraud API ---")
-        filter_email = False
         try:
             is_spam = self.check_for_spam(email_bytes=data)
         except http.client.HTTPException as err:
             breakpoint()
-
         augmented_data = self.add_anti_spam_headers(is_spam=is_spam, data=data)
         # I don't call smtpd.PureProxy's process_message() method because it's
         # janky. If I pass bytes for `data` it breaks because it tries to split
@@ -93,7 +91,15 @@ class AntiSpamServer(smtpd.PureProxy):
         Ref: https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers?view=o365-worldwide
         """
         e_msg = email.message_from_bytes(data, policy=email.policy.SMTPUTF8)
-        e_msg.add_header("X-Thundergolfer-AntiSpam", "SPAM" if is_spam else "HAM")
+        email_id = extract_email_msg_id(email_bytes=data)
+        if not email_id:
+            raise RuntimeError("Should not fail to get Message-ID.")
+        anti_spam_header_key = "X-Thundergolfer-AntiSpam"
+        e_msg.add_header(anti_spam_header_key, "SPAM" if is_spam else "HAM")
+        event_publisher.emit_email_headers_modified(
+            email_id=email_id,
+            headers=[anti_spam_header_key],
+        )
         return e_msg.as_bytes()
 
     @staticmethod
@@ -113,12 +119,6 @@ class AntiSpamServer(smtpd.PureProxy):
         req.add_header("Content-Length", str(len(data_b)))
         response = urllib.request.urlopen(req, data_b)
         response_data = json.loads(response.read())
-        # TODO(Jonathon): Ummmm what? Send event regardless of spam/ham outcome?
-        event_publisher.emit_email_spam_filtered(
-            email_id=email_id,
-            spam_detect_model_tag=config.spam_detect_model_tag,
-            confidence=response_data["confidence"],
-        )
         return response_data["label"]
 
 

@@ -17,7 +17,7 @@ Property = Union[str, int, float, bool, UUID]
 # the use of string literals which may conflict (but only at runtime)
 class EventTypes(str, enum.Enum):
     EMAIL_MARKED_SPAM = "email_marked_spam"
-    EMAIL_SPAM_FILTERED = "email_spam_filtered"
+    EMAIL_HEADERS_MODIFIED = "email_headers_modified"
     EMAIL_VIEWED = "email_viewed"
     SPAM_PREDICTED = "spam_predicted"
 
@@ -32,10 +32,9 @@ class EmailMarkedSpamProperties(NamedTuple):
     rcpttos: List[str]
 
 
-class EmailSpamFilteredProperties(NamedTuple):
+class EmailHeadersModifiedProperties(NamedTuple):
     email_id: UUID
-    spam_detect_model_tag: str
-    confidence: float
+    headers: List[str]
 
 
 class SpamPredictedEventProperties(NamedTuple):
@@ -50,7 +49,7 @@ class Event(NamedTuple):
     source: str
     id: UUID
     properties: Union[
-        EmailSpamFilteredProperties,
+        EmailHeadersModifiedProperties,
         EmailMarkedSpamProperties,
         EmailViewedProperties,
         SpamPredictedEventProperties,
@@ -69,20 +68,18 @@ class MailServerEventPublisher:
         self.source = "mail_server"
         self.emit_event = emit_event
 
-    def emit_email_spam_filtered(
+    def emit_email_headers_modified(
         self,
         *,
         email_id: str,
-        spam_detect_model_tag: str,
-        confidence: float,
+        headers: List[str],
     ):
-        props = EmailSpamFilteredProperties(
+        props = EmailHeadersModifiedProperties(
             email_id=email_id,
-            spam_detect_model_tag=spam_detect_model_tag,
-            confidence=confidence,
+            headers=headers,
         )
         event = Event(
-            type=EventTypes.EMAIL_SPAM_FILTERED,
+            type=EventTypes.EMAIL_HEADERS_MODIFIED,
             source=self.source,
             id=str(uuid.uuid4()),
             properties=props,
