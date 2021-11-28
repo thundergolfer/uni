@@ -32,10 +32,9 @@ def test_mail_server_event_publisher():
         emit_event=emit_func,
     )
 
-    mail_server_event_publisher.emit_email_spam_filtered(
+    mail_server_event_publisher.emit_email_headers_modified(
         email_id=str(uuid.uuid4()),
-        spam_detect_model_tag="foo_model_123",
-        confidence=0.5,
+        headers=["foo"],
     )
 
     assert len(event_log) == 1
@@ -53,6 +52,7 @@ def test_spam_detect_api_event_publisher():
         spam_detect_model_tag="foo_model_123",
         spam=False,
         confidence=0.5,
+        detection_id=f"spam-dtctn-FAKE",
     )
 
     assert len(event_log) == 1
@@ -72,14 +72,17 @@ def test_building_console_based_event_emitter(capsys):
             spam_detect_model_tag="test_fake_model_tag",
             spam=False,
             confidence=0.2,
+            detection_id=f"spam-dtctn-FAKE",
         ),
     )
 
     emit_func(event=test_event)
     out, err = capsys.readouterr()
+    print(out)
     expected = (
-        '{"type": "spam_predicted", "source": "TEST_FAKE_SOURCE", "id": "fake_uuid4", "properties": ['
-        '"test_fake_model_tag", 0.2, false]}\n'
+        '{"type": "spam_predicted", "source": "TEST_FAKE_SOURCE", '
+        '"id": "fake_uuid4", "properties": '
+        '["test_fake_model_tag", 0.2, false, "spam-dtctn-FAKE"]}\n'
     )
     assert expected == out
     assert "" == err
