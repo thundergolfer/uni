@@ -217,7 +217,7 @@ def simulate_senders(*, max_emails) -> None:
             )
             # Otherwise this sends emails really quickly.
             time.sleep(0.2)
-            if i % 100 == 0:
+            if i % 20 == 0:
                 logging.info(f"Sent {i} emails.")
 
 

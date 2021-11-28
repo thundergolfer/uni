@@ -4,6 +4,11 @@ API to detect Spam email and filter it out of client's inboxes.
 """
 
 import asyncore
+import email
+import email.errors
+import email.header
+import email.policy
+import email.utils
 import hashlib
 import http
 import json
@@ -15,7 +20,7 @@ import urllib.request
 import config
 import events
 
-from typing import Tuple
+from typing import Optional, Tuple
 
 ServerAddr = Tuple[str, int]
 
@@ -37,35 +42,65 @@ def hash_email_contents(email: bytes) -> str:
     return hashlib.sha256(email).hexdigest().upper()
 
 
-class FilteringServer(smtpd.PureProxy):
+def extract_email_header_field(*, email_bytes: bytes, field_name: str) -> Optional[str]:
+    e_msg = email.message_from_bytes(email_bytes, policy=email.policy.SMTPUTF8)
+    return e_msg.get(field_name)
+
+
+def extract_email_msg_id(email_bytes: bytes) -> Optional[str]:
+    try:
+        return extract_email_header_field(
+            email_bytes=email_bytes, field_name="Message-ID"
+        )
+    except (email.errors.HeaderParseError, IndexError):
+        # A few dozen emails in the dataset(s) have busted Message-IDs.
+        # There are 3 '<@Barclays.co.uk>' IDs, for example, which are in an invalid format,
+        # and obviously not unique.
+        # Ref: https://en.wikipedia.org/wiki/Message-ID
+        logging.warning("Failed to parse 'Message-ID' from email.")
+        return None
+
+
+class AntiSpamServer(smtpd.PureProxy):
     def __init__(self, localaddr, remoteaddr):
-        super(FilteringServer, self).__init__(localaddr, remoteaddr)
+        super(AntiSpamServer, self).__init__(localaddr, remoteaddr)
 
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
         logging.info("Call fraud API ---")
         filter_email = False
         try:
-            filter_email = self.filter(email_bytes=data)
+            is_spam = self.check_for_spam(email_bytes=data)
         except http.client.HTTPException as err:
             breakpoint()
-        if not filter_email:
-            # I don't call smtpd.PureProxy's process_message() method because it's
-            # janky. If I pass bytes for `data` it breaks because it tries to split
-            # those bytes using '\n', a string. If I pass a string, it passes that
-            # string to smtplib.sendmail which can only handle ascii strings, and the
-            # enron dataset emails aren't ascii.
-            s = smtplib.SMTP()
-            s.connect(self._remoteaddr[0], self._remoteaddr[1])
-            try:
-                s.sendmail(mailfrom, rcpttos, data)
-            finally:
-                s.quit()
 
-    # TODO(Jonathon): Don't filter message in mail server. Apply anti-spam headers like
-    # Microsoft Outlook does:
-    # https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers?view=o365-worldwide
-    def filter(self, email_bytes: bytes) -> bool:
-        email_hash_id = hash_email_contents(email=email_bytes)
+        augmented_data = self.add_anti_spam_headers(is_spam=is_spam, data=data)
+        # I don't call smtpd.PureProxy's process_message() method because it's
+        # janky. If I pass bytes for `data` it breaks because it tries to split
+        # those bytes using '\n', a string. If I pass a string, it passes that
+        # string to smtplib.sendmail which can only handle ascii strings, and the
+        # enron dataset emails aren't ascii.
+        s = smtplib.SMTP()
+        s.connect(self._remoteaddr[0], self._remoteaddr[1])
+        try:
+            s.sendmail(mailfrom, rcpttos, augmented_data)
+        finally:
+            s.quit()
+
+    @staticmethod
+    def add_anti_spam_headers(is_spam: bool, data: bytes) -> bytes:
+        """
+        Applying Anti-spam email headers like Microsoft Outlook does.
+        Ref: https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers?view=o365-worldwide
+        """
+        e_msg = email.message_from_bytes(data, policy=email.policy.SMTPUTF8)
+        e_msg.add_header("X-Thundergolfer-AntiSpam", "SPAM" if is_spam else "HAM")
+        return e_msg.as_bytes()
+
+    @staticmethod
+    def check_for_spam(email_bytes: bytes) -> bool:
+        email_id = extract_email_msg_id(email_bytes=email_bytes)
+        if not email_id:
+            raise RuntimeError("Should not fail to get Message-ID.")
         body = {"email": email_bytes.decode("utf-8")}
         spam_detect_api_url = ":".join(
             [str(component) for component in config.spam_detect_api_addr]
@@ -80,7 +115,7 @@ class FilteringServer(smtpd.PureProxy):
         response_data = json.loads(response.read())
         # TODO(Jonathon): Ummmm what? Send event regardless of spam/ham outcome?
         event_publisher.emit_email_spam_filtered(
-            email_id=email_hash_id,
+            email_id=email_id,
             spam_detect_model_tag=config.spam_detect_model_tag,
             confidence=response_data["confidence"],
         )
@@ -105,7 +140,7 @@ def serve():
     logging.info("Starting (spam-detecting) mail server.")
     localaddr: ServerAddr = config.mail_server_addr
     remoteaddr: ServerAddr = config.mail_receiver_addr
-    _server = FilteringServer(localaddr, remoteaddr)
+    _server = AntiSpamServer(localaddr, remoteaddr)
     asyncore.loop()
 
 
