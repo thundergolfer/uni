@@ -78,7 +78,6 @@ def test_building_console_based_event_emitter(capsys):
 
     emit_func(event=test_event)
     out, err = capsys.readouterr()
-    print(out)
     expected = (
         '{"type": "spam_predicted", "source": "TEST_FAKE_SOURCE", '
         '"id": "fake_uuid4", "properties": '
