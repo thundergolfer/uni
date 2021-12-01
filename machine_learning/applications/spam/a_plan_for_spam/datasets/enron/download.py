@@ -13,7 +13,7 @@ from typing import List, Sequence, Union
 
 from dataset import Example, RawEnronDataset
 
-logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s')
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s")
 logging.getLogger().setLevel(logging.DEBUG)
 
 enron_raw_dataset_url_root = "http://www.aueb.gr/users/ion/data/enron-spam/raw/"
@@ -31,7 +31,9 @@ def _download_and_extract_dataset(destination_root_path: pathlib.Path):
             dataset_file_url = f"{enron_raw_dataset_url_root}{key}/{value}.tar.gz"
             destination_path = destination_root_path / key / f"{value}.tar.gz"
             destination_path.parent.mkdir(parents=True, exist_ok=True)
-            with urllib.request.urlopen(dataset_file_url) as response, open(destination_path, 'wb') as out_file:
+            with urllib.request.urlopen(dataset_file_url) as response, open(
+                destination_path, "wb"
+            ) as out_file:
                 shutil.copyfileobj(response, out_file)
 
             logging.info(f"Extracting raw enron dataset file {key}/{value}")
@@ -42,14 +44,16 @@ def _download_and_extract_dataset(destination_root_path: pathlib.Path):
 
 def main(argv: Union[Sequence[str], None] = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--skip-download", action='store_true')
+    parser.add_argument("--skip-download", action="store_true")
     args = parser.parse_args(argv)
 
     # TODO(Jonathon): Don't hardcode paths.
-    destination_root_path = pathlib.Path((
-        "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/"
-        "a_plan_for_spam/datasets/enron/raw/"
-    ))
+    destination_root_path = pathlib.Path(
+        (
+            "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/"
+            "a_plan_for_spam/datasets/enron/raw/"
+        )
+    )
     processed_dataset_path = pathlib.Path(
         "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/"
         "a_plan_for_spam/datasets/enron/processed_raw_dataset.json"
@@ -58,8 +62,11 @@ def main(argv: Union[Sequence[str], None] = None) -> int:
     if not args.skip_download:
         _download_and_extract_dataset(destination_root_path=destination_root_path)
 
+    # TODO(Jonathon): This only produces ~50,000 examples.
+    # Other links to the dataset claim ~500,000 examples, eg.
+    # https://www.kaggle.com/wcukierski/enron-email-dataset
     ds: List[Example] = []
-    for pth in destination_root_path.glob('**/*'):
+    for pth in destination_root_path.glob("**/*"):
         if pth.is_dir() or str(pth).endswith("tar.gz"):
             continue
         # A single file looks like 'datasets/enron/raw/ham/lokay-m/enron_t_s/25'
