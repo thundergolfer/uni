@@ -78,9 +78,11 @@ from datasets.enron.dataset import Example, RawEnronDataset, deserialize_dataset
 
 
 class MessageTransferAgentServer(smtpd.DebuggingServer):
-    def __init__(self, localaddr, remoteaddr, filtered_enron_dataset_map):
-        super(MessageTransferAgentServer, self).__init__(localaddr, remoteaddr)
+    def __init__(self, localaddr, remoteaddr, filtered_enron_dataset_map, **kwargs):
         self.filtered_enron_dataset_map = filtered_enron_dataset_map
+        super(MessageTransferAgentServer, self).__init__(
+            localaddr, remoteaddr, **kwargs
+        )
 
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs) -> None:
         message_id = extract_email_msg_id(email_bytes=data)
@@ -147,7 +149,10 @@ def simulate_receivers() -> None:
     localaddr: ServerAddr = config.mail_receiver_addr
     remoteaddr: ServerAddr = config.mail_server_addr
     _server = MessageTransferAgentServer(
-        localaddr, remoteaddr, filtered_enron_dataset_map=filtered_enron_dataset_map
+        localaddr=localaddr,
+        remoteaddr=remoteaddr,
+        filtered_enron_dataset_map=filtered_enron_dataset_map,
+        enable_SMTPUTF8=True,
     )
     asyncore.loop()
 
@@ -196,7 +201,11 @@ def simulate_senders(*, max_emails) -> None:
     with RetryableSMTP(
         host=mail_server_addr[0], port=mail_server_addr[1], timeout=timeout_s
     ) as server:
-        server.ehlo()
+        resp = server.ehlo()
+        server.esmtp_features["smtputf8"] = True
+        if not server.has_extn("smtputf8"):
+            logging.error("ooops")
+            raise RuntimeError(resp)
 
         to_send = list(filtered_enron_dataset_map.values())
         # Shuffle the dataset because by default the Enron dataset is sorted by
@@ -213,16 +222,28 @@ def simulate_senders(*, max_emails) -> None:
                     "Invalid email. Could not find sender. Skipping invalid email..."
                 )
                 continue
-            # NOTE: Encoding maybe should be encoding="latin-1"
-            server.sendmail(
-                sender_email, "foo@canva.com", example.email.encode("utf-8")
+            msg = email.message_from_bytes(
+                example.email.encode("utf-8"), policy=email.policy.SMTPUTF8
             )
+            # NOTE: Encoding maybe should be encoding="latin-1"
+            try:
+                server.send_message(
+                    msg=msg,
+                    from_addr=sender_email,
+                    # TODO(Jonathon): w/o this some emails throw smtplib.SMTPRecipientsRefused
+                    to_addrs="foo@canva.com",
+                )
+            except smtplib.SMTPRecipientsRefused:
+                breakpoint()
             # Otherwise this sends emails really quickly.
             time.sleep(0.2)
             if i % 20 == 0:
                 logging.info(f"Sent {i} emails.")
 
 
+# TODO(Jonathon):
+# Eventually run into error processing emails.
+# UnicodeEncodeError: 'utf-8' codec can't encode characters in position 7-8: surrogates not allowed
 def main(argv: Union[Sequence[str], None] = None) -> int:
     parser = argparse.ArgumentParser(description="Process some integers.")
     parser.add_argument("mode", choices=["senders", "receivers"])

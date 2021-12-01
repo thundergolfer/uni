@@ -64,17 +64,17 @@ def extract_email_msg_id(email_bytes: bytes) -> Optional[str]:
         return None
 
 
-class AntiSpamServer(smtpd.PureProxy):
-    def __init__(self, localaddr, remoteaddr):
-        super(AntiSpamServer, self).__init__(localaddr, remoteaddr)
+class AntiSpamServer(smtpd.SMTPServer):
+    def __init__(self, localaddr, remoteaddr, **kwargs):
+        super(AntiSpamServer, self).__init__(localaddr, remoteaddr, **kwargs)
 
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
-        logging.info("Call fraud API ---")
         try:
+            logging.info("Call fraud API ---")
             is_spam = self.check_for_spam(email_bytes=data)
         except http.client.HTTPException as err:
             breakpoint()
-        augmented_data = self.add_anti_spam_headers(is_spam=is_spam, data=data)
+        e_msg = self.add_anti_spam_headers(is_spam=is_spam, data=data)
         # I don't call smtpd.PureProxy's process_message() method because it's
         # janky. If I pass bytes for `data` it breaks because it tries to split
         # those bytes using '\n', a string. If I pass a string, it passes that
@@ -83,12 +83,12 @@ class AntiSpamServer(smtpd.PureProxy):
         s = smtplib.SMTP()
         s.connect(self._remoteaddr[0], self._remoteaddr[1])
         try:
-            s.sendmail(mailfrom, rcpttos, augmented_data)
+            s.send_message(msg=e_msg, from_addr=mailfrom, to_addrs=rcpttos)
         finally:
             s.quit()
 
     @staticmethod
-    def add_anti_spam_headers(is_spam: bool, data: bytes) -> bytes:
+    def add_anti_spam_headers(is_spam: bool, data: bytes) -> email.message.Message:
         """
         Applying Anti-spam email headers like Microsoft Outlook does.
         Ref: https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-message-headers?view=o365-worldwide
@@ -103,7 +103,7 @@ class AntiSpamServer(smtpd.PureProxy):
             email_id=email_id,
             headers=[anti_spam_header_key],
         )
-        return e_msg.as_bytes()
+        return e_msg
 
     @staticmethod
     def check_for_spam(email_bytes: bytes) -> bool:
@@ -143,7 +143,9 @@ def serve():
     logging.info("Starting (spam-detecting) mail server.")
     localaddr: ServerAddr = config.mail_server_addr
     remoteaddr: ServerAddr = config.mail_receiver_addr
-    _server = AntiSpamServer(localaddr, remoteaddr)
+    _server = AntiSpamServer(
+        localaddr=localaddr, remoteaddr=remoteaddr, enable_SMTPUTF8=True
+    )
     asyncore.loop()
 
 
