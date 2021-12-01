@@ -5,6 +5,7 @@ servers in this application, and track certain metrics over time, such as
 'number of users marking an email as spam in the last 5 minutes'.
 """
 import collections
+import logging
 import os
 import pathlib
 import time
@@ -12,6 +13,9 @@ import time
 from typing import Callable, Deque, Protocol
 
 import config
+
+logging.basicConfig(format=config.logging_format_str)
+logging.getLogger().setLevel(logging.DEBUG)
 
 # The queues really shouldn't become very large. A low max
 # helps us surface bugs.
@@ -74,6 +78,11 @@ def run() -> None:
         config.logging_file_path_root,
         "email_marked_spam.log",
     )
+    while not log_path.exists():
+        wait_secs = 5
+        logging.info(f"'{log_path}' not yet created. Waiting {wait_secs} seconds")
+        time.sleep(wait_secs)
+
     log_lines = follow(log_path=log_path)
     func = build_email_marked_spam_counter_function(metric_window_size_secs=30)
     for log_ln in log_lines:
