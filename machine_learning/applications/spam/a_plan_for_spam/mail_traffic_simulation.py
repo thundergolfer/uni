@@ -141,7 +141,8 @@ def simulate_receivers() -> None:
         extract_email_msg_id(email_bytes=example.email.encode("utf-8")): example
         for example in raw_enron_dataset
     }
-    del filtered_enron_dataset_map[None]
+    if None in filtered_enron_dataset_map:
+        del filtered_enron_dataset_map[None]
 
     localaddr: ServerAddr = config.mail_receiver_addr
     remoteaddr: ServerAddr = config.mail_server_addr
@@ -181,7 +182,8 @@ def simulate_senders(*, max_emails) -> None:
         extract_email_msg_id(email_bytes=example.email.encode("utf-8")): example
         for example in raw_enron_dataset
     }
-    del filtered_enron_dataset_map[None]
+    if None in filtered_enron_dataset_map:
+        del filtered_enron_dataset_map[None]
 
     logging.info(f"Will simulate sending of at most {max_emails} emails.")
     # senders (including spammers) direct traffic at our fraud-detecting SMTP server.
