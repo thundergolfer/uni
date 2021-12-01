@@ -15,6 +15,7 @@ import json
 import logging
 import smtpd
 import smtplib
+import time
 import urllib.request
 
 import config
@@ -35,7 +36,9 @@ emit_event_func = events.build_event_emitter(
     to_file=True,
     log_root_path=config.logging_file_path_root,
 )
-event_publisher = events.MailServerEventPublisher(emit_event=emit_event_func)
+event_publisher = events.MailServerEventPublisher(
+    emit_event=emit_event_func, time_of_day_clock_fn=lambda: time.time_ns()
+)
 
 
 def hash_email_contents(email: bytes) -> str:

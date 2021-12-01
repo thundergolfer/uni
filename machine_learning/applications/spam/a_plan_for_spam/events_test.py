@@ -24,12 +24,17 @@ def produce_testable_emit(
     return emit
 
 
+def fake_clock_fn() -> int:
+    return 0
+
+
 def test_mail_server_event_publisher():
     event_log: List[events.Event] = []
     emit_func = produce_testable_emit(event_log)
 
     mail_server_event_publisher = events.MailServerEventPublisher(
         emit_event=emit_func,
+        time_of_day_clock_fn=fake_clock_fn,
     )
 
     mail_server_event_publisher.emit_email_headers_modified(
@@ -46,6 +51,7 @@ def test_spam_detect_api_event_publisher():
 
     event_publisher = events.SpamDetectAPIEventPublisher(
         emit_event=emit_func,
+        time_of_day_clock_fn=fake_clock_fn,
     )
 
     event_publisher.emit_spam_predicted_event(
@@ -68,6 +74,7 @@ def test_building_console_based_event_emitter(capsys):
         type=events.EventTypes.SPAM_PREDICTED,
         source="TEST_FAKE_SOURCE",
         id="fake_uuid4",
+        epoch_nanosecs=100001234,
         properties=events.SpamPredictedEventProperties(
             spam_detect_model_tag="test_fake_model_tag",
             spam=False,
@@ -80,7 +87,7 @@ def test_building_console_based_event_emitter(capsys):
     out, err = capsys.readouterr()
     expected = (
         '{"type": "spam_predicted", "source": "TEST_FAKE_SOURCE", '
-        '"id": "fake_uuid4", "properties": '
+        '"id": "fake_uuid4", "epoch_nanosecs": 100001234, "properties": '
         '["test_fake_model_tag", 0.2, false, "spam-dtctn-FAKE"]}\n'
     )
     assert expected == out

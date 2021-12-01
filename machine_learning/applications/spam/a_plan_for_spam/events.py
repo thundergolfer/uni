@@ -48,6 +48,7 @@ class Event(NamedTuple):
     type: EventTypes
     source: str
     id: UUID
+    epoch_nanosecs: int
     properties: Union[
         EmailHeadersModifiedProperties,
         EmailMarkedSpamProperties,
@@ -57,16 +58,17 @@ class Event(NamedTuple):
 
 
 Emitter = Callable[[Event], None]
-
+ClockFunction = Callable[[], int]
 
 # NOTE: Code like this gets repetitive, and so you'd typically generate it, possibly
 #       using an Interface Definition Language (IDL)
 
 
 class MailServerEventPublisher:
-    def __init__(self, emit_event: Emitter):
+    def __init__(self, emit_event: Emitter, time_of_day_clock_fn: ClockFunction):
         self.source = "mail_server"
         self.emit_event = emit_event
+        self.time_of_day_clock_fn = time_of_day_clock_fn
 
     def emit_email_headers_modified(
         self,
@@ -82,15 +84,17 @@ class MailServerEventPublisher:
             type=EventTypes.EMAIL_HEADERS_MODIFIED,
             source=self.source,
             id=str(uuid.uuid4()),
+            epoch_nanosecs=self.time_of_day_clock_fn(),
             properties=props,
         )
         self.emit_event(event)
 
 
 class SpamDetectAPIEventPublisher:
-    def __init__(self, emit_event: Emitter):
+    def __init__(self, emit_event: Emitter, time_of_day_clock_fn: ClockFunction):
         self.source = "spam_detect_api"
         self.emit_event = emit_event
+        self.time_of_day_clock_fn = time_of_day_clock_fn
 
     def emit_spam_predicted_event(
         self,
@@ -110,15 +114,17 @@ class SpamDetectAPIEventPublisher:
             type=EventTypes.SPAM_PREDICTED,
             source=self.source,
             id=str(uuid.uuid4()),
+            epoch_nanosecs=self.time_of_day_clock_fn(),
             properties=props,
         )
         self.emit_event(event)
 
 
 class MailTrafficSimulationEventPublisher:
-    def __init__(self, emit_event: Emitter):
+    def __init__(self, emit_event: Emitter, time_of_day_clock_fn: ClockFunction):
         self.source = "mail_traffic_simulation"
         self.emit_event = emit_event
+        self.time_of_day_clock_fn = time_of_day_clock_fn
 
     def emit_email_marked_spam_event(
         self,
@@ -136,6 +142,7 @@ class MailTrafficSimulationEventPublisher:
             type=EventTypes.EMAIL_MARKED_SPAM,
             source=self.source,
             id=str(uuid.uuid4()),
+            epoch_nanosecs=self.time_of_day_clock_fn(),
             properties=props,
         )
         self.emit_event(event)
@@ -152,6 +159,7 @@ class MailTrafficSimulationEventPublisher:
             type=EventTypes.EMAIL_VIEWED,
             source=self.source,
             id=str(uuid.uuid4()),
+            epoch_nanosecs=self.time_of_day_clock_fn(),
             properties=props,
         )
         self.emit_event(event)

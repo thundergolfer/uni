@@ -33,7 +33,9 @@ emit_event_func = events.build_event_emitter(
     to_file=True,
     log_root_path=config.logging_file_path_root,
 )
-event_publisher = events.MailTrafficSimulationEventPublisher(emit_event=emit_event_func)
+event_publisher = events.MailTrafficSimulationEventPublisher(
+    emit_event=emit_event_func, time_of_day_clock_fn=lambda: time.time_ns()
+)
 
 
 def extract_email_header_field(*, email_bytes: bytes, field_name: str) -> Optional[str]:
