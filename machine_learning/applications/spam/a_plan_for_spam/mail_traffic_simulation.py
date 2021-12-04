@@ -202,7 +202,7 @@ def simulate_senders(*, max_emails) -> None:
         host=mail_server_addr[0], port=mail_server_addr[1], timeout=timeout_s
     ) as server:
         resp = server.ehlo()
-        server.esmtp_features["smtputf8"] = True
+        server.esmtp_features["smtputf8"] = "True"
         if not server.has_extn("smtputf8"):
             logging.error("ooops")
             raise RuntimeError(resp)
