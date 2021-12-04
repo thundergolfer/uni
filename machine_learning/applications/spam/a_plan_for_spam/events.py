@@ -23,7 +23,7 @@ class EventTypes(str, enum.Enum):
 
 
 class EmailViewedProperties(NamedTuple):
-    email_id: UUID
+    email_id: str
 
 
 class EmailMarkedSpamProperties(NamedTuple):
