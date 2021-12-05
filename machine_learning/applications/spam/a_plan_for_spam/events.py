@@ -2,14 +2,17 @@
 The events module defines the schema'd events that flow through
 the application, and the event clients that are used to emit them.
 """
+import dataclasses
 import json
 import enum
 import pathlib
 import uuid
-from typing import Callable, List, NamedTuple, Optional, Union
+from typing import Callable, List, Optional, Type, Union
 
 UUID = str
 Property = Union[str, int, float, bool, UUID]
+
+import serde
 
 
 # Want event types to be globally unique.
@@ -22,29 +25,34 @@ class EventTypes(str, enum.Enum):
     SPAM_PREDICTED = "spam_predicted"
 
 
-class EmailViewedProperties(NamedTuple):
+@dataclasses.dataclass
+class EmailViewedProperties:
     email_id: str
 
 
-class EmailMarkedSpamProperties(NamedTuple):
+@dataclasses.dataclass
+class EmailMarkedSpamProperties:
     email_id: UUID
     mailfrom: str
     rcpttos: List[str]
 
 
-class EmailHeadersModifiedProperties(NamedTuple):
+@dataclasses.dataclass
+class EmailHeadersModifiedProperties:
     email_id: UUID
     headers: List[str]
 
 
-class SpamPredictedEventProperties(NamedTuple):
+@dataclasses.dataclass
+class SpamPredictedEventProperties:
     spam_detect_model_tag: str
     confidence: float
     spam: bool
     detection_id: str
 
 
-class Event(NamedTuple):
+@dataclasses.dataclass
+class Event:
     type: EventTypes
     source: str
     id: UUID
@@ -187,7 +195,7 @@ def build_event_emitter(
     def emit(
         event: Event,
     ):
-        serialized_event = json.dumps(event._asdict())
+        serialized_event = json.dumps(dataclasses.asdict(event))
         if to_console:
             emit_to_console(serialized_event)
         if to_file:
@@ -204,3 +212,7 @@ def build_event_emitter(
             )
 
     return emit
+
+
+def from_json(data: str) -> Event:
+    return serde.from_dict(dataklass=Event, data=json.loads(data))

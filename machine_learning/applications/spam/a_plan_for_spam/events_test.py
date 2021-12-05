@@ -88,7 +88,23 @@ def test_building_console_based_event_emitter(capsys):
     expected = (
         '{"type": "spam_predicted", "source": "TEST_FAKE_SOURCE", '
         '"id": "fake_uuid4", "epoch_nanosecs": 100001234, "properties": '
-        '["test_fake_model_tag", 0.2, false, "spam-dtctn-FAKE"]}\n'
+        '{"spam_detect_model_tag": "test_fake_model_tag", "confidence": 0.2, "spam": false, "detection_id": "spam-dtctn-FAKE"}}\n'
     )
     assert expected == out
     assert "" == err
+
+
+def test_from_json():
+    serialized_event = """{"type": "email_viewed", "source": "mail_traffic_simulation", "id": "adbdcc34-c1a1-4a47-abbf-d881a1359c05", "epoch_nanosecs": 1638676485437974000, "properties": {"email_id": "<1beb01c56098$c9c75f1f$57a58713@1hotelsvietnam.com>"}}"""
+    actual_event = events.from_json(data=serialized_event)
+    expected_props = events.EmailViewedProperties(
+        email_id="<1beb01c56098$c9c75f1f$57a58713@1hotelsvietnam.com>",
+    )
+    expected_event = events.Event(
+        type=events.EventTypes.EMAIL_VIEWED,
+        source="mail_traffic_simulation",
+        id="adbdcc34-c1a1-4a47-abbf-d881a1359c05",
+        epoch_nanosecs=1638676485437974000,
+        properties=expected_props,
+    )
+    assert expected_event == actual_event
