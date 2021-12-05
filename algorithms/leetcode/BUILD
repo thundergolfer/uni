@@ -35,3 +35,10 @@ cc_test(
     name = "trie",
     srcs = ["trie.c"],
 )
+
+java_binary(
+    name = "TwoSum",
+    main_class = "algorithms.leetcode.TwoSum",
+    srcs = ["TwoSum.java"],
+    deps = [],
+)
