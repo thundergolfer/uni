@@ -1,0 +1,29 @@
+load("@rules_java//java:defs.bzl", "java_binary", "java_library", "java_test")
+
+java_library(
+    name = "lib",
+    srcs = glob(["*.java"]),
+    deps = [
+        "@maven//:org_tensorflow_ndarray",
+        # For simplicity, test code is written alongside implementation code.
+        "//third_party:junit4",
+    ],
+)
+
+java_binary(
+    name = "Demo",
+    srcs = ["Demo.java"],
+    main_class = "com.thundergolfer.uni.optimization.basic_neuralnet_lib_java.Demo",
+    deps = [
+        ":lib",
+    ],
+)
+
+java_test(
+    name = "Tensor",
+    srcs = ["Tensor.java"],
+    test_class = "com.thundergolfer.uni.optimization.basic_neuralnet_lib_java.Tensor",
+    deps = [
+        "//third_party:junit4",
+    ],
+)

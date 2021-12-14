@@ -97,11 +97,10 @@ maven_install(
         "org.openjdk.jmh:jmh-generator-annprocess:1.31",
         "org.slf4j:slf4j-simple:1.7.30",
         "org.slf4j:slf4j-api:1.7.30",
+        "org.tensorflow:ndarray:0.3.2",
         "io.netty:netty-buffer:4.1.51.Final",
     ],
     repositories = [
-        # Private repositories are supported through HTTP Basic auth
-        "http://username:password@localhost:8081/artifactory/my-repository",
         "https://maven.google.com",
         "https://repo1.maven.org/maven2",
     ],
