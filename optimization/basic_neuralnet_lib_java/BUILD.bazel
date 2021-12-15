@@ -24,6 +24,7 @@ java_test(
     srcs = ["Tensor.java"],
     test_class = "com.thundergolfer.uni.optimization.basic_neuralnet_lib_java.Tensor",
     deps = [
+        "@maven//:org_tensorflow_ndarray",
         "//third_party:junit4",
     ],
 )
