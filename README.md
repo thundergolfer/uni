@@ -28,6 +28,7 @@ Currently, the contents of this mono-repo are broken down into the following top
     * [The Rust Programming Language](/books/the_rust_programming_language)
 * [**Concurrency**](/concurrency) - Code written to learn how to solve concurrency problems/exercises using code.
 * [**Databases**](/databases) - SQL, mostly.
+* [**Data Structures**](/data_structures) - Implementations of interesting data structures, for example a *heap*.
 * [**Docs**](/docs) - Static-site documentation for monorepo. Served at https://thundergolfer.com/uni, or viewable locally (see readme instructions within folder).
 * [**Languages**](/languages) - Code for learning the details of programming languages (C, C++, Java, Python, Rust).
 * [**Machine Learning**](/machine_learning) - H Y P E
