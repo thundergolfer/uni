@@ -3,6 +3,7 @@ import re
 import unittest
 from collections import defaultdict
 
+from typing import Dict
 from typing import Iterable
 from typing import NamedTuple
 from typing import Set
@@ -116,7 +117,9 @@ class TestNaiveBayes(unittest.TestCase):
         p_if_ham = math.exp(sum(math.log(p) for p in probs_if_ham))
 
         # Should be about 0.83
-        assert model.predict(text) == p_if_spam / (p_if_spam + p_if_ham)
+        expected = p_if_spam / (p_if_spam + p_if_ham)
+        actual = model.predict(text)
+        assert abs(expected - actual) < 0.01
 
 
 if __name__ == "__main__":
