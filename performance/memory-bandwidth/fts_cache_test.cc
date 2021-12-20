@@ -86,7 +86,7 @@ std::string str_from_bytes(size_t num_bytes) {
 	// I hate C++ so much
 	std::ostringstream ss;
 	ss << num_bytes;
-	
+
 	if (div == 0) { ss << " bytes"; }
 	else if (div == 1) { ss << "Kb"; }
 	else if (div == 2) { ss << "Mb"; }
@@ -107,14 +107,14 @@ struct Slice {
 	Slice(T* s, T* e) : _begin(s), _end(e) { if (_end < _begin) { std::abort(); } }
 	Slice(Slice const& other) = default;
 	Slice(std::vector<T>& v) : _begin(v.data()), _end(v.data() + v.size()) {}
-	Slice subslice(size_t offset) { return Slice(begin + offset, _end); }
-	Slice subslice(size_t offset, size_t new_length) { return Slice(begin + offset, _begin + offset + new_length); }
+	Slice subslice(size_t offset) { return Slice(_begin + offset, _end); }
+	Slice subslice(size_t offset, size_t new_length) { return Slice(_begin + offset, _begin + offset + new_length); }
 
-	__forceinline T* begin() { return _begin; }
-	__forceinline T* end() { return _end; }
-	__forceinline size_t size() const { return _end - _begin; }
-	__forceinline bool is_empty() const { return size() == 0; }
-	__forceinline T const & operator[](size_t index) const { return _begin[index]; }
+	__attribute__((always_inline)) T* begin() { return _begin; }
+	__attribute__((always_inline)) T* end() { return _end; }
+	__attribute__((always_inline)) size_t size() const { return _end - _begin; }
+	__attribute__((always_inline)) bool is_empty() const { return size() == 0; }
+	__attribute__((always_inline)) T const & operator[](size_t index) const { return _begin[index]; }
 
 	template<size_t N>
 	static Slice<T> from_array(std::array<T, N>& arr) {
@@ -311,14 +311,14 @@ Result sum(Slice<matrix4x4_simd> data) {
 		}
 	}
 
-	result.sum += simd_sum.m256i_i32[0];
-	result.sum += simd_sum.m256i_i32[1];
-	result.sum += simd_sum.m256i_i32[2];
-	result.sum += simd_sum.m256i_i32[3];
-	result.sum += simd_sum.m256i_i32[4];
-	result.sum += simd_sum.m256i_i32[5];
-	result.sum += simd_sum.m256i_i32[6];
-	result.sum += simd_sum.m256i_i32[7];
+	result.sum += simd_sum[0];
+	result.sum += simd_sum[1];
+	result.sum += simd_sum[2];
+	result.sum += simd_sum[3];
+	result.sum += simd_sum[4];
+	result.sum += simd_sum[5];
+	result.sum += simd_sum[6];
+	result.sum += simd_sum[7];
 
 	return result;
 }
@@ -344,14 +344,14 @@ Result sum(Slice<matrix4x4_simd> data, Slice<uint32_t> indices) {
 		}
 	}
 
-	result.sum += simd_sum.m256i_i32[0];
-	result.sum += simd_sum.m256i_i32[1];
-	result.sum += simd_sum.m256i_i32[2];
-	result.sum += simd_sum.m256i_i32[3];
-	result.sum += simd_sum.m256i_i32[4];
-	result.sum += simd_sum.m256i_i32[5];
-	result.sum += simd_sum.m256i_i32[6];
-	result.sum += simd_sum.m256i_i32[7];
+	result.sum += simd_sum[0];
+	result.sum += simd_sum[1];
+	result.sum += simd_sum[2];
+	result.sum += simd_sum[3];
+	result.sum += simd_sum[4];
+	result.sum += simd_sum[5];
+	result.sum += simd_sum[6];
+	result.sum += simd_sum[7];
 
 	return result;
 }
@@ -456,7 +456,7 @@ std::vector<T> generate_elements(size_t num_elements, GEN gen) {
 	return result;
 }
 
-template<typename T, typename GEN> 
+template<typename T, typename GEN>
 std::vector<T> generate_bytes(size_t num_bytes, GEN gen) {
 	if (num_bytes % sizeof(T) != 0)
 		std::abort();
@@ -556,7 +556,7 @@ template<typename T>
 Result sum(Slice<T> data_slice, Slice<uint32_t> indices, size_t elements_to_read) {
 	if (indices.is_empty())
 		return sum(data_slice, elements_to_read);
-		
+
 	Result result;
 
 	size_t num_indices = indices.size();
@@ -665,18 +665,18 @@ void run(ofstream& json, std::string type_name, Slice<T> full_data, Slice<uint32
 				// Create threads
 				std::vector<std::future<Result>> futures;
 				std::atomic_bool spin_block = true;
-				std::atomic_size_t latch = thread_count; 
+				std::atomic_size_t latch = thread_count;
 
 				for (size_t thread = 0; thread < thread_count; ++thread) {
 					auto data_slice = data_slices.size() > 1 ? data_slices[thread] : data_slices[0];
 					Slice<uint32_t> index_slice = index_slices.empty() ? Slice<uint32_t>() : (index_slices.size() > 1 ? index_slices[thread] : index_slices[0]);
-					
+
 					// Compute elements to read for this thread
 					// Thread 0 gets remainder
 					size_t elements_to_read_for_thread = elements_to_read / thread_count;
 					if (thread == 0)
 						elements_to_read_for_thread += elements_to_read % thread_count;
-					
+
 					futures.push_back(std::async(std::launch::async, [data_slice, index_slice, op, elements_to_read_for_thread, &latch, &spin_block](){
 						// Signal Ready
 						--latch;
@@ -717,7 +717,7 @@ void run(ofstream& json, std::string type_name, Slice<T> full_data, Slice<uint32
 			result.bytes_touched /= num_loops;
 			result.ops /= num_loops;
 			std::cout << "  Speed: (" << gigabytes_per_sec << ")  AvgMS: (" << avg_ms << ")  BytesTouched: (" << result.bytes_touched << ")  Ops: (" << result.ops << ")  Sum: (" << result.sum << ")" << std::endl;
-			
+
 			if constexpr (COUNT_EXTRA) {
 				if (result.bytes_touched != bytes_to_read) {
 					std::cout << "Expected to touch [" << bytes_to_read << "] bytes but actually touched [" << result.bytes_touched << "]" << std::endl;
@@ -725,7 +725,7 @@ void run(ofstream& json, std::string type_name, Slice<T> full_data, Slice<uint32
 			}
 			json << "]," << std::endl; // close thread entry
 		}
-	
+
 		json << "        ]" << std::endl; // close thread_times
 		json << "      }," << std::endl; // close line entry
 		std::cout << std::endl;
@@ -739,14 +739,14 @@ void run(ofstream& json, std::string type_name, Slice<T> full_data, Slice<uint32
 
 template<typename T>
 void run_suite(
-	ofstream & json, 
+	ofstream & json,
 	std::string type_str,
 	size_t num_loops,
 	size_t num_threads,
 	size_t bytes_to_generate,
 	Slice<size_t> block_sizes,
 	Slice<size_t> bytes_to_read_seq,
-	Slice<size_t> bytes_to_read_rand) 
+	Slice<size_t> bytes_to_read_rand)
 {
 	std::cout << "-----------------------\n" << type_str << "\n----------------------" << std::endl;
 
@@ -864,4 +864,3 @@ int main()
 	json << "]" << std::endl; // close plots
 	json.close();
 }
-
