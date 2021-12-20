@@ -3,6 +3,8 @@ load("@pypi//:requirements.bzl", "requirement")
 
 # Trying out the work done in
 # https://www.forrestthewoods.com/blog/memory-bandwidth-napkin-math/.
+#
+# WARN: This code takes more than 30 minutes to run.
 cc_binary(
     name = "memory-bandwidth",
     srcs = ["fts_cache_test.cc"],
