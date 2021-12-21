@@ -25,8 +25,21 @@ do before adding more servers?
 
 ### My Answer
 
-TODO
+Not sure what "disregard I/O" means, but seeing the throughput of just reading from memory.
+
+Random reads from memory are about `1 GiB / sec`. 
+
+`64 Bytes = 2^6 bytes`. `1KiB` is `2^10`, so each value is `2^10 / 2^6 = 1/(2^4) = 1/16th` of `1KiB`.
+
+`1KiB` is _roughly_ `1/10^6` of `1GiB`, so at `1GiB / sec` we can process roughly `16 * 10^6` values a second.
+
+16 million is way, way bigger than 10,000. So that's my stab at disregarding I/O.
+
+TCP network overhead is about `~10us`, which is `10^-5` fraction of a second. So you can do `10^5 = 100,000` a second.
+Memory R/W is lightning fast compared to this, so request/sec is dominated by network overhead.
+
+Roughly `100k` per second is 10x what was reported by the engineer, so something is up.  
 
 ### Comparison to Simon's answer
 
-TODO
+Basically the same answer, though he doesn't mention this "disregard I/O" explicitly again, so I don't quite get that bit.
