@@ -1036,6 +1036,9 @@ void run_suite(
 
 int main()
 {
+    // TODO(Jonathon): This will write the file somewhere under Bazel's
+    // execution root, which is not helpful. Refactor so that the program
+    // requires an absolute output path.
     std::string filename = "data.json";
     std::ofstream json(filename, std::ios::binary);
 
