@@ -92,4 +92,4 @@ I disagree with Simon saying SSD-based processing would take 320ms.
 > For SSD (about 10x cheaper, and 10x slower than memory), 320 ms. 300 ms is way too high, but 3 ms is acceptable. 
 
 That's 100x worse than RAM, which seems contradicted by the numbers he has in his `napkin-math` repo. 
-I've DM'd him on Twitter to follow-up.
+I've DM'd him on Twitter to follow-up (_Update:_ Simon replied on Twitter and has now updated the post 👍).
