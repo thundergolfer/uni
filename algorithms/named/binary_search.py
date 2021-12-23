@@ -3,7 +3,7 @@ import unittest
 
 from typing import List, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def binary_search(items: List[T], item: T) -> bool:
@@ -43,5 +43,5 @@ class TestBinarySearch(unittest.TestCase):
         self.assertFalse(binary_search([1, 5, 10, 15, 20], 50))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
