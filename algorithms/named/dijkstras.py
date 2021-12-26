@@ -18,7 +18,7 @@ class Edge:
 class WeightedVertex:
     id: str
     weight: int = sys.maxsize  # for our purpose, this is effectively infinity.
-    previous: Optional['WeightedVertex'] = None
+    previous: Optional["WeightedVertex"] = None
     # Mapping the id of a neighbour node to its weight.
     neighbors: Dict[str, int] = dataclasses.field(default_factory=dict)
 
@@ -26,7 +26,9 @@ class WeightedVertex:
         return self.id == other.id
 
     def __hash__(self):
-        return hash(self.id, )
+        return hash(
+            self.id,
+        )
 
 
 VertexKey = str
@@ -151,28 +153,16 @@ class TestDijkstras(unittest.TestCase):
             Edge("c", "d", 11),
             Edge("c", "f", 2),
             Edge("d", "e", 6),
-            Edge("e", "f", 9)
+            Edge("e", "f", 9),
         ]
         graph = build_graph(edges=edges)
 
         for c in "abcdef":
-            self.assertEqual(
-                0,
-                dijkstras(graph, c, c)
-            )
+            self.assertEqual(0, dijkstras(graph, c, c))
 
-        self.assertEqual(
-            26,
-            dijkstras(graph, "a", "e")
-        )
-        self.assertEqual(
-            9,
-            dijkstras(graph, "e", "f")
-        )
-        self.assertEqual(
-            11,
-            dijkstras(graph, "a", "f")
-        )
+        self.assertEqual(26, dijkstras(graph, "a", "e"))
+        self.assertEqual(9, dijkstras(graph, "e", "f"))
+        self.assertEqual(11, dijkstras(graph, "a", "f"))
 
     def test_unreachable(self):
         edges = [
@@ -181,11 +171,7 @@ class TestDijkstras(unittest.TestCase):
             Edge("d", "e", 14),
         ]
         graph = build_graph(edges=edges)
-        self.assertEqual(
-            -1,
-            dijkstras(graph, "a", "e")
-        )
-
+        self.assertEqual(-1, dijkstras(graph, "a", "e"))
 
 
 if __name__ == "__main__":
