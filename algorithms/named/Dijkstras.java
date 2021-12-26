@@ -93,7 +93,7 @@ public class Dijkstras {
             return -1;
         }
 
-        PriorityQueue<WeightedVertex> priorityQueue = new PriorityQueue<WeightedVertex>(
+        PriorityQueue<WeightedVertex> priorityQueue = new PriorityQueue<>(
                 Comparator.comparingInt(v -> v.weight)
         );
 
@@ -104,7 +104,9 @@ public class Dijkstras {
             if (v.id.equals(sink)) {
                 sinkVertex = v;
             }
-            priorityQueue.add(v);
+            if (v.id.equals(source)) {
+                priorityQueue.add(v); // Need only add the source node into queue, at first.
+            }
         }
 
         if (sinkVertex == null) {
@@ -117,15 +119,11 @@ public class Dijkstras {
         while (!priorityQueue.isEmpty()) {
             curr = priorityQueue.poll();
 
-            if (curr.weight == Integer.MAX_VALUE) {
-                break; // we can ignore u (and any other remaining vertices) since they are unreachable
-            }
-
             for (Map.Entry<String, Integer> a : curr.neighbors.entrySet()) {
-                neighbor = g.graph.get(a.getKey()); // the neighbour in this iteration
+                neighbor = g.graph.get(a.getKey()); // the neighbor in this iteration.
 
                 final int alternateWeight = curr.weight + a.getValue();
-                // If true, shorter path to neighbour found
+                // If true, shorter path to neighbor found.
                 if (alternateWeight < neighbor.weight) {
                     priorityQueue.remove(neighbor);
                     neighbor.weight = alternateWeight;
