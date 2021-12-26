@@ -15,6 +15,12 @@ py_test(
 )
 
 py_test(
+    name = "mergesort_test",
+    srcs = ["mergesort.py"],
+    main = "mergesort.py",
+)
+
+py_test(
     name = "union_find_test",
     srcs = ["union_find.py"],
     main = "union_find.py",
