@@ -40,10 +40,10 @@ def build_graph(edges: List[Edge]) -> Graph:
             g[edge.origin] = WeightedVertex(
                 id=edge.origin,
             )
-    if edge.dest not in g:
-        g[edge.dest] = WeightedVertex(
-            id=edge.dest,
-        )
+        if edge.dest not in g:
+            g[edge.dest] = WeightedVertex(
+                id=edge.dest,
+            )
 
     for edge in edges:
         # For undirected graph, must also create the reverse link.
