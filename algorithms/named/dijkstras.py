@@ -89,7 +89,7 @@ def dijkstras(graph: Graph, source: str, sink: str) -> int:
                 neighbor.previous = curr
                 priority_q.add_task(neighbor, priority=neighbor.weight)
 
-    return sink_node.weight
+    return -1 if sink_node.weight == sys.maxsize else sink_node.weight
 
 
 class PriorityQueue:
@@ -173,6 +173,19 @@ class TestDijkstras(unittest.TestCase):
             11,
             dijkstras(graph, "a", "f")
         )
+
+    def test_unreachable(self):
+        edges = [
+            Edge("a", "b", 7),
+            Edge("a", "c", 9),
+            Edge("d", "e", 14),
+        ]
+        graph = build_graph(edges=edges)
+        self.assertEqual(
+            -1,
+            dijkstras(graph, "a", "e")
+        )
+
 
 
 if __name__ == "__main__":
