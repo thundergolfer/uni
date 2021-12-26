@@ -29,26 +29,26 @@ class WeightedVertex:
         return hash(self.id, )
 
 
-class Graph:
-    def __init__(self, edges: List[Edge]) -> None:
-        self.g: Dict[str, WeightedVertex] = {}
+VertexKey = str
+Graph = Dict[VertexKey, WeightedVertex]
 
-        for edge in edges:
-            if edge.origin not in self.g:
-                self.g[edge.origin] = WeightedVertex(
-                    id=edge.origin,
-                )
-            if edge.dest not in self.g:
-                self.g[edge.dest] = WeightedVertex(
-                    id=edge.dest,
-                )
 
-        for edge in edges:
-            # For undirected graph, must also create the reverse link.
-            self.g[edge.origin].neighbors[edge.dest] = edge.weight
+def build_graph(edges: List[Edge]) -> Graph:
+    g: Dict[str, WeightedVertex] = {}
+    for edge in edges:
+        if edge.origin not in g:
+            g[edge.origin] = WeightedVertex(
+                id=edge.origin,
+            )
+    if edge.dest not in g:
+        g[edge.dest] = WeightedVertex(
+            id=edge.dest,
+        )
 
-    def values(self) -> List[WeightedVertex]:
-        return list(self.g.values())
+    for edge in edges:
+        # For undirected graph, must also create the reverse link.
+        g[edge.origin].neighbors[edge.dest] = edge.weight
+    return g
 
 
 def dijkstras(graph: Graph, source: str, sink: str) -> int:
@@ -60,7 +60,7 @@ def dijkstras(graph: Graph, source: str, sink: str) -> int:
     sink_node = None
     # Don't trust that the weight vertices have the correct
     # weights. Reset them to needed initial values.
-    for weighted_v in graph.g.values():
+    for weighted_v in graph.values():
         weighted_v.previous = weighted_v if weighted_v.id == source else None
         weighted_v.weight = 0 if weighted_v.id == source else sys.maxsize
         if weighted_v.id == source:
@@ -80,7 +80,7 @@ def dijkstras(graph: Graph, source: str, sink: str) -> int:
         curr: WeightedVertex = priority_q.pop_task()
 
         for neighbor_key in curr.neighbors:
-            neighbor = graph.g[neighbor_key]
+            neighbor = graph[neighbor_key]
             edge_weight = curr.neighbors[neighbor_key]
             alternate_weight = curr.weight + edge_weight
 
@@ -153,7 +153,7 @@ class TestDijkstras(unittest.TestCase):
             Edge("d", "e", 6),
             Edge("e", "f", 9)
         ]
-        graph = Graph(edges=edges)
+        graph = build_graph(edges=edges)
 
         for c in "abcdef":
             self.assertEqual(
