@@ -33,6 +33,16 @@ java_test(
 )
 
 java_test(
+    name = "Dijkstras",
+    srcs = ["Dijkstras.java"],
+    test_class = "algorithms.named.Dijkstras",
+    deps = [
+        "//third_party:junit4",
+    ],
+)
+
+
+java_test(
     name = "DFS",
     srcs = ["DFS.java"],
     test_class = "algorithms.named.DFS",
