@@ -48,7 +48,7 @@ Be aware, they may open up all on top of each other, making it look like just on
 
 The application code is all pure-Python (stdlib only), but testing uses `pytest`. 
 
-`TODO`
+`python3 -m pytest` ('-m' method adds current dir to `sys.path`)
 
 #### Type-checking
 
