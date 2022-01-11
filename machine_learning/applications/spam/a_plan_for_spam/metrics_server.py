@@ -10,7 +10,7 @@ import os
 import pathlib
 import time
 
-from typing import Callable, Deque, Protocol
+from typing import Deque, Protocol
 
 import config
 

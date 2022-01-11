@@ -14,7 +14,6 @@ import pathlib
 import random
 import smtplib
 import smtpd
-import sys
 import time
 
 import config
