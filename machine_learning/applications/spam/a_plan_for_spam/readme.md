@@ -48,6 +48,10 @@ The application code is all pure-Python (stdlib only), but testing uses `pytest`
 
 `python3 -m pytest` ('-m' method adds current dir to `sys.path`)
 
+or, for just **integration**:
+
+`python3 -m pytest integration/`
+
 #### Type-checking
 
 At the moment, I haven't got a virtualenv so `mypy` is installed to system. 🤮
