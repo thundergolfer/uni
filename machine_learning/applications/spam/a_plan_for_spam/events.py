@@ -3,8 +3,8 @@ The events module defines the schema'd events that flow through
 the application, and the event clients that are used to emit them.
 """
 import dataclasses
-import json
 import enum
+import json
 import pathlib
 import uuid
 from typing import Callable, List, Optional, Type, Union
