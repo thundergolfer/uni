@@ -15,16 +15,6 @@ from datasets.enron import dataset
 
 # TODO(Jonathon): Should write a test which checks a UTF-8 email can make it end-to-end.
 
-# TODO(Jonathon): Should be able to read in a small Enron-like dataset during
-#                 integration testing. Would at least make the tests run faster.
-
-# TODO(Jonathon): This integration test is flaky.
-# '''
-# reply
-#     raise SMTPServerDisconnected("Connection unexpectedly closed")
-# smtplib.SMTPServerDisconnected: Connection unexpectedly closed
-# '''
-
 
 def test_end_to_end(tmp_path):
     tmp_datasets_root = tmp_path / "datasets"
