@@ -23,7 +23,9 @@ def test_load_classifier_success(tmp_path):
         classifier_destination_root=tmp_path,
     )
     test_email = "test email: doesn't matter what contents"
-    assert dummy_classifier(email=test_email) == loaded_dummy_classifier(email=test_email)
+    assert dummy_classifier(email=test_email) == loaded_dummy_classifier(
+        email=test_email
+    )
 
 
 def test_load_classifier_corrupted_data(tmp_path):
