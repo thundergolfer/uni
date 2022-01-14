@@ -110,7 +110,7 @@ class AntiSpamServer(smtpd.SMTPServer):
         email_id = extract_email_msg_id(email_bytes=email_bytes)
         if not email_id:
             raise RuntimeError("Should not fail to get Message-ID.")
-        body = {"email": email_bytes.decode("utf-8")}
+        body = {"email": email_bytes.decode("latin-1")}
         spam_detect_api_url = ":".join(
             [str(component) for component in config.spam_detect_api_addr]
         )
@@ -123,20 +123,6 @@ class AntiSpamServer(smtpd.SMTPServer):
         response = urllib.request.urlopen(req, data_b)
         response_data = json.loads(response.read())
         return response_data["label"]
-
-
-# TODO(Jonathon): Error that crashes mail server:
-#
-# error: uncaptured python exception, closing channel
-# <smtpd.SMTPChannel connected ('::1', 52340, 0, 0) at 0x108f1fd60>
-# (<class 'email.errors.HeaderParseError'>:expected addr-spec or obs-route but found ' > size=2867'
-# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asyncore.py|read|83]
-# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asyncore.py|handle_read_event|420]
-# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asynchat.py|handle_read|171]
-# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtpd.py|found_terminator|359]
-# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtpd.py|smtp_MAIL|525]
-# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/smtpd.py|_getaddr|449]
-# [/usr/local/Cellar/python@3.9/3.9.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/email/_header_value_parser.py|get_angle_addr|1722])
 
 
 def serve():
