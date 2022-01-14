@@ -16,6 +16,7 @@ import smtplib
 import smtpd
 import time
 
+import cleaning
 import config
 import events
 
@@ -57,12 +58,17 @@ def extract_email_msg_id(email_bytes: bytes) -> Optional[str]:
 
 
 def extract_email_from(email_bytes: bytes) -> Optional[str]:
-    from_val = extract_email_header_field(email_bytes=email_bytes, field_name="From")
+    try:
+        from_val = extract_email_header_field(email_bytes=email_bytes, field_name="From")
+    except AttributeError:
+        return None
     if not from_val:
         return from_val
     # Parse 'name-addr' format. https://datatracker.ietf.org/doc/html/rfc5322#section-3.4
     parsed_from = email.utils.parseaddr(from_val)
-    return parsed_from[1]  # Ignore display name, if any. Grab email address.
+    # Ignore display name, if any. Grab email address.
+    email_addr_part = parsed_from[1].strip()
+    return email_addr_part if email_addr_part else None
 
 
 def hash_email_contents(email: bytes) -> str:
@@ -136,14 +142,9 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
 
 
 def simulate_receivers() -> None:
-    raw_enron_dataset = deserialize_dataset(enron_raw_dataset_path)
-    # NOTE: Multiple emails with invalid Message-IDs will map to `None`
-    filtered_enron_dataset_map: Dict[Union[str, None], Example] = {
-        extract_email_msg_id(email_bytes=example.email.encode("utf-8")): example
-        for example in raw_enron_dataset
-    }
-    if None in filtered_enron_dataset_map:
-        del filtered_enron_dataset_map[None]
+    filtered_enron_dataset_map: Dict[
+        str, Example
+    ] = cleaning.transform_dataset_for_simulation(enron_raw_dataset_path)
 
     localaddr: ServerAddr = config.mail_receiver_addr
     remoteaddr: ServerAddr = config.mail_server_addr
@@ -180,14 +181,9 @@ class RetryableSMTP(smtplib.SMTP):
 
 
 def simulate_senders(*, max_emails) -> None:
-    raw_enron_dataset = deserialize_dataset(enron_raw_dataset_path)
-    # NOTE: Multiple emails with invalid Message-IDs will map to `None`
-    filtered_enron_dataset_map: Dict[Union[str, None], Example] = {
-        extract_email_msg_id(email_bytes=example.email.encode("utf-8")): example
-        for example in raw_enron_dataset
-    }
-    if None in filtered_enron_dataset_map:
-        del filtered_enron_dataset_map[None]
+    filtered_enron_dataset_map: Dict[
+        str, Example
+    ] = cleaning.transform_dataset_for_simulation(enron_raw_dataset_path)
 
     logging.info(f"Will simulate sending of at most {max_emails} emails.")
     # senders (including spammers) direct traffic at our fraud-detecting SMTP server.
@@ -215,34 +211,48 @@ def simulate_senders(*, max_emails) -> None:
         for i, example in enumerate(to_send):
             if i == max_emails:
                 return
-            sender_email = extract_email_from(email_bytes=example.email.encode("utf-8"))
+            try:
+                sender_email = extract_email_from(
+                    email_bytes=example.email.encode("latin-1", "ignore")
+                )
+            except (UnicodeEncodeError, AttributeError):
+                breakpoint()
             if not sender_email:
                 logging.warning(
                     "Invalid email. Could not find sender. Skipping invalid email..."
                 )
                 continue
             msg = email.message_from_bytes(
-                example.email.encode("utf-8"), policy=email.policy.SMTPUTF8
+                example.email.encode("latin-1", "ignore"), policy=email.policy.SMTPUTF8
             )
-            # NOTE: Encoding maybe should be encoding="latin-1"
+
+            try:
+                if not msg.get("Message-ID"):
+                    # corrupted email. Can't send or mail_server.py will blow up.
+                    continue
+            except AttributeError:
+                continue
+
             try:
                 server.send_message(
                     msg=msg,
                     from_addr=sender_email,
                     # TODO(Jonathon): w/o this some emails throw smtplib.SMTPRecipientsRefused
-                    to_addrs="foo@canva.com",
+                    to_addrs="foo@sanva.com",
                 )
-            except smtplib.SMTPRecipientsRefused:
-                breakpoint()
+            except (
+                smtplib.SMTPRecipientsRefused,
+                smtplib.SMTPServerDisconnected,
+                UnicodeEncodeError,
+            ):
+                logging.error(f"Unable to process email sent by {sender_email}.")
+                raise
             # Otherwise this sends emails really quickly.
-            time.sleep(0.2)
+            time.sleep(0.05)
             if i % 20 == 0:
                 logging.info(f"Sent {i} emails.")
 
 
-# TODO(Jonathon):
-# Eventually run into error processing emails.
-# UnicodeEncodeError: 'utf-8' codec can't encode characters in position 7-8: surrogates not allowed
 def main(argv: Union[Sequence[str], None] = None) -> int:
     parser = argparse.ArgumentParser(description="Process some integers.")
     parser.add_argument("mode", choices=["senders", "receivers"])
