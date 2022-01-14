@@ -31,9 +31,7 @@ def extract_email_msg_id(e_msg: email.message.Message) -> Optional[str]:
         return None
 
 
-def _transform_dataset_chunk(
-    example: Example
-) -> Optional[Tuple[str, Example]]:
+def _transform_dataset_chunk(example: Example) -> Optional[Tuple[str, Example]]:
     e_msg = email.message_from_bytes(
         example.email.encode("latin-1"), policy=email.policy.SMTPUTF8
     )
@@ -80,10 +78,13 @@ def _transform_dataset_chunk(
         else:
             part.set_param("charset", "latin-1")
     try:
-        return (msg_id, Example(
-            email=e_msg.as_string(policy=email.policy.SMTP),
-            spam=example.spam,
-        ))
+        return (
+            msg_id,
+            Example(
+                email=e_msg.as_string(policy=email.policy.SMTP),
+                spam=example.spam,
+            ),
+        )
     except UnicodeEncodeError as exc:
         if exc.reason != "surrogates not allowed":
             raise
@@ -99,7 +100,9 @@ def transform_dataset_for_simulation(
     filtered_enron_dataset_map: Dict[str, Example] = {}
     with multiprocessing.Pool(10) as pool:
         chunk_size = 5_000
-        items = pool.map(_transform_dataset_chunk, raw_enron_dataset, chunksize=chunk_size)
+        items = pool.map(
+            _transform_dataset_chunk, raw_enron_dataset, chunksize=chunk_size
+        )
         for m in [item for item in items if item is not None]:
             filtered_enron_dataset_map[m[0]] = m[1]
     return filtered_enron_dataset_map
