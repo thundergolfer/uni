@@ -27,16 +27,6 @@ ServerAddr = Tuple[str, int]
 logging.basicConfig(format=config.logging_format_str)
 logging.getLogger().setLevel(logging.DEBUG)
 
-logging.info("Building mail-traffic-simulation event publisher.")
-emit_event_func = events.build_event_emitter(
-    to_console=True,
-    to_file=True,
-    log_root_path=config.logging_file_path_root,
-)
-event_publisher = events.MailTrafficSimulationEventPublisher(
-    emit_event=emit_event_func, time_of_day_clock_fn=lambda: time.time_ns()
-)
-
 
 def extract_email_header_field(*, email_bytes: bytes, field_name: str) -> Optional[str]:
     e_msg = email.message_from_bytes(email_bytes, policy=email.policy.SMTPUTF8)
@@ -59,7 +49,9 @@ def extract_email_msg_id(email_bytes: bytes) -> Optional[str]:
 
 def extract_email_from(email_bytes: bytes) -> Optional[str]:
     try:
-        from_val = extract_email_header_field(email_bytes=email_bytes, field_name="From")
+        from_val = extract_email_header_field(
+            email_bytes=email_bytes, field_name="From"
+        )
     except AttributeError:
         return None
     if not from_val:
@@ -83,8 +75,16 @@ from datasets.enron.dataset import Example, RawEnronDataset, deserialize_dataset
 
 
 class MessageTransferAgentServer(smtpd.DebuggingServer):
-    def __init__(self, localaddr, remoteaddr, filtered_enron_dataset_map, **kwargs):
+    def __init__(
+        self,
+        localaddr,
+        remoteaddr,
+        filtered_enron_dataset_map,
+        event_publisher,
+        **kwargs,
+    ):
         self.filtered_enron_dataset_map = filtered_enron_dataset_map
+        self.event_publisher = event_publisher
         super(MessageTransferAgentServer, self).__init__(
             localaddr, remoteaddr, **kwargs
         )
@@ -94,7 +94,7 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
         if not message_id:
             logging.warning("failed to extract Message-ID. Can't process it.")
             return
-        event_publisher.emit_email_viewed_event(
+        self.event_publisher.emit_email_viewed_event(
             email_id=message_id,
         )
         current_example = self.filtered_enron_dataset_map.get(message_id)
@@ -126,7 +126,7 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
             # false neg: marked email ham but user marked it spam.
             # true neg: marked ham and user thinks its ham too.
             logging.info("User marked email as spam.")
-            event_publisher.emit_email_marked_spam_event(
+            self.event_publisher.emit_email_marked_spam_event(
                 email_id=message_id,
                 rcpttos=rcpttos,
                 mailfrom=mailfrom,
@@ -141,7 +141,8 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
             )
 
 
-def simulate_receivers() -> None:
+def simulate_receivers(event_publisher) -> None:
+    logging.info("Starting dataset clean. May take ~30 secs.")
     filtered_enron_dataset_map: Dict[
         str, Example
     ] = cleaning.transform_dataset_for_simulation(enron_raw_dataset_path)
@@ -153,6 +154,7 @@ def simulate_receivers() -> None:
         remoteaddr=remoteaddr,
         filtered_enron_dataset_map=filtered_enron_dataset_map,
         enable_SMTPUTF8=True,
+        event_publisher=event_publisher,
     )
     asyncore.loop()
 
@@ -181,6 +183,7 @@ class RetryableSMTP(smtplib.SMTP):
 
 
 def simulate_senders(*, max_emails) -> None:
+    logging.info("Starting dataset clean. May take ~30 secs.")
     filtered_enron_dataset_map: Dict[
         str, Example
     ] = cleaning.transform_dataset_for_simulation(enron_raw_dataset_path)
@@ -259,12 +262,22 @@ def main(argv: Union[Sequence[str], None] = None) -> int:
     parser.add_argument("--max-emails", type=int, default=10 ** 6)
     args = parser.parse_args(argv)
 
+    logging.info("Building mail-traffic-simulation event publisher.")
+    emit_event_func = events.build_event_emitter(
+        to_console=True,
+        to_file=True,
+        log_root_path=config.logging_file_path_root,
+    )
+    event_publisher = events.MailTrafficSimulationEventPublisher(
+        emit_event=emit_event_func, time_of_day_clock_fn=lambda: time.time_ns()
+    )
+
     if args.mode == "senders":
         logging.info("Starting simulation of email traffic senders.")
         simulate_senders(max_emails=args.max_emails)
     elif args.mode == "receivers":
         logging.info("Starting simulation of email traffic receivers (end users).")
-        simulate_receivers()
+        simulate_receivers(event_publisher=event_publisher)
     else:
         raise AssertionError(f"{args.mode} is an illegal mode value.")
     return 0
