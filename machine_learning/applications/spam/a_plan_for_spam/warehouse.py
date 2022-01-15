@@ -5,7 +5,7 @@ by the other system components and run offline analysis.
 import json
 import pathlib
 import time
-from typing import NamedTuple, Sequence
+from typing import cast, NamedTuple, Sequence
 
 import config
 import events
@@ -65,15 +65,16 @@ def email_spam_dataset(
                 # it's extremely unlikely that duplicates will occur, but good practice
                 # to always sift them out.
                 viewed_event = serde.from_dict(events.Event, raw_event)
+                props = cast(events.EmailViewedProperties, viewed_event.properties)
                 if viewed_event.id in seen_event_ids:
                     continue
                 seen_event_ids.add(viewed_event.id)
-                email_id = viewed_event.properties.email_id
+                email_id = props.email_id
                 if email_id not in pii_email_content_map:
                     # TODO: .strip() email_id strings.
                     # KeyError: ' <2670596469.1196937787@pool-71-109-91-230.lsanca.dsl-w.verizon.net>'
                     continue
-                zippy[viewed_event.properties.email_id] = EmailSpamDatasetRow(
+                zippy[email_id] = EmailSpamDatasetRow(
                     email_id=email_id,
                     text=pii_email_content_map[email_id].email,
                     spam=False,
@@ -90,11 +91,14 @@ def email_spam_dataset(
                 # de-duplicate using event-id. In the absence of a bad bug it's
                 # extremely unlikely that duplicates will occur, but good it's practice
                 # to always sift them out.
-                email_marked_spam_event = serde.from_dict(events.Event, raw_event)
-                if email_marked_spam_event.id in seen_event_ids:
+                marked_spam_event = serde.from_dict(events.Event, raw_event)
+                marked_spam_props = cast(
+                    events.EmailMarkedSpamProperties, marked_spam_event.properties
+                )
+                if marked_spam_event.id in seen_event_ids:
                     continue
-                seen_event_ids.add(email_marked_spam_event.id)
-                email_id = email_marked_spam_event.properties.email_id
+                seen_event_ids.add(marked_spam_event.id)
+                email_id = marked_spam_props.email_id
                 zippy[email_id] = EmailSpamDatasetRow(
                     email_id=zippy[email_id].email_id,
                     text=zippy[email_id].text,
