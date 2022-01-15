@@ -48,13 +48,13 @@ def _transform_dataset_chunk(example: Example) -> Optional[Tuple[str, Example]]:
         # This breaks email sending, so we skip it.
         # TODO: Could patch it.
         return None
-    except ValueError as val_err:
+    except ValueError:
         # At least one email has a bad offset:
         #
         #    Date: Wed, 10 Nov 2004 15:02:29 +310000
         #
         # That offset is 129 days+.
-        # This doesn't actually seem to be a problem.
+        # This doesn't actually seem to be a problem during sending.
         pass
 
     # TODO(Jonathon): We don't really want to eliminate weird encodings
@@ -62,16 +62,15 @@ def _transform_dataset_chunk(example: Example) -> Optional[Tuple[str, Example]]:
     # The email dataset has some odd charsets that the Python email modules
     # don't know how to deal with.
     # At the moment I'm just overriding them to be 'latin-1' so that they're processable.
-    _unknown_charsets = set(
-        [
-            "iso-7017-5",
-            "iso-7654-7",
-            "iso-1816-4",
-            "iso-9571-7",
-            "iso-1894-2",
-            "iso-9829-6",
-        ]
-    )
+    # eg.
+    #     [
+    #         "iso-7017-5",
+    #         "iso-7654-7",
+    #         "iso-1816-4",
+    #         "iso-9571-7",
+    #         "iso-1894-2",
+    #         "iso-9829-6",
+    #     ]
     for part in e_msg.walk():
         if not part.is_multipart():
             part.set_charset("latin-1")
@@ -99,12 +98,12 @@ def transform_dataset_for_simulation(
     raw_enron_dataset = deserialize_dataset(dataset_path)
     filtered_enron_dataset_map: Dict[str, Example] = {}
     with multiprocessing.Pool(10) as pool:
-        chunk_size = 5_000
-        items = pool.map(
+        chunk_size = 1_000
+        results = pool.map(
             _transform_dataset_chunk, raw_enron_dataset, chunksize=chunk_size
         )
-        for m in [item for item in items if item is not None]:
-            filtered_enron_dataset_map[m[0]] = m[1]
+        for (key, example) in [res for res in results if res is not None]:
+            filtered_enron_dataset_map[key] = example
     return filtered_enron_dataset_map
 
 
