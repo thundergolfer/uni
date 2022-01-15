@@ -32,14 +32,14 @@ class EmailViewedProperties:
 
 @dataclasses.dataclass
 class EmailMarkedSpamProperties:
-    email_id: UUID
+    email_id: str
     mailfrom: str
     rcpttos: List[str]
 
 
 @dataclasses.dataclass
 class EmailHeadersModifiedProperties:
-    email_id: UUID
+    email_id: str
     headers: List[str]
 
 
