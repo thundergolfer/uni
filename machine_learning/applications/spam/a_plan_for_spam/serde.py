@@ -184,9 +184,18 @@ def _build_value_for_union(union: Type, data: Any) -> Any:
         except SerdeError:
             pass
     if len(union_matches) > 1:
-        raise SerdeError(
-            f"Strict union match error. Cannot choose b/w possible matches: {union_matches}"
-        )
+        # We break ties by checking which union match has the most matched fields.
+        # This is a hack, because it won't work in the case of many Optional[Y] types.
+        matches_list = list(union_matches.values())
+        matches_list.sort(key=lambda x: len(x.__dataclass_fields__))
+        if len(matches_list[0].__dataclass_fields__) == len(
+            matches_list[1].__dataclass_fields__
+        ):
+            # couldn't break tie.
+            raise SerdeError(
+                f"Strict union match error. Cannot choose b/w possible matches: {union_matches}"
+            )
+        return matches_list[0]
     return union_matches.popitem()[1]
 
 
