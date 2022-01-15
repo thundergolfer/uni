@@ -109,7 +109,7 @@ def tokenize(text: str) -> Set[str]:
 
 
 def train_naive_bayes_classifier(ds: Dataset, k: float = 0.5) -> SpamClassifier:
-    tokens: Set[str] = set()
+    dataset_tokens: Set[str] = set()
     token_spam_counts: Dict[str, int] = defaultdict(int)
     token_ham_counts: Dict[str, int] = defaultdict(int)
     spam_messages = ham_messages = 0
@@ -122,18 +122,18 @@ def train_naive_bayes_classifier(ds: Dataset, k: float = 0.5) -> SpamClassifier:
 
         # Increment word counts
         for token in tokenize(example.email):
-            tokens.add(token)
+            dataset_tokens.add(token)
             if example.spam:
                 token_spam_counts[token] += 1
             else:
                 token_ham_counts[token] += 1
 
     def classify(email: str) -> Prediction:
-        text_tokens = tokenize(email)
+        email_tokens = tokenize(email)
         log_prob_if_spam = log_prob_if_ham = 0.0
 
         # Iterate through each word in our vocabulary
-        for token in tokens:
+        for token in dataset_tokens:
             spam = token_spam_counts[token]
             ham = token_ham_counts[token]
 
@@ -141,7 +141,7 @@ def train_naive_bayes_classifier(ds: Dataset, k: float = 0.5) -> SpamClassifier:
             prob_if_ham = (ham + k) / (ham_messages + 2 * k)
             # If *token* appears in the message,
             # add the log probability of seeing it
-            if token in text_tokens:
+            if token in email_tokens:
                 log_prob_if_spam += math.log(prob_if_spam)
                 log_prob_if_ham += math.log(prob_if_ham)
             # Otherwise add the log probability of _not_ seeing it,
@@ -326,7 +326,6 @@ def main(argv: Union[Sequence[str], None] = None) -> int:
         classifier_destination_root=model_registry_root,
         current_git_commit_hash=get_git_revision_hash(),
     )
-
     return 0
 
 

@@ -17,7 +17,6 @@ def test_prob_calculation():
     ]
 
     classify_func = model_trainer.train_naive_bayes_classifier(dataset)
-
     email = "hello spam"
     probs_if_ham = [
         (1 + 0.5) / (2 + 2 * 0.5),  # "hello" (present)

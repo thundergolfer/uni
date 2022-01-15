@@ -7,12 +7,12 @@ import enum
 import json
 import pathlib
 import uuid
-from typing import Callable, List, Optional, Type, Union
+from typing import Callable, List, Optional, Union
+
+import serde
 
 UUID = str
 Property = Union[str, int, float, bool, UUID]
-
-import serde
 
 
 # Want event types to be globally unique.

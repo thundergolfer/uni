@@ -229,9 +229,9 @@ def simulate_senders(*, max_emails) -> None:
                 example.email.encode("latin-1", "ignore"), policy=email.policy.SMTPUTF8
             )
 
+            # corrupted email. Can't send or mail_server.py will blow up.
             try:
                 if not msg.get("Message-ID"):
-                    # corrupted email. Can't send or mail_server.py will blow up.
                     continue
             except AttributeError:
                 continue
