@@ -81,7 +81,7 @@ def main(argv: Union[Sequence[str], None] = None) -> int:
 
     logging.info("Writing processed raw dataset to file.")
     with open(processed_dataset_path, "w") as f:
-        json.dump(ds, f)
+        json.dump(ds, f, indent=4)
 
     return 0
 
