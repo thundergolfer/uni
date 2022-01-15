@@ -110,7 +110,6 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
             #
             # Weirdly some dots are getting dropped...
             # Can find email by searching for 'PayPal Email ID PP243'.
-            # breakpoint()
             logging.error(
                 "Received email was not matched against a Message-ID. Should never happen."
             )
