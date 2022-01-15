@@ -16,7 +16,6 @@ import smtplib
 import smtpd
 import time
 
-import cleaning
 import config
 import events
 
@@ -67,11 +66,11 @@ def hash_email_contents(email: bytes) -> str:
     return hashlib.sha256(email).hexdigest().upper()
 
 
-enron_raw_dataset_path = pathlib.Path(
+enron_dataset_path = pathlib.Path(
     config.datasets_path_root,
     config.dataset_subpath,
 )
-from datasets.enron.dataset import Example, RawEnronDataset, deserialize_dataset
+from datasets.enron.dataset import Example, RawEnronDataset, deserialize_clean_dataset
 
 
 class MessageTransferAgentServer(smtpd.DebuggingServer):
@@ -143,9 +142,9 @@ class MessageTransferAgentServer(smtpd.DebuggingServer):
 
 def simulate_receivers(event_publisher) -> None:
     logging.info("Starting dataset clean. May take ~30 secs.")
-    filtered_enron_dataset_map: Dict[
-        str, Example
-    ] = cleaning.transform_dataset_for_simulation(enron_raw_dataset_path)
+    filtered_enron_dataset_map: Dict[str, Example] = deserialize_clean_dataset(
+        enron_dataset_path
+    )
 
     localaddr: ServerAddr = config.mail_receiver_addr
     remoteaddr: ServerAddr = config.mail_server_addr
@@ -184,9 +183,9 @@ class RetryableSMTP(smtplib.SMTP):
 
 def simulate_senders(*, max_emails) -> None:
     logging.info("Starting dataset clean. May take ~30 secs.")
-    filtered_enron_dataset_map: Dict[
-        str, Example
-    ] = cleaning.transform_dataset_for_simulation(enron_raw_dataset_path)
+    filtered_enron_dataset_map: Dict[str, Example] = deserialize_clean_dataset(
+        enron_dataset_path
+    )
 
     logging.info(f"Will simulate sending of at most {max_emails} emails.")
     # senders (including spammers) direct traffic at our fraud-detecting SMTP server.

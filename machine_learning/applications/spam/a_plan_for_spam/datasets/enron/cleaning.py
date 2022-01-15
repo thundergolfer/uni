@@ -6,18 +6,17 @@ import email
 import email.errors
 import email.policy
 import email.utils
+import json
+import logging
 import multiprocessing
 import pathlib
 
-import config
-from datasets.enron.dataset import Example, RawEnronDataset, deserialize_dataset
+from dataset import Example, RawEnronDataset, deserialize_dataset
 
 from typing import Dict, Mapping, Optional, Tuple
 
-enron_raw_dataset_path = pathlib.Path(
-    config.datasets_path_root,
-    config.dataset_subpath,
-)
+logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s")
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 def extract_email_msg_id(e_msg: email.message.Message) -> Optional[str]:
@@ -109,4 +108,15 @@ def transform_dataset_for_simulation(
 
 if __name__ == "__main__":
     print("Transforming dataset.")
-    transform_dataset_for_simulation(dataset_path=enron_raw_dataset_path)
+    enron_raw_dataset_path = pathlib.Path(
+        "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/"
+        "a_plan_for_spam/datasets/enron/processed_raw_dataset.json"
+    )
+    dataset = transform_dataset_for_simulation(dataset_path=enron_raw_dataset_path)
+    logging.info("Writing cleaned dataset to file.")
+    clean_dataset_path = pathlib.Path(
+        "/Users/jonathon/Code/thundergolfer/uni/machine_learning/applications/spam/"
+        "a_plan_for_spam/datasets/enron/clean/dataset.json"
+    )
+    with open(clean_dataset_path, "w") as f:
+        json.dump(dataset, f, indent=4)

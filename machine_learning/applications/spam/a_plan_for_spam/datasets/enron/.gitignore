@@ -1,3 +1,4 @@
 raw/
+clean/
 processed_raw_dataset.json
 !.gitignore
