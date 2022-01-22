@@ -44,7 +44,7 @@ class DetectionResult(NamedTuple):
 
 def load_spam_detector() -> model_trainer.SpamClassifier:
     tag = config.spam_detect_model_tag
-    classifier_dest_root = pathlib.Path(config.spam_model_serialization_destination)
+    classifier_dest_root = pathlib.Path(config.spam_models_destination)
     return model_trainer.load_serialized_classifier(
         classifier_sha256_hash=tag,
         classifier_destination_root=classifier_dest_root,
