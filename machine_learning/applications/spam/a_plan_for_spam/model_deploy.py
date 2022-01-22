@@ -5,6 +5,8 @@ It supports:
  - deploying by tag
  - rollback
 """
+import argparse
+
 from typing import List, Optional, Sequence, TextIO
 
 _DB_RESERVED_CHAR = "="
@@ -56,6 +58,25 @@ def rollback_model(tag: str) -> None:
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
+    parser = argparse.ArgumentParser(prog="PROG")
+    subparsers = parser.add_subparsers(dest="subparser_name", help="sub-command help")
+
+    parser_a = subparsers.add_parser("deploy", help="a help")
+    parser_a.add_argument("--tag", type=str, help="bar help", required=True)
+    parser_a.set_defaults(func=deploy_model)
+
+    parser_b = subparsers.add_parser("tag", help="b help")
+    parser_b.add_argument("--tag", type=str, help="baz help", required=True)
+    parser_b.add_argument("--model", type=str, required=True)
+    parser_b.set_defaults(func=tag_model)
+
+    args = parser.parse_args(argv)
+    if args.subparser_name == "deploy":
+        print("DEPLOY")
+    elif args.subparser_name == "tag":
+        print("TAG")
+    else:
+        raise AssertionError
     return 0
 
 
