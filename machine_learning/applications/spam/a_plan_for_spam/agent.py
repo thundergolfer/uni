@@ -20,7 +20,7 @@ import time
 
 import config
 
-from typing import Sequence, Union
+from typing import Optional, Sequence
 
 logging.basicConfig(format=config.logging_format_str)
 logging.getLogger().setLevel(logging.DEBUG)
@@ -79,7 +79,7 @@ def cleanup() -> None:
         log_file.unlink()
 
 
-def main(argv: Union[Sequence[str], None] = None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="subparser_name")
 

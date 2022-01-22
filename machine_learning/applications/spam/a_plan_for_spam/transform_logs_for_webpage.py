@@ -8,7 +8,7 @@ import pathlib
 
 import config
 
-from typing import Union, Sequence
+from typing import Optional, Sequence
 
 
 logging.basicConfig(format=config.logging_format_str)
@@ -24,7 +24,7 @@ def transform_log_file(log_file: pathlib.Path) -> dict:
     return {}
 
 
-def main(argv: Union[Sequence[str], None] = None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> int:
     logging_file_path_root = pathlib.Path(config.logging_file_path_root)
     logging.info(f"Slurping logs from '{logging_file_path_root}'")
     for log_file in logging_file_path_root.glob("*.log"):

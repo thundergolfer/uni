@@ -21,7 +21,6 @@ from typing import (
     Iterable,
     NamedTuple,
     Optional,
-    Union,
     Sequence,
     Set,
 )
@@ -315,7 +314,7 @@ def load_serialized_classifier(
     return pickle.loads(classifier_bytes)
 
 
-def main(argv: Union[Sequence[str], None] = None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-registry-root", required=True)
     args = parser.parse_args(argv)

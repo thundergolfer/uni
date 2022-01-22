@@ -9,7 +9,7 @@ import shutil
 import tarfile
 import urllib.request
 
-from typing import List, Sequence, Union
+from typing import List, Optional, Sequence
 
 from dataset import Example, RawEnronDataset
 
@@ -42,7 +42,7 @@ def _download_and_extract_dataset(destination_root_path: pathlib.Path):
             tar.close()
 
 
-def main(argv: Union[Sequence[str], None] = None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--skip-download", action="store_true")
     args = parser.parse_args(argv)

@@ -19,7 +19,7 @@ import time
 import config
 import events
 
-from typing import Dict, Optional, Sequence, Union, Tuple
+from typing import Dict, Optional, Sequence, Tuple
 
 ServerAddr = Tuple[str, int]
 
@@ -254,7 +254,7 @@ def simulate_senders(*, max_emails) -> None:
                 logging.info(f"Sent {i} emails.")
 
 
-def main(argv: Union[Sequence[str], None] = None) -> int:
+def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Process some integers.")
     parser.add_argument("mode", choices=["senders", "receivers"])
     parser.add_argument("--max-emails", type=int, default=10 ** 6)
