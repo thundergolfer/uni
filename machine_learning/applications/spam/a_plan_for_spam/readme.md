@@ -24,13 +24,14 @@ Spam.
 
 1. Mail server (incoming / outgoing)
 2. Spam detection API server
-3. Email user activity simulation server 
+3. Email user activity simulation server (send & receive) 
 4. Data warehouse
 5. Model trainer
+6. Metrics server
 
 #### Diagram
 
-TODO
+![Spam Architecture-1](https://user-images.githubusercontent.com/12058921/150667019-0e4825ef-07cb-4eb3-a0e7-8944901d0a70.jpg)
 
 ### Usage
 
