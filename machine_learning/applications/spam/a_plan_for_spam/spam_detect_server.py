@@ -18,8 +18,6 @@ import model_trainer
 
 from typing import NamedTuple
 
-# B/C: https://stackoverflow.com/a/27733727/4885590
-from model_trainer import bad_words_spam_classifier
 
 logging.basicConfig(format=config.logging_format_str)
 logging.getLogger().setLevel(logging.DEBUG)

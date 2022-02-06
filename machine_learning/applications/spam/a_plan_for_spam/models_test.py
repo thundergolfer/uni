@@ -1,7 +1,7 @@
 import math
 from typing import NamedTuple
 
-import model_trainer
+import models
 
 
 class Example(NamedTuple):
@@ -16,7 +16,7 @@ def test_prob_calculation():
         Example(email="hello ham", spam=False),
     ]
 
-    classify_func = model_trainer.train_naive_bayes_classifier(dataset)
+    classify_func = models.train_naive_bayes_classifier(dataset)
     email = "hello spam"
     probs_if_ham = [
         (1 + 0.5) / (2 + 2 * 0.5),  # "hello" (present)
