@@ -125,7 +125,7 @@ class AntiSpamServer(smtpd.SMTPServer):
         return response_data["label"]
 
 
-def serve():
+def serve() -> None:
     logging.info("Starting (spam-detecting) mail server.")
     localaddr: ServerAddr = config.mail_server_addr
     remoteaddr: ServerAddr = config.mail_receiver_addr
