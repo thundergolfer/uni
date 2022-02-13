@@ -36,6 +36,7 @@ class TestBinarySearch(unittest.TestCase):
         self.assertTrue(binary_search([1, 2], 1))
         self.assertTrue(binary_search([1, 2, 4], 1))
         self.assertTrue(binary_search([1, 2, 4], 4))
+        self.assertTrue(binary_search([1, 2, 4, 49, 49], 2))
 
     def test_false_when_item_missing(self):
         self.assertFalse(binary_search([1], 2))
