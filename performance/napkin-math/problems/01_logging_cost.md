@@ -31,7 +31,7 @@ over time the goal is for you to be able to do these calculations with no aids!
 ______
  14400
 +72000
-=86000
+=86400
 ```
 
 86,400 seconds per day.
