@@ -38,7 +38,9 @@ Random reads from memory are about `1 GiB / sec`.
 TCP network overhead is about `~10us`, which is `10^-5` fraction of a second. So you can do `10^5 = 100,000` a second.
 Memory R/W is lightning fast compared to this, so request/sec is dominated by network overhead.
 
-Roughly `100k` per second is 10x what was reported by the engineer, so something is up.  
+Roughly `100k` per second is 10x what was reported by the engineer, so something is up. 
+
+(Feb 2021 Followup: This accords with Redis' docs, which claim 100k req/s without pipelining.) 
 
 ### Comparison to Simon's answer
 
