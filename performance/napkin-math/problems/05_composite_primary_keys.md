@@ -35,7 +35,7 @@ I love seeing your answers, so don't hesitate to email me those back!
 ### My Answer
 
 (1) This isn't really 'worst case', because I think that would involve reading pages with
-_zero_ matches. The query executor can't tell if a page has in advance. But anyway...
+_zero_ matches. The query executor can't tell if a page has a match in advance. But anyway...
 
 For worst case we'd get no page cache hits. So all 100 pages come from disk.
 
@@ -77,6 +77,7 @@ That's around `~163 bytes`. ID field is 8 bytes and so is `shop_id`, so 16 bytes
 > https://sirupsen.com/napkin/problem-6
 
 Simon didn't double the random disk seek time because of need to fetch 16KiB not 8KiB. This seems reasonable.
+He gave the answer: `10ms`.
 
 Simon "[assumed] sequential memory read performance for the 16Kb page", where I chose random read performance.
 This seems reasonable because random RAM read performance is more relevant when you're fetching many small amounts of data,
