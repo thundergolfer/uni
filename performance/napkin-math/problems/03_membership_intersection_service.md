@@ -53,7 +53,7 @@ is quite an ask.
 
 #### Memory
 
-Read `1MiB` from memory, sequentially: `100 - 250ms`. On 2021 computers, it's `~100ms`.
+Read `1MiB` from memory, sequentially: `100 - 250μs`. On 2021 computers, it's `~100μs`.
 
 `100μs * 8MB per attr ~= 800μs` (approx not exact because `8MB != 8MiB`).
 
