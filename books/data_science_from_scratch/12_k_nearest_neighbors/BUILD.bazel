@@ -1,0 +1,8 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
+load("@pypi//:requirements.bzl", "requirement")
+
+py_binary(
+    name = "knn",
+    srcs = ["knn.py"],
+    deps = [requirement("requests")]
+)
