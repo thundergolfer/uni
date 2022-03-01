@@ -1,0 +1,16 @@
+load("@pypi//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
+
+py_binary(
+    name = "k_nearest_neighbors",
+    main = "scratch.py",
+    srcs = glob(["*.py"]),
+    deps = [],
+)
+
+py_test(
+    name = "test_kdtree",
+    main = "kdtree.py",
+    srcs = ["kdtree.py"],
+    deps = [],
+)
