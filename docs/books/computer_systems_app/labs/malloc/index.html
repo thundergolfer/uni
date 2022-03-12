@@ -1,209 +1,14 @@
-<!doctype html><html lang=en dir=ltr>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=description content="Malloc Lab #   👋️ Note: Updated to Y86-64 for CS:APP3e. Students are given a small default Y86-64 array copying function and a working pipelined Y86-64 processor design that runs the copy function in some nominal number of clock cycles per array element (CPE). The students attempt to minimize the CPE by modifying both the function and the processor design. This gives the students a deep appreciation for the interactions between hardware and software.">
-<meta name=theme-color content="#FFFFFF"><meta property="og:title" content>
-<meta property="og:description" content>
-<meta property="og:type" content="website">
-<meta property="og:url" content="http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/">
-<title>Malloc | uni' docs</title><link rel=manifest href=/uni/manifest.json>
-<link rel=icon href=/uni/favicon.png type=image/x-icon>
-<link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous>
-<script defer src=/uni/flexsearch.min.js></script>
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Malloc Lab #   👋️ Note: Updated to Y86-64 for CS:APP3e. Students are given a small default Y86-64 array copying function and a working pipelined Y86-64 processor design that runs the copy function in some nominal number of clock cycles per array element (CPE). The students attempt to minimize the CPE by modifying both the function and the processor design. This gives the students a deep appreciation for the interactions between hardware and software."><meta name=theme-color content="#FFFFFF"><meta property="og:title" content><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:url" content="http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/"><title>Malloc | uni' docs</title><link rel=manifest href=/uni/manifest.json><link rel=icon href=/uni/favicon.png type=image/x-icon><link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous><script defer src=/uni/flexsearch.min.js></script>
 <script defer src=/uni/en.search.min.3e18b957aaad79efe7a2e6c700a657499e5fe1f735157406cf60d31d75cc23e5.js integrity="sha256-Phi5V6qtee/noubHAKZXSZ5f4fc1FXQGz2DTHXXMI+U=" crossorigin=anonymous></script>
-<link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/index.xml title="uni' docs">
-</head><body dir=ltr>
-<input type=checkbox class="hidden toggle" id=menu-control>
-<input type=checkbox class="hidden toggle" id=toc-control>
-<main class="container flex">
-<aside class=book-menu>
-<div class=book-menu-content>
-<nav>
-<h2 class=book-brand>
-<a href=/uni/><span>uni' docs</span>
-</a>
-</h2><div class=book-search>
-<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
-<div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/algorithms/>Algorithms</a>
-<ul>
-</ul></li><li>
-<span>Books</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a>
-<ul>
-<li>
-<span>Labs</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/ class=active>Malloc</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a>
-<ul>
-</ul></li></ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/crafting_interpreters/>Crafting Interpreters</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/>Data Science From Scratch</a>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/2_a_crash_course_in_python/>2 a Crash Course in Python</a>
-<ul>
-</ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/fp_in_scala/>Fp in Scala</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/programming_rust/>Programming Rust</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/the_rust_programming_language/>The Rust Programming Language</a>
-<ul>
-</ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a>
-<ul>
-</ul></li><li>
-<span>Data Structures</span>
-<ul>
-</ul></li><li>
-<span>Databases</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/databases/fromscratch_heapfile_and_hashindex/>Fromscratch Heapfile and Hashindex</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a>
-<ul>
-</ul></li></ul></li><li>
-<span>Machine Learning</span>
-<ul>
-<li>
-<span>Applications</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/machine_learning/applications/self_driving_toy_car/>Self Driving Toy Car</a>
-<ul>
-</ul></li><li>
-<span>Spam</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/>A Plan for Spam</a>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/datasets/>Datasets</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/web/>Web</a>
-<ul>
-</ul></li></ul></li></ul></li></ul></li></ul></li><li>
-<span>Operating Systems</span>
-<ul>
-<li>
-<span>Linux</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a>
-<ul>
-</ul></li></ul></li></ul></li><li>
-<span>Optimization</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a>
-<ul>
-</ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/performance/>Performance</a>
-<ul>
-<li>
-<span>Jvm</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a>
-<ul>
-</ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/performance/napkin-math/>Napkin Math</a>
-<ul>
-</ul></li></ul></li><li>
-<span>Tools</span>
-<ul>
-<li>
-<span>Build</span>
-<ul>
-<li>
-<span>Bazel</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a>
-<ul>
-</ul></li></ul></li><li>
-<span>Docs</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a>
-<ul>
-</ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
-</div></aside><div class=book-page>
-<header class=book-header>
-<div class="flex align-center justify-between">
-<label for=menu-control>
-<img src=/uni/svg/menu.svg class=book-icon alt=Menu>
-</label>
+<link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/index.xml title="uni' docs"></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a href=/uni/><span>uni' docs</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><a href=http://thundergolfer.com/uni/docs/algorithms/>Algorithms</a><ul></ul></li><li><span>Books</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a><ul><li><span>Labs</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/ class=active>Malloc</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a><ul></ul></li></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/crafting_interpreters/>Crafting Interpreters</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/>Data Science From Scratch</a><ul><li><a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/2_a_crash_course_in_python/>2 a Crash Course in Python</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/fp_in_scala/>Fp in Scala</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/programming_rust/>Programming Rust</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/the_rust_programming_language/>The Rust Programming Language</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a><ul></ul></li><li><span>Data Structures</span><ul></ul></li><li><span>Databases</span><ul><li><a href=http://thundergolfer.com/uni/docs/databases/fromscratch_heapfile_and_hashindex/>Fromscratch Heapfile and Hashindex</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a><ul></ul></li></ul></li><li><span>Machine Learning</span><ul><li><span>Applications</span><ul><li><a href=http://thundergolfer.com/uni/docs/machine_learning/applications/self_driving_toy_car/>Self Driving Toy Car</a><ul></ul></li><li><span>Spam</span><ul><li><a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/>A Plan for Spam</a><ul><li><a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/datasets/>Datasets</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/web/>Web</a><ul></ul></li></ul></li></ul></li></ul></li></ul></li><li><span>Operating Systems</span><ul><li><span>Linux</span><ul><li><a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a><ul></ul></li></ul></li></ul></li><li><span>Optimization</span><ul><li><a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/>Performance</a><ul><li><span>Jvm</span><ul><li><a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/napkin-math/>Napkin Math</a><ul></ul></li></ul></li><li><span>Tools</span><ul><li><span>Build</span><ul><li><span>Bazel</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a><ul></ul></li></ul></li><li><span>Docs</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a><ul></ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/uni/svg/menu.svg class=book-icon alt=Menu></label>
 <strong>Malloc</strong>
-<label for=toc-control>
-<img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents">
-</label>
-</div><aside class="hidden clearfix">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#_malloc_-lab><em>Malloc</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a>
-<ul>
-<li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-building-the-lab>3. Building the Lab</a></li><li><a href=#4-grading-the-lab>4. Grading the Lab</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=_malloc_-lab>
-<em>Malloc</em> Lab
-<a class=anchor href=#_malloc_-lab>#</a>
-</h2><blockquote>
-<p>👋️ <strong>Note:</strong> Updated to Y86-64 for CS:APP3e. Students are given a small default Y86-64 array copying function and a working pipelined Y86-64 processor design that runs the copy function in some nominal number of clock cycles per array element (CPE). The students attempt to minimize the CPE by modifying both the function and the processor design. This gives the students a deep appreciation for the interactions between hardware and software.</p></blockquote><blockquote>
-<p><strong>Note:</strong> The lab materials include the master source distribution of the Y86-64 processor simulators and the Y86-64 Guide to Simulators. (<em>I unzipped it into <code>tar/</code></em>)</p></blockquote><h2 id=contents>
-Contents
-<a class=anchor href=#contents>#</a>
-</h2><ul>
-<li>Files downloaded from CS:APP website as <code>archlab-handout.tar</code>, and listed below in the original README contents</li></ul><h2 id=lab-assignment-write-up>
-Lab Assignment Write-Up
-<a class=anchor href=#lab-assignment-write-up>#</a>
-</h2><p><a href=http://csapp.cs.cmu.edu/3e/malloclab.pdf>csapp.cs.cmu.edu/3e/malloclab.pdf</a>.</p><p>This write-up is pretty helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem.</p><h2 id=original-readmemd>
-Original <code>README.md</code>
-<a class=anchor href=#original-readmemd>#</a>
-</h2><p>This section is copied from <a href=http://csapp.cs.cmu.edu/3e/README-archlab>csapp.cs.cmu.edu/3e/README-archlab</a>.
-It was modified only to conform to standard Markdown formatting.</p><p>It is not particularly useful for people doing self-study, but is reproduced here anyway.</p><hr>
-<pre tabindex=0><code>#####################################################################
+<label for=toc-control><img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#_malloc_-lab><em>Malloc</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-building-the-lab>3. Building the Lab</a></li><li><a href=#4-grading-the-lab>4. Grading the Lab</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=_malloc_-lab><em>Malloc</em> Lab
+<a class=anchor href=#_malloc_-lab>#</a></h2><blockquote><p>👋️ <strong>Note:</strong> Updated to Y86-64 for CS:APP3e. Students are given a small default Y86-64 array copying function and a working pipelined Y86-64 processor design that runs the copy function in some nominal number of clock cycles per array element (CPE). The students attempt to minimize the CPE by modifying both the function and the processor design. This gives the students a deep appreciation for the interactions between hardware and software.</p></blockquote><blockquote><p><strong>Note:</strong> The lab materials include the master source distribution of the Y86-64 processor simulators and the Y86-64 Guide to Simulators. (<em>I unzipped it into <code>tar/</code></em>)</p></blockquote><h2 id=contents>Contents
+<a class=anchor href=#contents>#</a></h2><ul><li>Files downloaded from CS:APP website as <code>archlab-handout.tar</code>, and listed below in the original README contents</li></ul><h2 id=lab-assignment-write-up>Lab Assignment Write-Up
+<a class=anchor href=#lab-assignment-write-up>#</a></h2><p><a href=http://csapp.cs.cmu.edu/3e/malloclab.pdf>csapp.cs.cmu.edu/3e/malloclab.pdf</a>.</p><p>This write-up is pretty helpful for even those doing self-study. Read through it to learn how to approach this lab&rsquo;s problem.</p><h2 id=original-readmemd>Original <code>README.md</code>
+<a class=anchor href=#original-readmemd>#</a></h2><p>This section is copied from <a href=http://csapp.cs.cmu.edu/3e/README-archlab>csapp.cs.cmu.edu/3e/README-archlab</a>.
+It was modified only to conform to standard Markdown formatting.</p><p>It is not particularly useful for people doing self-study, but is reproduced here anyway.</p><hr><pre tabindex=0><code>#####################################################################
 # CS:APP Malloc Lab
 # Directions to Instructors
 #
@@ -213,39 +18,19 @@ It was modified only to conform to standard Markdown formatting.</p><p>It is not
 ######################################################################
 </code></pre><p>This directory contains the files that you will need to run the CS:APP
 malloc lab, which develops a student&rsquo;s understanding of pointers,
-system-level programming, and memory managment.</p><h3 id=1-overview>
-1. Overview
-<a class=anchor href=#1-overview>#</a>
-</h3><p>In this lab, students write their own storage allocator, in particular
+system-level programming, and memory managment.</p><h3 id=1-overview>1. Overview
+<a class=anchor href=#1-overview>#</a></h3><p>In this lab, students write their own storage allocator, in particular
 implementations of the malloc, free, and realloc functions. A
 trace-driven driver (mdriver) evaluates the quality of the student&rsquo;s
-implementation in terms of space utilization and throughput.</p><h3 id=2-files>
-2. Files
-<a class=anchor href=#2-files>#</a>
-</h3><ul>
-<li><code>Makefile</code> Makefile that builds the Lab</li><li><code>README</code> This file</li><li><code>grade/</code> Autograding scripts</li><li><code>malloclab-handout/</code> The files handed out to the students</li><li><code>src/</code> The driver sources</li><li><code>traces/</code> The malloc/free/realloc trace files used by the driver</li><li><code>writeup/</code> The malloc lab writeup</li></ul><h3 id=3-building-the-lab>
-3. Building the Lab
-<a class=anchor href=#3-building-the-lab>#</a>
-</h3><p>Step 1: Configure the driver in <code>src/</code> for your site. See <code>src/README</code> for
+implementation in terms of space utilization and throughput.</p><h3 id=2-files>2. Files
+<a class=anchor href=#2-files>#</a></h3><ul><li><code>Makefile</code> Makefile that builds the Lab</li><li><code>README</code> This file</li><li><code>grade/</code> Autograding scripts</li><li><code>malloclab-handout/</code> The files handed out to the students</li><li><code>src/</code> The driver sources</li><li><code>traces/</code> The malloc/free/realloc trace files used by the driver</li><li><code>writeup/</code> The malloc lab writeup</li></ul><h3 id=3-building-the-lab>3. Building the Lab
+<a class=anchor href=#3-building-the-lab>#</a></h3><p>Step 1: Configure the driver in <code>src/</code> for your site. See <code>src/README</code> for
 detailed information on the driver.</p><p>Step 2: Modify the Latex writeup in <code>writeup/</code> to reflect the handout
 and handin directions for your site. If you don&rsquo;t use Latex, use your
 favorite document preparation system to prepare Postcript and PDF
 versions of the writeup in <code>malloclab.ps</code> and <code>malloclab.pdf</code>.</p><p>Step 3: Modify the <code>LABNAME</code> and <code>DEST</code> variables in <code>./Makefile</code> for your
 site.</p><p>Step 4: Type &ldquo;make&rdquo; to build the <code>$(LABNAME)-handout.tar</code> file.</p><p>Step 5: Type &ldquo;make dist&rdquo; to copy the <code>$(LABNAME)-handout.tar</code> file
 and the writeup to the distribution directory where the students
-will retrieve the lab.</p><h3 id=4-grading-the-lab>
-4. Grading the Lab
-<a class=anchor href=#4-grading-the-lab>#</a>
-</h3><p>There are autograding scripts for this lab. See grade/README for
-details.</p></article><footer class=book-footer>
-<div class="flex flex-wrap justify-between">
-</div><script>(function(){function e(n){const e=window.getSelection(),t=document.createRange();t.selectNodeContents(n),e.removeAllRanges(),e.addRange(t)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
-</footer><div class=book-comments>
-</div><label for=menu-control class="hidden book-menu-overlay"></label>
-</div><aside class=book-toc>
-<div class=book-toc-content>
-<nav id=TableOfContents>
-<ul>
-<li><a href=#_malloc_-lab><em>Malloc</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a>
-<ul>
-<li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-building-the-lab>3. Building the Lab</a></li><li><a href=#4-grading-the-lab>4. Grading the Lab</a></li></ul></li></ul></nav></div></aside></main></body></html>
+will retrieve the lab.</p><h3 id=4-grading-the-lab>4. Grading the Lab
+<a class=anchor href=#4-grading-the-lab>#</a></h3><p>There are autograding scripts for this lab. See grade/README for
+details.</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function e(n){const e=window.getSelection(),t=document.createRange();t.selectNodeContents(n),e.removeAllRanges(),e.addRange(t)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#_malloc_-lab><em>Malloc</em> Lab</a></li><li><a href=#contents>Contents</a></li><li><a href=#lab-assignment-write-up>Lab Assignment Write-Up</a></li><li><a href=#original-readmemd>Original <code>README.md</code></a><ul><li><a href=#1-overview>1. Overview</a></li><li><a href=#2-files>2. Files</a></li><li><a href=#3-building-the-lab>3. Building the Lab</a></li><li><a href=#4-grading-the-lab>4. Grading the Lab</a></li></ul></li></ul></nav></div></aside></main></body></html>

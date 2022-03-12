@@ -1,199 +1,11 @@
-<!doctype html><html lang=en dir=ltr>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=description content="Napkin Math #   Originally from https://github.com/sirupsen/napkin-math.
- The goal of this project is to collect software, numbers, and techniques to quickly estimate the expected performance of systems from first-principles. For example, how quickly can you read 1 GB of memory? By composing these resources you should be able to answer interesting questions like: how much storage cost should you expect to pay for logging for an application with 100,000 RPS?">
-<meta name=theme-color content="#FFFFFF"><meta property="og:title" content>
-<meta property="og:description" content>
-<meta property="og:type" content="website">
-<meta property="og:url" content="http://thundergolfer.com/uni/docs/performance/napkin-math/">
-<title>Napkin Math | uni' docs</title><link rel=manifest href=/uni/manifest.json>
-<link rel=icon href=/uni/favicon.png type=image/x-icon>
-<link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous>
-<script defer src=/uni/flexsearch.min.js></script>
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Napkin Math #   Originally from https://github.com/sirupsen/napkin-math.
+ The goal of this project is to collect software, numbers, and techniques to quickly estimate the expected performance of systems from first-principles. For example, how quickly can you read 1 GB of memory? By composing these resources you should be able to answer interesting questions like: how much storage cost should you expect to pay for logging for an application with 100,000 RPS?"><meta name=theme-color content="#FFFFFF"><meta property="og:title" content><meta property="og:description" content><meta property="og:type" content="website"><meta property="og:url" content="http://thundergolfer.com/uni/docs/performance/napkin-math/"><title>Napkin Math | uni' docs</title><link rel=manifest href=/uni/manifest.json><link rel=icon href=/uni/favicon.png type=image/x-icon><link rel=stylesheet href=/uni/book.min.958cea7827621d6fbcb3acf091344c3e44e3d2a9428f9c3c38bb9eb37bf8c45d.css integrity="sha256-lYzqeCdiHW+8s6zwkTRMPkTj0qlCj5w8OLues3v4xF0=" crossorigin=anonymous><script defer src=/uni/flexsearch.min.js></script>
 <script defer src=/uni/en.search.min.3e18b957aaad79efe7a2e6c700a657499e5fe1f735157406cf60d31d75cc23e5.js integrity="sha256-Phi5V6qtee/noubHAKZXSZ5f4fc1FXQGz2DTHXXMI+U=" crossorigin=anonymous></script>
-<link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/performance/napkin-math/index.xml title="uni' docs">
-</head><body dir=ltr>
-<input type=checkbox class="hidden toggle" id=menu-control>
-<input type=checkbox class="hidden toggle" id=toc-control>
-<main class="container flex">
-<aside class=book-menu>
-<div class=book-menu-content>
-<nav>
-<h2 class=book-brand>
-<a href=/uni/><span>uni' docs</span>
-</a>
-</h2><div class=book-search>
-<input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/>
-<div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/algorithms/>Algorithms</a>
-<ul>
-</ul></li><li>
-<span>Books</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a>
-<ul>
-<li>
-<span>Labs</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a>
-<ul>
-</ul></li></ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/crafting_interpreters/>Crafting Interpreters</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/>Data Science From Scratch</a>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/2_a_crash_course_in_python/>2 a Crash Course in Python</a>
-<ul>
-</ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/fp_in_scala/>Fp in Scala</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/programming_rust/>Programming Rust</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/books/the_rust_programming_language/>The Rust Programming Language</a>
-<ul>
-</ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a>
-<ul>
-</ul></li><li>
-<span>Data Structures</span>
-<ul>
-</ul></li><li>
-<span>Databases</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/databases/fromscratch_heapfile_and_hashindex/>Fromscratch Heapfile and Hashindex</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a>
-<ul>
-</ul></li></ul></li><li>
-<span>Machine Learning</span>
-<ul>
-<li>
-<span>Applications</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/machine_learning/applications/self_driving_toy_car/>Self Driving Toy Car</a>
-<ul>
-</ul></li><li>
-<span>Spam</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/>A Plan for Spam</a>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/datasets/>Datasets</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/web/>Web</a>
-<ul>
-</ul></li></ul></li></ul></li></ul></li></ul></li><li>
-<span>Operating Systems</span>
-<ul>
-<li>
-<span>Linux</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a>
-<ul>
-</ul></li></ul></li></ul></li><li>
-<span>Optimization</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a>
-<ul>
-</ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/performance/>Performance</a>
-<ul>
-<li>
-<span>Jvm</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a>
-<ul>
-</ul></li></ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/performance/napkin-math/ class=active>Napkin Math</a>
-<ul>
-</ul></li></ul></li><li>
-<span>Tools</span>
-<ul>
-<li>
-<span>Build</span>
-<ul>
-<li>
-<span>Bazel</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a>
-<ul>
-</ul></li><li>
-<a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a>
-<ul>
-</ul></li></ul></li><li>
-<span>Docs</span>
-<ul>
-<li>
-<a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a>
-<ul>
-</ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
-</div></aside><div class=book-page>
-<header class=book-header>
-<div class="flex align-center justify-between">
-<label for=menu-control>
-<img src=/uni/svg/menu.svg class=book-icon alt=Menu>
-</label>
+<link rel=alternate type=application/rss+xml href=http://thundergolfer.com/uni/docs/performance/napkin-math/index.xml title="uni' docs"></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a href=/uni/><span>uni' docs</span></a></h2><div class=book-search><input type=text id=book-search-input placeholder=Search aria-label=Search maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><ul><li><a href=http://thundergolfer.com/uni/docs/algorithms/>Algorithms</a><ul></ul></li><li><span>Books</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/>Computer Systems App</a><ul><li><span>Labs</span><ul><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/architecture/>Architecture</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/attack/>Attack</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/binary_bomb/>Binary Bomb</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/buffer/>Buffer</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/cache/>Cache</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/data/>Data</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/malloc/>Malloc</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/performance/>Performance</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/proxy/>Proxy</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/computer_systems_app/labs/shell/>Shell</a><ul></ul></li></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/crafting_interpreters/>Crafting Interpreters</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/>Data Science From Scratch</a><ul><li><a href=http://thundergolfer.com/uni/docs/books/data_science_from_scratch/2_a_crash_course_in_python/>2 a Crash Course in Python</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/fp_in_scala/>Fp in Scala</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/programming_rust/>Programming Rust</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/books/the_rust_programming_language/>The Rust Programming Language</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/concurrency/>Concurrency</a><ul></ul></li><li><span>Data Structures</span><ul></ul></li><li><span>Databases</span><ul><li><a href=http://thundergolfer.com/uni/docs/databases/fromscratch_heapfile_and_hashindex/>Fromscratch Heapfile and Hashindex</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/databases/sql/>SQL</a><ul></ul></li></ul></li><li><span>Machine Learning</span><ul><li><span>Applications</span><ul><li><a href=http://thundergolfer.com/uni/docs/machine_learning/applications/self_driving_toy_car/>Self Driving Toy Car</a><ul></ul></li><li><span>Spam</span><ul><li><a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/>A Plan for Spam</a><ul><li><a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/datasets/>Datasets</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/machine_learning/applications/spam/a_plan_for_spam/web/>Web</a><ul></ul></li></ul></li></ul></li></ul></li></ul></li><li><span>Operating Systems</span><ul><li><span>Linux</span><ul><li><a href=http://thundergolfer.com/uni/docs/operating_systems/linux/strace_in_seventy_lines/>Strace in Seventy Lines</a><ul></ul></li></ul></li></ul></li><li><span>Optimization</span><ul><li><a href=http://thundergolfer.com/uni/docs/optimization/basic_neuralnet_lib/>Basic Neuralnet Lib</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/>Performance</a><ul><li><span>Jvm</span><ul><li><a href=http://thundergolfer.com/uni/docs/performance/jvm/bytebuffer-allocatedirect/>Bytebuffer Allocatedirect</a><ul></ul></li></ul></li><li><a href=http://thundergolfer.com/uni/docs/performance/napkin-math/ class=active>Napkin Math</a><ul></ul></li></ul></li><li><span>Tools</span><ul><li><span>Build</span><ul><li><span>Bazel</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_julia/>Rules Julia</a><ul></ul></li><li><a href=http://thundergolfer.com/uni/docs/tools/build/bazel/rules_nim/>Rules Nim</a><ul></ul></li></ul></li><li><span>Docs</span><ul><li><a href=http://thundergolfer.com/uni/docs/tools/build/docs/technical-documentation-system/>Technical Documentation System</a><ul></ul></li></ul></li></ul></li></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/uni/svg/menu.svg class=book-icon alt=Menu></label>
 <strong>Napkin Math</strong>
-<label for=toc-control>
-<img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents">
-</label>
-</div><aside class="hidden clearfix">
-<nav id=TableOfContents>
-<ul>
-<li><a href=#napkin-math>Napkin Math</a>
-<ul>
-<li><a href=#numbers>Numbers</a></li><li><a href=#cost-numbers>Cost Numbers</a></li></ul></li><li><a href=#compression-ratios>Compression Ratios</a>
-<ul>
-<li><a href=#techniques>Techniques</a></li><li><a href=#resources>Resources</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=napkin-math>
-Napkin Math
-<a class=anchor href=#napkin-math>#</a>
-</h2><blockquote>
-<p>Originally from <a href=https://github.com/sirupsen/napkin-math>https://github.com/sirupsen/napkin-math</a>.</p></blockquote><p>The goal of this project is to collect software, numbers, and techniques to
+<label for=toc-control><img src=/uni/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#napkin-math>Napkin Math</a><ul><li><a href=#numbers>Numbers</a></li><li><a href=#cost-numbers>Cost Numbers</a></li></ul></li><li><a href=#compression-ratios>Compression Ratios</a><ul><li><a href=#techniques>Techniques</a></li><li><a href=#resources>Resources</a></li></ul></li></ul></nav></aside></header><article class=markdown><h2 id=napkin-math>Napkin Math
+<a class=anchor href=#napkin-math>#</a></h2><blockquote><p>Originally from <a href=https://github.com/sirupsen/napkin-math>https://github.com/sirupsen/napkin-math</a>.</p></blockquote><p>The goal of this project is to collect software, numbers, and techniques to
 quickly estimate the expected performance of systems from first-principles. For
 example, how quickly can you read 1 GB of memory? By composing these resources
 you should be able to answer interesting questions like: how much storage cost
@@ -204,44 +16,11 @@ newsletter</a> where you&rsquo;ll get a problem every few
 weeks to practise on</strong>. It should only take you a few minutes to solve each one as your
 facility with these techniques improve.</p><p>The archive of problems to practise with are
 <a href=https://sirupsen.com/napkin/>here</a>. The solution will be in the following
-newsletter.</p><h3 id=numbers>
-Numbers
-<a class=anchor href=#numbers>#</a>
-</h3><p>Below are numbers that are rounded from runs on a <a href=https://gist.github.com/sirupsen/766f266eebf6bdf2525bdbb309e17a41>GCP <code>c2-standard-4</code></a> (Intel
+newsletter.</p><h3 id=numbers>Numbers
+<a class=anchor href=#numbers>#</a></h3><p>Below are numbers that are rounded from runs on a <a href=https://gist.github.com/sirupsen/766f266eebf6bdf2525bdbb309e17a41>GCP <code>c2-standard-4</code></a> (Intel
 Cascade) and 2017 Macbook (2.8GHz, quad-core).</p><p><strong>Note 1:</strong> Numbers have been rounded, which means they don&rsquo;t line up perfectly.
 <strong>Note 2:</strong> Some throughput and latency numbers don&rsquo;t line up (for ease of
-calculations see exact results e.g. <a href=https://gist.github.com/sirupsen/766f266eebf6bdf2525bdbb309e17a41>here</a>).</p><table>
-<thead>
-<tr>
-<th>Operation</th><th>Latency</th><th>Throughput</th><th>1 MiB</th><th>1 GiB</th></tr></thead><tbody>
-<tr>
-<td>Sequential Memory R/W (64 bytes)</td><td>5 ns</td><td>10 GiB/s</td><td>100 μs</td><td>100 ms</td></tr><tr>
-<td>Hashing, not crypto-safe (64 bytes)</td><td>25 ns</td><td>2 GiB/s</td><td>500 μs</td><td>500 ms</td></tr><tr>
-<td>Random Memory R/W (64 bytes)</td><td>50 ns</td><td>1 GiB/s</td><td>1 ms</td><td>1 s</td></tr><tr>
-<td>Fast Serialization <code>[8]</code> <code>[9]</code> †</td><td>N/A</td><td>1 GiB/s</td><td>1 ms</td><td>1s</td></tr><tr>
-<td>Fast Deserialization <code>[8]</code> <code>[9]</code> †</td><td>N/A</td><td>1 GiB/s</td><td>1 ms</td><td>1s</td></tr><tr>
-<td>System Call</td><td>500 ns</td><td>N/A</td><td>N/A</td><td>N/A</td></tr><tr>
-<td>Hashing, crypto-safe (64 bytes)</td><td>500 ns</td><td>200 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr>
-<td>Sequential SSD read (8 KiB)</td><td>1 μs</td><td>4 GiB/s</td><td>200 μs</td><td>200 ms</td></tr><tr>
-<td>Context Switch <code>[1] [2]</code></td><td>10 μs</td><td>N/A</td><td>N/A</td><td>N/A</td></tr><tr>
-<td>Sequential SSD write, -fsync (8KiB)</td><td>10 μs</td><td>1 GiB/s</td><td>1 ms</td><td>1 s</td></tr><tr>
-<td>TCP Echo Server (32 KiB)</td><td>10 μs</td><td>4 GiB/s</td><td>200 μs</td><td>200 ms</td></tr><tr>
-<td>Sequential SSD write, +fsync (8KiB)</td><td>1 ms</td><td>10 MiB/s</td><td>100 ms</td><td>2 min</td></tr><tr>
-<td>Sorting (64-bit integers)</td><td>N/A</td><td>200 MiB/s</td><td>5 ms</td><td>5 s</td></tr><tr>
-<td>Random SSD Seek (8 KiB)</td><td>100 μs</td><td>70 MiB/s</td><td>15 ms</td><td>15 s</td></tr><tr>
-<td>Compression <code>[3]</code></td><td>N/A</td><td>100 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr>
-<td>Decompression <code>[3]</code></td><td>N/A</td><td>200 MiB/s</td><td>5 ms</td><td>5s</td></tr><tr>
-<td>Serialization <code>[8]</code> <code>[9]</code> †</td><td>N/A</td><td>100 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr>
-<td>Deserialization <code>[8]</code> <code>[9]</code> †</td><td>N/A</td><td>100 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr>
-<td>Proxy: Envoy/ProxySQL/Nginx/HAProxy</td><td>50 μs</td><td>?</td><td>?</td><td>?</td></tr><tr>
-<td>Network within same region <code>[6]</code></td><td>250 μs</td><td>100 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr>
-<td>{MySQL, Memcached, Redis, ..} Query</td><td>500 μs</td><td>?</td><td>?</td><td>?</td></tr><tr>
-<td>Random HDD Seek (8 KiB)</td><td>10 ms</td><td>70 MiB/s</td><td>15 ms</td><td>15 s</td></tr><tr>
-<td>Network between regions <code>[6]</code></td><td><a href=https://www.cloudping.co/grid#>Varies</a></td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr><tr>
-<td>Network NA East &lt;-> West</td><td>60 ms</td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr><tr>
-<td>Network EU West &lt;-> NA East</td><td>80 ms</td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr><tr>
-<td>Network NA West &lt;-> Singapore</td><td>180 ms</td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr><tr>
-<td>Network EU West &lt;-> Singapore</td><td>160 ms</td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr></tbody></table><p><strong>†:</strong> &ldquo;Fast serialization/deserialization&rdquo; is typically a simple wire-protocol
+calculations see exact results e.g. <a href=https://gist.github.com/sirupsen/766f266eebf6bdf2525bdbb309e17a41>here</a>).</p><table><thead><tr><th>Operation</th><th>Latency</th><th>Throughput</th><th>1 MiB</th><th>1 GiB</th></tr></thead><tbody><tr><td>Sequential Memory R/W (64 bytes)</td><td>5 ns</td><td>10 GiB/s</td><td>100 μs</td><td>100 ms</td></tr><tr><td>Hashing, not crypto-safe (64 bytes)</td><td>25 ns</td><td>2 GiB/s</td><td>500 μs</td><td>500 ms</td></tr><tr><td>Random Memory R/W (64 bytes)</td><td>50 ns</td><td>1 GiB/s</td><td>1 ms</td><td>1 s</td></tr><tr><td>Fast Serialization <code>[8]</code> <code>[9]</code> †</td><td>N/A</td><td>1 GiB/s</td><td>1 ms</td><td>1s</td></tr><tr><td>Fast Deserialization <code>[8]</code> <code>[9]</code> †</td><td>N/A</td><td>1 GiB/s</td><td>1 ms</td><td>1s</td></tr><tr><td>System Call</td><td>500 ns</td><td>N/A</td><td>N/A</td><td>N/A</td></tr><tr><td>Hashing, crypto-safe (64 bytes)</td><td>500 ns</td><td>200 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr><td>Sequential SSD read (8 KiB)</td><td>1 μs</td><td>4 GiB/s</td><td>200 μs</td><td>200 ms</td></tr><tr><td>Context Switch <code>[1] [2]</code></td><td>10 μs</td><td>N/A</td><td>N/A</td><td>N/A</td></tr><tr><td>Sequential SSD write, -fsync (8KiB)</td><td>10 μs</td><td>1 GiB/s</td><td>1 ms</td><td>1 s</td></tr><tr><td>TCP Echo Server (32 KiB)</td><td>10 μs</td><td>4 GiB/s</td><td>200 μs</td><td>200 ms</td></tr><tr><td>Sequential SSD write, +fsync (8KiB)</td><td>1 ms</td><td>10 MiB/s</td><td>100 ms</td><td>2 min</td></tr><tr><td>Sorting (64-bit integers)</td><td>N/A</td><td>200 MiB/s</td><td>5 ms</td><td>5 s</td></tr><tr><td>Random SSD Seek (8 KiB)</td><td>100 μs</td><td>70 MiB/s</td><td>15 ms</td><td>15 s</td></tr><tr><td>Compression <code>[3]</code></td><td>N/A</td><td>100 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr><td>Decompression <code>[3]</code></td><td>N/A</td><td>200 MiB/s</td><td>5 ms</td><td>5s</td></tr><tr><td>Serialization <code>[8]</code> <code>[9]</code> †</td><td>N/A</td><td>100 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr><td>Deserialization <code>[8]</code> <code>[9]</code> †</td><td>N/A</td><td>100 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr><td>Proxy: Envoy/ProxySQL/Nginx/HAProxy</td><td>50 μs</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Network within same region <code>[6]</code></td><td>250 μs</td><td>100 MiB/s</td><td>10 ms</td><td>10s</td></tr><tr><td>{MySQL, Memcached, Redis, ..} Query</td><td>500 μs</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Random HDD Seek (8 KiB)</td><td>10 ms</td><td>70 MiB/s</td><td>15 ms</td><td>15 s</td></tr><tr><td>Network between regions <code>[6]</code></td><td><a href=https://www.cloudping.co/grid#>Varies</a></td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr><tr><td>Network NA East &lt;-> West</td><td>60 ms</td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr><tr><td>Network EU West &lt;-> NA East</td><td>80 ms</td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr><tr><td>Network NA West &lt;-> Singapore</td><td>180 ms</td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr><tr><td>Network EU West &lt;-> Singapore</td><td>160 ms</td><td>25 MiB/s</td><td>40 ms</td><td>40s</td></tr></tbody></table><p><strong>†:</strong> &ldquo;Fast serialization/deserialization&rdquo; is typically a simple wire-protocol
 that just dumps bytes, or a very efficient environment. Typically standard
 serialization such as e.g. JSON will be of the slower kind. We include both here
 as serialization/deserialization is a very, very broad topic with extremely
@@ -250,41 +29,15 @@ You won&rsquo;t get the right numbers when you&rsquo;re compiling in debug mode.
 can help this project by adding new suites and filling out the blanks.</p><p>I am aware of some inefficiencies in this suite. I intend to improve my skills
 in this area, in order to ensure the numbers are the upper-bound of performance
 you may be able to squeeze out in production. I find it highly unlikely any of
-them will be more than 2-3x off, which shouldn&rsquo;t be a problem for most users.</p><h3 id=cost-numbers>
-Cost Numbers
-<a class=anchor href=#cost-numbers>#</a>
-</h3><p>Approximate numbers that should be consistent between Cloud providers.</p><table>
-<thead>
-<tr>
-<th>What</th><th>Amount</th><th>$ / Month</th><th>$ / Hour</th></tr></thead><tbody>
-<tr>
-<td>CPU</td><td>1</td><td>$10</td><td>$0.02</td></tr><tr>
-<td>Memory</td><td>1 GB</td><td>$1</td><td></td></tr><tr>
-<td>SSD</td><td>1 GB</td><td>$0.1</td><td></td></tr><tr>
-<td>Disk</td><td>1 GB</td><td>$0.01</td><td></td></tr><tr>
-<td>S3, GCS, ..</td><td>1 GB</td><td>$0.01</td><td></td></tr><tr>
-<td>Network</td><td>1 GB</td><td>$0.01</td><td></td></tr></tbody></table><h2 id=compression-ratios>
-Compression Ratios
-<a class=anchor href=#compression-ratios>#</a>
-</h2><p>This is sourced from a few sources. <code>[3]</code> <code>[4]</code> <code>[5]</code> Note that compression speeds (but
+them will be more than 2-3x off, which shouldn&rsquo;t be a problem for most users.</p><h3 id=cost-numbers>Cost Numbers
+<a class=anchor href=#cost-numbers>#</a></h3><p>Approximate numbers that should be consistent between Cloud providers.</p><table><thead><tr><th>What</th><th>Amount</th><th>$ / Month</th><th>$ / Hour</th></tr></thead><tbody><tr><td>CPU</td><td>1</td><td>$10</td><td>$0.02</td></tr><tr><td>Memory</td><td>1 GB</td><td>$1</td><td></td></tr><tr><td>SSD</td><td>1 GB</td><td>$0.1</td><td></td></tr><tr><td>Disk</td><td>1 GB</td><td>$0.01</td><td></td></tr><tr><td>S3, GCS, ..</td><td>1 GB</td><td>$0.01</td><td></td></tr><tr><td>Network</td><td>1 GB</td><td>$0.01</td><td></td></tr></tbody></table><h2 id=compression-ratios>Compression Ratios
+<a class=anchor href=#compression-ratios>#</a></h2><p>This is sourced from a few sources. <code>[3]</code> <code>[4]</code> <code>[5]</code> Note that compression speeds (but
 generally not ratios) vary by an order of magnitude depending on the algorithm
 and the level of compression (which trades speed for compression).</p><p>I typically ballpark that another <em>x in compression ratio decreases performance
 by 10x</em>. E.g. we can <a href=https://quixdb.github.io/squash-benchmark/#results-table>get a 2x ratio on English
 Wikipedia</a> at ~200
-MiB/s, and 3x at ~20MiB/s, and 4x at 1MB/s.</p><table>
-<thead>
-<tr>
-<th>What</th><th>Compression Ratio</th></tr></thead><tbody>
-<tr>
-<td>HTML</td><td>2-3x</td></tr><tr>
-<td>English</td><td>2-4x</td></tr><tr>
-<td>Source Code</td><td>2-4x</td></tr><tr>
-<td>Executables</td><td>2-3x</td></tr><tr>
-<td>RPC</td><td>5-10x</td></tr></tbody></table><h3 id=techniques>
-Techniques
-<a class=anchor href=#techniques>#</a>
-</h3><ul>
-<li><strong>Don&rsquo;t overcomplicate.</strong> If you are basing your calculation on more than 6
+MiB/s, and 3x at ~20MiB/s, and 4x at 1MB/s.</p><table><thead><tr><th>What</th><th>Compression Ratio</th></tr></thead><tbody><tr><td>HTML</td><td>2-3x</td></tr><tr><td>English</td><td>2-4x</td></tr><tr><td>Source Code</td><td>2-4x</td></tr><tr><td>Executables</td><td>2-3x</td></tr><tr><td>RPC</td><td>5-10x</td></tr></tbody></table><h3 id=techniques>Techniques
+<a class=anchor href=#techniques>#</a></h3><ul><li><strong>Don&rsquo;t overcomplicate.</strong> If you are basing your calculation on more than 6
 assumptions, you&rsquo;re likely making it harder than it should be.</li><li><strong>Keep the units.</strong> They&rsquo;re good checksumming.
 <a href=https://wolframalpha.com>Wolframalpha</a> has terrific support if you need a
 hand in converting e.g. KiB to TiB.</li><li><strong>Calculate with exponents.</strong> A lot of back-of-the-envelope calculations are
@@ -294,11 +47,8 @@ less. Only worrying about single-digit coefficients and exponents makes it
 much easier on a napkin (not to speak of all the zeros you avoid writing).</li><li><strong>Perform Fermi decomposition.</strong> Write down things you can guess at until you
 can start to hint at an answer. When you want to know the cost of storage
 for logging, you&rsquo;re going to want to know how big a log line is, how many of
-those you have per second, what that costs, and so on.</li></ul><h3 id=resources>
-Resources
-<a class=anchor href=#resources>#</a>
-</h3><ul>
-<li><code>[1]</code>: <a href=https://eli.thegreenplace.net/2018/measuring-context-switching-and-memory-overheads-for-linux-threads/>https://eli.thegreenplace.net/2018/measuring-context-switching-and-memory-overheads-for-linux-threads/</a></li><li><code>[2]</code>: <a href=https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html>https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html</a></li><li><code>[3]</code>: <a href=https://cran.r-project.org/web/packages/brotli/vignettes/brotli-2015-09-22.pdf>https://cran.r-project.org/web/packages/brotli/vignettes/brotli-2015-09-22.pdf</a></li><li><code>[4]</code>: <a href=https://github.com/google/snappy>https://github.com/google/snappy</a></li><li><code>[5]</code>: <a href=https://quixdb.github.io/squash-benchmark/>https://quixdb.github.io/squash-benchmark/</a></li><li><code>[6]</code>: <a href=https://dl.acm.org/doi/10.1145/1879141.1879143>https://dl.acm.org/doi/10.1145/1879141.1879143</a></li><li><code>[7]</code>: <a href=https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics#Seek_times_&_characteristics>https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics#Seek_times_&_characteristics</a></li><li><code>[8]</code>: <a href=https://github.com/simdjson/simdjson#performance-results>https://github.com/simdjson/simdjson#performance-results</a></li><li><code>[9]</code>: <a href=https://github.com/protocolbuffers/protobuf/blob/master/docs/performance.md>https://github.com/protocolbuffers/protobuf/blob/master/docs/performance.md</a></li><li><a href=https://easyperf.net/blog/2019/08/02/Perf-measurement-environment-on-Linux#2-disable-hyper-threading>&ldquo;How to get consistent results when benchmarking on
+those you have per second, what that costs, and so on.</li></ul><h3 id=resources>Resources
+<a class=anchor href=#resources>#</a></h3><ul><li><code>[1]</code>: <a href=https://eli.thegreenplace.net/2018/measuring-context-switching-and-memory-overheads-for-linux-threads/>https://eli.thegreenplace.net/2018/measuring-context-switching-and-memory-overheads-for-linux-threads/</a></li><li><code>[2]</code>: <a href=https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html>https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html</a></li><li><code>[3]</code>: <a href=https://cran.r-project.org/web/packages/brotli/vignettes/brotli-2015-09-22.pdf>https://cran.r-project.org/web/packages/brotli/vignettes/brotli-2015-09-22.pdf</a></li><li><code>[4]</code>: <a href=https://github.com/google/snappy>https://github.com/google/snappy</a></li><li><code>[5]</code>: <a href=https://quixdb.github.io/squash-benchmark/>https://quixdb.github.io/squash-benchmark/</a></li><li><code>[6]</code>: <a href=https://dl.acm.org/doi/10.1145/1879141.1879143>https://dl.acm.org/doi/10.1145/1879141.1879143</a></li><li><code>[7]</code>: <a href=https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics#Seek_times_&_characteristics>https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics#Seek_times_&_characteristics</a></li><li><code>[8]</code>: <a href=https://github.com/simdjson/simdjson#performance-results>https://github.com/simdjson/simdjson#performance-results</a></li><li><code>[9]</code>: <a href=https://github.com/protocolbuffers/protobuf/blob/master/docs/performance.md>https://github.com/protocolbuffers/protobuf/blob/master/docs/performance.md</a></li><li><a href=https://easyperf.net/blog/2019/08/02/Perf-measurement-environment-on-Linux#2-disable-hyper-threading>&ldquo;How to get consistent results when benchmarking on
 Linux?&rdquo;</a>.
 Great compilation of various Kernel and CPU features to toggle for reliable
 bench-marking, e.g. CPU affinity, disabling turbo boost, etc. It also has
@@ -320,17 +70,4 @@ Tables</a>. Thorough
 resource on the expected throughput for various instructions which is helpful
 to inspect the assembly.</li><li><a href=http://halobates.de/>halobates.de</a>. Useful resource for low-level
 performance by the author of <code>toplev</code>.</li><li><a href="https://www.amazon.com/Systems-Performance-Enterprise-Brendan-Gregg/dp/0133390098/ref=sr_1_1?keywords=systems+performance&qid=1580733419&sr=8-1">Systems Performance (book)</a>. Fantastic book about analyzing system performance, finding bottlenecks, and understanding operating systems.</li><li><a href=https://lwn.net/Articles/776703/>io_uring</a>. Best summary, it links to many
-resources.</li><li><a href=https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html>How Long Does It Takes To Make a Context Switch</a></li><li><a href=https://github.com/powturbo/TurboPFor-Integer-Compression>Integer Compression Comparisons</a></li><li><a href=https://danluu.com/file-consistency/>Files are hard</a></li></ul></article><footer class=book-footer>
-<div class="flex flex-wrap justify-between">
-</div><script>(function(){function e(n){const e=window.getSelection(),t=document.createRange();t.selectNodeContents(n),e.removeAllRanges(),e.addRange(t)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
-</footer><div class=book-comments>
-</div><label for=menu-control class="hidden book-menu-overlay"></label>
-</div><aside class=book-toc>
-<div class=book-toc-content>
-<nav id=TableOfContents>
-<ul>
-<li><a href=#napkin-math>Napkin Math</a>
-<ul>
-<li><a href=#numbers>Numbers</a></li><li><a href=#cost-numbers>Cost Numbers</a></li></ul></li><li><a href=#compression-ratios>Compression Ratios</a>
-<ul>
-<li><a href=#techniques>Techniques</a></li><li><a href=#resources>Resources</a></li></ul></li></ul></nav></div></aside></main></body></html>
+resources.</li><li><a href=https://blog.tsunanet.net/2010/11/how-long-does-it-take-to-make-context.html>How Long Does It Takes To Make a Context Switch</a></li><li><a href=https://github.com/powturbo/TurboPFor-Integer-Compression>Integer Compression Comparisons</a></li><li><a href=https://danluu.com/file-consistency/>Files are hard</a></li></ul></article><footer class=book-footer><div class="flex flex-wrap justify-between"></div><script>(function(){function e(n){const e=window.getSelection(),t=document.createRange();t.selectNodeContents(n),e.removeAllRanges(),e.addRange(t)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#napkin-math>Napkin Math</a><ul><li><a href=#numbers>Numbers</a></li><li><a href=#cost-numbers>Cost Numbers</a></li></ul></li><li><a href=#compression-ratios>Compression Ratios</a><ul><li><a href=#techniques>Techniques</a></li><li><a href=#resources>Resources</a></li></ul></li></ul></nav></div></aside></main></body></html>
