@@ -32,7 +32,7 @@ class Scanner {
         keywords = new HashMap<>();
         keywords.put("and", AND);
         keywords.put("class", CLASS);
-        keywords.put("eles", ELSE);
+        keywords.put("else", ELSE);
         keywords.put("false", FALSE);
         keywords.put("for", FOR);
         keywords.put("fun", FUN);
