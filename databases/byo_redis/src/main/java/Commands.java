@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Commands {
+    // TODO(Jonathon): This should receive RedisData not a RESP Array.
     public static String runCommand(RedisSerializationProtocol.Array respArr) throws CommandException {
         List<String> commandArgs = new ArrayList<>();
         String command = null;
