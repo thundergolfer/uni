@@ -16,10 +16,10 @@ public class Commands {
                 }
             }
         }
-        if (command.equals("ECHO")) {
+        if (command.toUpperCase().equals("ECHO")) {
             System.out.println("Run ECHO with args" + commandArgs.toString());
             return runECHO(commandArgs);
-        } else if (command.equals("PING")) {
+        } else if (command.toUpperCase().equals("PING")) {
             return runPING(null);
         } else {
             throw new RuntimeException("Fuck command was not matched: " + command);
