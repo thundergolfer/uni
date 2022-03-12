@@ -1,3 +1,5 @@
+package com.thundergolfer.uni.byo.redis;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

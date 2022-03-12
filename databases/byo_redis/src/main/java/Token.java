@@ -1,3 +1,5 @@
+package com.thundergolfer.uni.byo.redis;
+
 enum TokenType {
     // Single character tokens
     COMMAND, SIMPLE_STRING_DATATYPE_ID,

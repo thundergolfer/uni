@@ -1,3 +1,5 @@
+package com.thundergolfer.uni.byo.redis;
+
 import java.util.List;
 
 enum RedisDataType {
