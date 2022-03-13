@@ -3,9 +3,6 @@ package com.thundergolfer.uni.byo.redis;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.Collections;
-import java.util.LinkedList;
-
 import static org.junit.Assert.assertEquals;
 
 public class TestScanner {
@@ -28,7 +25,7 @@ public class TestScanner {
         Scanner scanner = new Scanner(input);
         List<Token> expected = Arrays.asList(
                 new Token(TokenType.ARRAYS_DATATYPE_ID, "*", null, 0),
-                new Token(TokenType.NUMBER, "9", 9.0, 0),
+                new Token(TokenType.NUMBER, "9", 9, 0),
                 new Token(TokenType.EOF, "", null, 0)
         );
         List<Token> actual = scanner.scanTokens();

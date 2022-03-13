@@ -1,9 +1,7 @@
 package com.thundergolfer.uni.byo.redis;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Scanner {
     private final String source;
@@ -12,14 +10,6 @@ public class Scanner {
     private int start = 0;
     private int current = 0;
     private int line = 1;
-
-    private static final Map<String, TokenType> keywords;
-
-    static {
-        keywords = new HashMap<>();
-        keywords.put("PING", TokenType.COMMAND);
-        keywords.put("GET", TokenType.COMMAND);
-    }
 
     Scanner(String source) {
         this.source = source;
@@ -106,7 +96,7 @@ public class Scanner {
         }
 
         addToken(TokenType.NUMBER,
-                Double.parseDouble(source.substring(start, current)));
+                Integer.parseInt(source.substring(start, current)));
     }
 
     private boolean isAlpha(char c) {
@@ -125,10 +115,7 @@ public class Scanner {
 
     private void identifier() {
         while (isAlphaNumeric(peek())) advance();
-        String text = source.substring(start, current);
-        TokenType type = keywords.get(text);
-        if (type == null) type = TokenType.IDENTIFIER;
-        addToken(type);
+        addToken(TokenType.IDENTIFIER);
     }
 
     private char advance() {

@@ -14,7 +14,7 @@ public class Main {
         private String clientId;
         private PrintWriter output;
         private BufferedReader input;
-        private RedisSerializationProtocol.Array respArr = null;
+        private RedisData.Deserializer deserializer = null;
 
         public ClientHandler(Socket socket, String clientId)  {
             this.clientSocket = socket;
@@ -34,27 +34,14 @@ public class Main {
                     Scanner scanner = new Scanner(clientMsgLine);
                     List<Token> tokens = scanner.scanTokens();
                     System.out.println(tokens);
-                    if (RedisSerializationProtocol.isRESPArray(tokens)) {
-                        if (respArr != null) {
-                            System.out.println("Woops! Restarted RESP Array.");
-                        }
-                        int arrSize = Integer.parseInt(tokens.get(1).lexeme);
-                        respArr = new RedisSerializationProtocol.Array(arrSize);;
-                    } else if (respArr != null) {
-                      // In middle of RESP Array building.
-                      respArr.addItem(tokens);
-                      if (respArr.isFilled()) {
-                          System.out.println("Done!");
-                          System.out.println(respArr.toString());
-                          // RESP Array command
-                          String reply = Commands.runCommand(respArr);
-                          output.print(reply);
-                          output.flush();
-                          respArr = null; // Reset RESP Array.
-                      }
-                    } else {
-                        // Simple command
-                        String reply = Commands.runCommand(tokens);
+                    if (deserializer == null) {
+                        deserializer = new RedisData.Deserializer();
+                    }
+                    deserializer.process(tokens);
+                    if (deserializer.isComplete()) {
+                        List<RedisData> data = deserializer.getRedisData();
+                        String reply = Commands.runCommand(data);
+                        deserializer.reset();
                         output.print(reply);
                         output.flush();
                     }

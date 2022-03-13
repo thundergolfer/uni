@@ -8,9 +8,9 @@ java_binary(
 )
 
 java_test(
-    name = "TestScanner",
+    name = "TestRedisData",
     srcs = glob(["src/main/java/*.java"]),
-    test_class = "com.thundergolfer.uni.byo.redis.TestScanner",
+    test_class = "com.thundergolfer.uni.byo.redis.TestRedisData",
     deps = [
         "//third_party:junit4",
     ],
@@ -20,6 +20,15 @@ java_test(
     name = "TestRedisSerializationProtocol",
     srcs = glob(["src/main/java/*.java"]),
     test_class = "com.thundergolfer.uni.byo.redis.TestRedisSerializationProtocol",
+    deps = [
+        "//third_party:junit4",
+    ],
+)
+
+java_test(
+    name = "TestScanner",
+    srcs = glob(["src/main/java/*.java"]),
+    test_class = "com.thundergolfer.uni.byo.redis.TestScanner",
     deps = [
         "//third_party:junit4",
     ],

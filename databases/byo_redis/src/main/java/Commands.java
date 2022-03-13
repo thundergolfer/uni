@@ -4,29 +4,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Commands {
-    // TODO(Jonathon): This should receive RedisData not a RESP Array.
-    public static String runCommand(RedisSerializationProtocol.Array respArr) throws CommandException {
-        List<String> commandArgs = new ArrayList<>();
-        String command = null;
-        String curr;
-        for (List<Token> item : respArr.items) {
-            curr = argumentFromTokens(item);
-            if (curr != null) {
-                if (command == null) {
-                    command = curr;
-                } else {
-                    commandArgs.add(curr);
-                }
-            }
-        }
-        if (command.toUpperCase().equals("ECHO")) {
-            System.out.println("Run ECHO with args" + commandArgs.toString());
-            return runECHO(commandArgs);
-        } else if (command.toUpperCase().equals("PING")) {
-            return runPING(null);
+    public static String runCommand(List<RedisData> command) throws CommandException {
+        System.out.println("Running command...");
+        System.out.println(command);
+        if (command.size() == 0) return RedisSerializationProtocol.SimpleString.create("EMPTY");
+
+        String commandStr;
+        if (command.get(0).getType() != RedisDataType.SIMPLE_STRING) {
+            throw new CommandException("Invalid command. Expected command string as 1st arg.");
         } else {
-            throw new RuntimeException("Fuck command was not matched: " + command);
+            commandStr = command.get(0).getStrValue();
         }
+
+        COMMAND c;
+        try {
+            c = COMMAND.valueOf(commandStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new CommandException(String.format("Unhandled command: %s", commandStr));
+        }
+
+        List<String> args;
+        switch (c) {
+            case ECHO:
+                args = redisDataToStringArgs(command.subList(1, command.size()));
+                return runECHO(args);
+            case PING:
+                args = redisDataToStringArgs(command.subList(1, command.size()));
+                return runPING(args);
+            default:
+                throw new AssertionError("Enum match failed.");
+        }
+    }
+
+    private static List<String> redisDataToStringArgs(List<RedisData> data) throws CommandException {
+        List<String> args = new ArrayList<>();
+        for (RedisData d : data) {
+            if (d.getType() != RedisDataType.SIMPLE_STRING) {
+                throw new CommandException("Got non-string argument in strings-only command.");
+            }
+            args.add(d.getStrValue());
+        }
+        return args;
     }
 
     private static String argumentFromTokens(List<Token> tokens) {
@@ -46,33 +64,24 @@ public class Commands {
         return null;
     }
 
-    public static String runCommand(List<Token> input) throws CommandException {
-        if (input.size() == 0) {
-            return "";
-        }
-
-        Token commandToken = input.get(0);
-        if (commandToken.type == TokenType.COMMAND) {
-            if (commandToken.lexeme.equals("PING")) {
-                return runPING(input.subList(1, input.size()));
-            } else {
-                throw new CommandException(String.format("%s command not implemented.", commandToken.lexeme));
-            }
-        } else {
-            throw new CommandException("Command not provided.");
-        }
-    }
-
     private static String runECHO(List<String> args) throws CommandException {
-        return RedisSerializationProtocol.BulkString.create(args.get(0));
+        String message = String.join(" ", args);
+        return RedisSerializationProtocol.BulkString.create(message);
     }
 
-    private static String runPING(List<Token> args) throws CommandException {
+    private static String runPING(List<String> args) throws CommandException {
         // EOF only argument
-        if (args == null || args.size() == 1) {
+        System.err.println(args);
+        if (args == null || args.size() == 0) {
             return RedisSerializationProtocol.SimpleString.create("PONG");
         } else {
             throw new CommandException("Arguments are not supported for PING command.");
         }
     }
+}
+
+
+enum COMMAND {
+    PING,
+    ECHO,
 }

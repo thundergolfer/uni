@@ -2,7 +2,7 @@ package com.thundergolfer.uni.byo.redis;
 
 enum TokenType {
     // Single character tokens
-    COMMAND, SIMPLE_STRING_DATATYPE_ID,
+    SIMPLE_STRING_DATATYPE_ID,
     ERROR_DATATYPE_ID, ARRAYS_DATATYPE_ID,
     BULK_STRING_DATATYPE_ID, INT_DATATYPE_ID,
 
