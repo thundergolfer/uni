@@ -1,3 +1,19 @@
+## Build your own (BYO) Redis
+
+I am up to the final stage of the _Codecrafters.io_ Redis challenge, implementing Redis _expires_.
+
+My Java code is a bit garbage, but up front work on scanning and deserializing at least made the
+`SET` and `GET` command implementations a breeze.
+
+### Important fixes
+
+* Handle 'bulk strings' correctly
+* Non-shit error handling and error messages.
+
+---
+
+### Original `README`
+
 This is a starting point for Java solutions to the
 ["Build Your Own Redis" Challenge](https://codecrafters.io/challenges/redis).
 
@@ -8,7 +24,7 @@ event loops, the Redis protocol and more.
 **Note**: If you're viewing this repo on GitHub, head over to
 [codecrafters.io](https://codecrafters.io) to signup for early access.
 
-# Passing the first stage
+### Passing the first stage
 
 The entry point for your Redis implementation is in `Main.java`. Study and
 uncomment the relevant code, and push your changes to pass the first stage:
@@ -21,7 +37,7 @@ git push origin master
 
 That's all!
 
-# Stage 2 & beyond
+### Stage 2 & beyond
 
 Note: This section is for stages 2 and beyond.
 
