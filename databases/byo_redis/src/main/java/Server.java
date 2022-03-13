@@ -5,18 +5,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class Main {
+public class Server {
     // TODO(Jonathon): Add EventLoop implementation, like the official Redis uses, instead of threaded.
     private static class ClientHandler extends Thread {
+        private Datastore datastore;
         private Socket clientSocket;
         private String clientId;
         private PrintWriter output;
         private BufferedReader input;
         private RedisData.Deserializer deserializer = null;
 
-        public ClientHandler(Socket socket, String clientId)  {
+        public ClientHandler(Datastore store, Socket socket, String clientId)  {
+            this.datastore = store;
             this.clientSocket = socket;
             this.clientId = clientId;
         }
@@ -33,14 +34,13 @@ public class Main {
                     System.out.printf("Received %s from client %s\n", clientMsgLine, clientId);
                     Scanner scanner = new Scanner(clientMsgLine);
                     List<Token> tokens = scanner.scanTokens();
-                    System.out.println(tokens);
                     if (deserializer == null) {
                         deserializer = new RedisData.Deserializer();
                     }
                     deserializer.process(tokens);
                     if (deserializer.isComplete()) {
                         List<RedisData> data = deserializer.getRedisData();
-                        String reply = Commands.runCommand(data);
+                        String reply = Commands.runCommand(datastore, data);
                         deserializer.reset();
                         output.print(reply);
                         output.flush();
@@ -68,15 +68,15 @@ public class Main {
         ServerSocket serverSocket;
         UUID uuid;
         int port = 6379;
-
-        // You can use print statements as follows for debugging, they'll be visible when running tests.
         System.out.printf("Starting Redis-like server on localhost:%d\n", port);
+        Datastore store = new Datastore();
         try {
             serverSocket = new ServerSocket(port);
             serverSocket.setReuseAddress(true);
             while (true) {
                 uuid = UUID.randomUUID();
                 new ClientHandler(
+                        store,
                         serverSocket.accept(),
                         uuid.toString()
                 ).start();

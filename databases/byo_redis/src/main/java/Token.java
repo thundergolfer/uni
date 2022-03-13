@@ -6,13 +6,8 @@ enum TokenType {
     ERROR_DATATYPE_ID, ARRAYS_DATATYPE_ID,
     BULK_STRING_DATATYPE_ID, INT_DATATYPE_ID,
 
-    // One or two character tokens
-
     // Literals
     IDENTIFIER, STRING, NUMBER,
-
-    // Keywords
-
     EOF
 }
 

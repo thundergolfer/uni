@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Commands {
-    public static String runCommand(List<RedisData> command) throws CommandException {
-        System.out.println("Running command...");
-        System.out.println(command);
+    public static String runCommand(Datastore store, List<RedisData> command) throws CommandException {
         if (command.size() == 0) return RedisSerializationProtocol.SimpleString.create("EMPTY");
 
         String commandStr;
@@ -16,21 +14,22 @@ public class Commands {
             commandStr = command.get(0).getStrValue();
         }
 
-        COMMAND c;
+        RedisCmd c;
         try {
-            c = COMMAND.valueOf(commandStr.toUpperCase());
+            c = RedisCmd.valueOf(commandStr.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new CommandException(String.format("Unhandled command: %s", commandStr));
         }
-
-        List<String> args;
+        List<String> args= redisDataToStringArgs(command.subList(1, command.size()));
         switch (c) {
             case ECHO:
-                args = redisDataToStringArgs(command.subList(1, command.size()));
                 return runECHO(args);
             case PING:
-                args = redisDataToStringArgs(command.subList(1, command.size()));
                 return runPING(args);
+            case SET:
+                return runSET(store, args);
+            case GET:
+                return runGET(store, args);
             default:
                 throw new AssertionError("Enum match failed.");
         }
@@ -47,23 +46,6 @@ public class Commands {
         return args;
     }
 
-    private static String argumentFromTokens(List<Token> tokens) {
-        Token valToken;
-        if (tokens.get(0).type == TokenType.INT_DATATYPE_ID) {
-            valToken = tokens.get(1);
-            if (valToken.type == TokenType.NUMBER) {
-                return String.valueOf(valToken.literal);
-            } else {
-                throw new RuntimeException("Fuck");
-            }
-        } else if (tokens.get(0).type == TokenType.BULK_STRING_DATATYPE_ID) {
-            return null;
-        } else if (tokens.get(0).type == TokenType.IDENTIFIER) {
-            return tokens.get(0).lexeme;
-        }
-        return null;
-    }
-
     private static String runECHO(List<String> args) throws CommandException {
         String message = String.join(" ", args);
         return RedisSerializationProtocol.BulkString.create(message);
@@ -78,10 +60,36 @@ public class Commands {
             throw new CommandException("Arguments are not supported for PING command.");
         }
     }
+
+    // TODO(Jonathon): Support expiry, the final challenge of https://app.codecrafters.io/courses/redis.
+    private static String runSET(Datastore store, List<String> args) throws CommandException {
+        if (args.size() != 2) {
+            throw new CommandException("Invalid SET command. Must be 'SET <key> <value>.");
+        }
+        String key = args.get(0);
+        String value = args.get(1);
+        store.set(key, value);
+        return RedisSerializationProtocol.SimpleString.Ok();
+    }
+
+    private static String runGET(Datastore store, List<String> args) throws CommandException {
+        if (args.size() != 1) {
+            throw new CommandException("Invalid GET command. Must be 'GET <key>.");
+        }
+        String key = args.get(0);
+        String val = store.get(key);
+        if (val == null) {
+            return RedisSerializationProtocol.BulkString.Nil();
+        } else {
+            return RedisSerializationProtocol.BulkString.create(val);
+        }
+    }
 }
 
 
-enum COMMAND {
+enum RedisCmd {
     PING,
     ECHO,
+    GET,
+    SET,
 }

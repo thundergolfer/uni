@@ -1,8 +1,5 @@
 package com.thundergolfer.uni.byo.redis;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RedisSerializationProtocol {
     private static final String CRLF = "\r\n";
 
@@ -35,6 +32,14 @@ public class RedisSerializationProtocol {
             sb.append(message.length());
             sb.append(RedisSerializationProtocol.CRLF);
             sb.append(message);
+            sb.append(RedisSerializationProtocol.CRLF);
+            return sb.toString();
+        }
+
+        public static String Nil() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(firstByte);
+            sb.append(-1);
             sb.append(RedisSerializationProtocol.CRLF);
             return sb.toString();
         }
