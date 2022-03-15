@@ -22,7 +22,7 @@ python_register_toolchains(
     python_version = "3.9",
 )
 
-load("@python39_resolved_interpreter//:defs.bzl", "interpreter")
+load("@python39_resolved_interpreter//:defs.bzl", python_interpreter = "interpreter")
 
 
 load("@rules_python//python:pip.bzl", "pip_install")
@@ -30,7 +30,7 @@ load("@rules_python//python:pip.bzl", "pip_install")
 pip_install(
    name = "pypi",
    requirements = "//third_party:requirements.txt",
-   python_interpreter_target = interpreter,
+   python_interpreter_target = python_interpreter,
    extra_pip_args = ["-v"]
 )
 
@@ -62,7 +62,7 @@ load("@mypy_integration//repositories:deps.bzl", mypy_integration_deps = "deps")
 
 mypy_integration_deps(
     "//tools/build/typing:mypy_version.txt",
-    python_interpreter_target = "@python_interpreter//:python/install/bin/python3.8"
+    python_interpreter_target = python_interpreter,
 )
 
 ##########
