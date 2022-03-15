@@ -23,9 +23,7 @@ jobs:
     - name: Set up Python 3
       uses: actions/setup-python@v2
       with:
-        # Moving beyond 3.7 triggers this bug in python-standalone: https://github.com/indygreg/PyOxidizer/issues/406
-        # TODO(Jonathon): Upgrade beyond 3.7 when https://github.com/indygreg/PyOxidizer/issues/406 is fixed.
-        python-version: '3.7'
+        python-version: '3.9'
 
     - name: Run tests
       run: bazel test //...
