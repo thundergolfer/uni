@@ -2,6 +2,7 @@ package com.craftinginterpreters.tool;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +20,11 @@ public class GenerateAst {
                 "Grouping   : Expr expression",
                 "Literal    : Object value",
                 "Unary      : Token operator, Expr right"
+        ));
+        
+        defineAst(outputDir, "Stmt", Arrays.asList(
+                "Expression : Expr expression",
+                "Print      : Expr expression"
         ));
     }
 
