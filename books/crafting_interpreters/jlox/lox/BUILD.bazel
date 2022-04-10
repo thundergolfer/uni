@@ -5,3 +5,10 @@ java_binary(
     srcs = glob(["*.java"]),
     main_class = "com.craftinginterpreters.lox.Lox"
 )
+
+# Used in section 5.4, A (Not Very) Pretty-Printer.
+java_binary(
+    name = "AstPrinter",
+    srcs = glob(["*.java"]),
+    main_class = "com.craftinginterpreters.lox.AstPrinter"
+)
