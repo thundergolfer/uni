@@ -6,6 +6,11 @@ public class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        return expr.name.lexeme + " = " + print(expr.value);
+    }
+
+    @Override
     public String visitBinaryExpr(Expr.Binary expr) {
         return parenthesize(
                 expr.operator.lexeme,
@@ -55,5 +60,12 @@ public class AstPrinter implements Expr.Visitor<String> {
                 new Expr.Grouping(
                         new Expr.Literal(45.67)));
         System.out.println(new AstPrinter().print(expression));
+
+
+        Expr assignment = new Expr.Assign(
+                new Token(TokenType.IDENTIFIER, "a", null, 1),
+                expression
+        );
+        System.out.println(new AstPrinter().print(assignment));
     }
 }
