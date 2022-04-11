@@ -121,6 +121,19 @@ public class Interpreter implements Expr.Visitor<Object>,
         stmt.accept(this);
     }
 
+    private void executeBlock(List<Stmt> statements,
+                              Environment environment) {
+        Environment previous = this.environment;
+        try {
+            this.environment = environment;
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.environment = previous;
+        }
+    }
+
     private boolean isTruthy(Object object) {
         if (object == null) return false;
         if (object instanceof Boolean) return (boolean)object;
@@ -149,6 +162,12 @@ public class Interpreter implements Expr.Visitor<Object>,
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.statements, new Environment(environment));
         return null;
     }
 
