@@ -54,6 +54,11 @@ public class Lox {
         // Stop if there was a syntax error.
         if (hadError) return;
 
+        Resolver resolver = new Resolver(interpeter);
+        resolver.resolve(statements);
+
+        if (hadError) return;
+
         interpeter.interpret(statements);
     }
 
