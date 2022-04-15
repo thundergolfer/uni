@@ -87,6 +87,7 @@ class Scanner {
                 break;
             case '>':
                 addToken(match('=') ? GREATER_EQUAL : GREATER);
+                break;
             case '/':
                 // This one is a little trickier
                 if (match('/')) {
@@ -187,9 +188,8 @@ class Scanner {
     private boolean match(char expected) {
         if (isAtEnd()) return false;
         if (source.charAt(current) != expected) return false;
-
         current++;
-        return false;
+        return true;
     }
 
     private void addToken(TokenType type) {
