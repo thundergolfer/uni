@@ -10,6 +10,10 @@ own folder.
 
 * [`jlox`](./jlox) (Java Implementation)
 * [`clox`](./clox) (C Implementation)
+
+I also may complete some bonus implementations.
+
+* [`pylox`](./pylox) (Python Implementation)
 * [`rlox`](./rlox) (Rust Implementation)
 
 Textbook code is available at https://github.com/munificent/craftinginterpreters/.
