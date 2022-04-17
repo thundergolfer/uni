@@ -1,5 +1,10 @@
-pub type Chunk = Vec<u8>;
+pub type Chunk = Vec<OpCode>;
 
-pub enum Opcode {
+#[derive(Debug)]
+pub enum OpCode {
     OpReturn,
+}
+
+pub fn write_chunk(chunk: &mut Chunk, code: OpCode) {
+    chunk.push(code);
 }
