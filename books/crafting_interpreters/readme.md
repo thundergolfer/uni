@@ -55,19 +55,20 @@ I have a script that clones and use's the textbook's test suite.
 ### `clox` 
 
 I worked on the C implementation of the Lox interpreter straight after finishing `jlox`.
+It's a bytecode interpreter using a stack-based virtual machine.
 
 #### Usage 
 
 You can run the `clox` exe in 'repl' mode: 
 
 ```bash
-TODO: bazel run //books/crafting_interpreters/clox/lox
+bazel run //books/crafting_interpreters/clox/lox
 ```
 
 Or you can pass it a file: 
 
 ```bash
-TODO: bazel run //books/crafting_interpreters/clox/lox -- foo.lox
+bazel run //books/crafting_interpreters/clox/lox -- foo.lox
 ```
 
 #### Testing
