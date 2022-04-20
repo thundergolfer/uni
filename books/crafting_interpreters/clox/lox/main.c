@@ -12,7 +12,7 @@ static void repl() {
     for (;;) {
         printf("> ");
 
-        if (fgets(line, sizeof(line), stdin)) {
+        if (!fgets(line, sizeof(line), stdin)) {
             printf("\n");
             break;
         }
