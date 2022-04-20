@@ -164,6 +164,8 @@ static void unary() {
     }
 }
 
+// Copied from the web version of the book. I did not want
+// to type it out.
 ParseRule rules[] = {
   [TOKEN_LEFT_PAREN]    = {grouping, NULL,   PREC_NONE},
   [TOKEN_RIGHT_PAREN]   = {NULL,     NULL,   PREC_NONE},
