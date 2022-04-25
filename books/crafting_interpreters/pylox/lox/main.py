@@ -8,7 +8,7 @@ def repl() -> None:
     while True:
         print("> ", end="")
         line = input()
-        # TODO(Jonathon): hehe, quite the cheat. Actually implement an interpreter.
+        # TODO(@Jonathon): hehe, quite the cheat. Actually implement an interpreter.
         result = eval(line)
         print(result)
 
