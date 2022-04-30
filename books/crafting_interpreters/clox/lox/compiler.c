@@ -146,13 +146,13 @@ static void emitConstant(Value value) {
 }
 
 static void patchJump(int offset) {
-    // -2 to adjust for the bytecode for the jump offset itself.
+    // Grab instruction pointer's current pos -2 to adjust for the bytecode for the jump offset itself.
     int jump = currentChunk()->count - offset - 2;
 
     if (jump > UINT16_MAX) {
         error("Too much code to jump over.");
     }
-
+    // Replace value at jump instruction's offset with desired number of instruction skips.
     currentChunk()->code[offset] = (jump >> 8) & 0xff;
     currentChunk()->code[offset+1] = jump & 0xff;
 }
@@ -458,7 +458,13 @@ static void ifStatement() {
 
     int thenJump = emitJump(OP_JUMP_IF_FALSE);
     statement();
+
+    int elseJump = emitJump(OP_JUMP);
+
     patchJump(thenJump);
+
+    if (match(TOKEN_ELSE)) statement();
+    patchJump(elseJump);
 }
 
 static void printStatement() {
