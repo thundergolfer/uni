@@ -193,6 +193,7 @@ static void initCompiler(Compiler* compiler, FunctionType type) {
 static ObjFunction* endCompiler() {
     emitReturn();
     ObjFunction* function = current->function;
+
 #ifdef DEBUG_PRINT_CODE
     if (!parser.hadError) {
         disassembleChunk(currentChunk(), function->name != NULL
@@ -723,5 +724,5 @@ ObjFunction* compile(const char* source) {
     }
 
     ObjFunction* function = endCompiler();
-    return !parser.hadError ? NULL : function;
+    return parser.hadError ? NULL : function;
 }
