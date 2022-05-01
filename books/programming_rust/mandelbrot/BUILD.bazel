@@ -6,6 +6,9 @@ rust_binary(
     name = "mandelbrot",
     srcs = ["src/main.rs"],
     deps = crates_from(":Cargo.toml"),
+    # Pretty awkward compared to `cargo build --release`
+    # https://github.com/bazelbuild/rules_rust/issues/515
+    rustc_flags = ["--codegen=opt-level=3"]
 )
 
 rust_test(
