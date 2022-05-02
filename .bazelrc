@@ -11,3 +11,9 @@ build --javabase=@bazel_tools//tools/jdk:remote_jdk11
 build --java_toolchain=@bazel_tools//tools/jdk:toolchain_java11 
 build --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_java11
 
+build --sandbox_default_allow_network=false
+build --remote_local_fallback
+
+test --incompatible_exclusive_test_sandboxed
+
+try-import %workspace%/.bazelrc.user
