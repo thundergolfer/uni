@@ -129,6 +129,16 @@ ObjString* tableFindString(Table* table, const char* chars,
     }
 }
 
+void tableRemoveWhite(Table* table) {
+    for (int i = 0; i < table->capacity; i++) {
+        Entry* entry = &table->entries[i];
+        if (entry->key != NULL && !entry->key->obj.isMarked) {
+            // This ref'd object is about to be swept. Remove it.
+            tableDelete(table, entry->key);
+        }
+    }
+}
+
 void markTable(Table* table) {
     for (int i = 0; i < table->capacity; i++) {
         Entry* entry = &table->entries[i];

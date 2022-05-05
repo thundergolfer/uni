@@ -27,6 +27,7 @@ void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
 
 void markObject(Obj* object) {
     if (object == NULL) return;
+    if (object->isMarked) return;
 
 #ifdef DEBUG_LOG_GC
     printf("%p mark ", (void*)object);
@@ -48,6 +49,43 @@ void markObject(Obj* object) {
 
 void markValue(Value value) {
     if (IS_OBJ(value)) markObject(AS_OBJ(value));
+}
+
+static void markArray(ValueArray* array) {
+    for (int i = 0; i < array->count; i++) {
+        markValue(array->values[i]);
+    }
+}
+
+static void blackenObject(Obj* object) {
+#ifdef DEBUG_LOG_GC
+  printf("%p blacken ", (void*)object);
+  printValue(OBJ_VAL(object));
+  printf("\n");
+#endif
+
+    switch (object->type) {
+        case OBJ_CLOSURE: {
+            ObjClosure* closure = (ObjClosure*)object;
+            markObject((Obj*)closure->function);
+            for (int i = 0; i < closure->upvalueCount; i++) {
+                markObject((Obj*)closure->upvalues[i]);
+            }
+            break;
+        }
+        case OBJ_FUNCTION: {
+            ObjFunction* function = (ObjFunction*)object;
+            markObject((Obj*)function->name);
+            markArray(&function->chunk.constants);
+            break;
+        }
+        case OBJ_UPVALUE:
+            markValue(((ObjUpvalue*)object)->closed);
+            break;
+        case OBJ_NATIVE:
+        case OBJ_STRING:
+            break;
+    }
 }
 
 static void freeObject(Obj* object) {
@@ -103,12 +141,48 @@ static void markRoots() {
     markCompilerRoots();
 }
 
+static void traceReferences() {
+    while (vm.grayCount > 0) {
+        Obj* object = vm.grayStack[--vm.grayCount];
+        blackenObject(object);
+    }
+}
+
+static void sweep() {
+    Obj* previous = NULL;
+    Obj* object = vm.objects;
+    while (object != NULL) {
+        if (object->isMarked) {
+            // When next sweep starts, we need every obj to be 'white'.
+            object->isMarked = false;
+            // This is in-use. Skip past it.
+            previous = object;
+            object = object->next;
+        } else {
+            Obj* unreached = object;
+            object = object->next;
+            if (previous != NULL) {
+                // Keep linked list connected.
+                previous->next = object;
+            } else {
+                // Edge-case where unreachable object is only object in VM.
+                vm.objects = object;
+            }
+
+            freeObject(unreached);
+        }
+    }
+}
+
 void collectGarbage() {
 #ifdef DEBUG_LOG_GC
     printf("-- gc begin\n");
 #endif
 
     markRoots();
+    traceReferences();
+    tableRemoveWhite(&vm.strings);
+    sweep();
 
 #ifdef DEBUG_LOG_GC
     printf("-- gc end\n");
