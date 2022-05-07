@@ -114,6 +114,15 @@ static bool callValue(Value callee, int argCount) {
         switch (OBJ_TYPE(callee)) {
             case OBJ_BOUND_METHOD: {
                 ObjBoundMethod* bound = AS_BOUND_METHOD(callee);
+                // `this` gets bound to method receiver.
+                //
+                //          <----- -1 -----<------ argCount -------stackTop
+                //          0              1           2           3
+                // [ script | fn topping() | "berries" |  "cream"  | ...
+                //         |_________________________________________|
+                //         topping Callframe
+                //
+                vm.stackTop[-argCount - 1] = bound->receiver;
                 return call(bound->method, argCount);
             }
             case OBJ_CLASS: {
