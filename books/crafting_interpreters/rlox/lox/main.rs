@@ -16,10 +16,10 @@ fn main() {
     println!("{:?}", c);
 
     let constant = add_constant(&mut c, 1.2);
-    write_chunk(&mut c, OpCode::OpConstant { constant });
+    write_chunk(&mut c, OpCode::OpConstant { constant }, 123);
 
-    write_chunk(&mut c, OpCode::OpReturn);
-    write_chunk(&mut c, OpCode::OpReturn);
+    write_chunk(&mut c, OpCode::OpReturn, 123);
+    write_chunk(&mut c, OpCode::OpReturn, 123);
 
     disassemble_chunk(&c, "test chunk");
 

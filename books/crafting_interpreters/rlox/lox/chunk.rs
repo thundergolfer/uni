@@ -4,6 +4,7 @@ use super::value;
 pub struct Chunk {
     pub code: Vec<OpCode>,
     pub constants: value::ValueArray,
+    pub lines: Vec<usize>,
 }
 
 // TODO(Jonathon): Think about www.reddit.com/r/rust/comments/ui24sa/most_idiomatic_way_to_represent_opcodes/,
@@ -18,11 +19,13 @@ pub fn build_chunk() -> Chunk {
     Chunk {
         code: Vec::new(),
         constants: value::ValueArray::new(),
+        lines: Vec::new(),
     }
 }
 
-pub fn write_chunk(chunk: &mut Chunk, code: OpCode) {
+pub fn write_chunk(chunk: &mut Chunk, code: OpCode, line: usize) {
     chunk.code.push(code);
+    chunk.lines.push(line);
 }
 
 pub fn add_constant(chunk: &mut Chunk, value: value::Value) -> usize {

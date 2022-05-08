@@ -19,6 +19,11 @@ fn simple_instruction(name: &str, offset: usize) -> usize {
 
 fn disassemble_instruction(chunk: &Chunk, offset: usize) -> usize {
     print!("{:0>4} ", offset);
+    if offset > 0 && chunk.lines[offset] == chunk.lines[offset - 1] {
+        print!("   | ");
+    } else {
+        print!("{:4} ", chunk.lines[offset]);
+    }
 
     let instruction = chunk.code.get(offset).unwrap();
     return match instruction {
