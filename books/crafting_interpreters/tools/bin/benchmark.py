@@ -1,30 +1,30 @@
+import argparse
 import os.path
-import sys
 import subprocess
+import sys
 from subprocess import PIPE
 
 from typing import Optional
 
 
-def run_trial(interpreter, benchmark):
+def run_trial(interpreter: str, benchmark: str):
     """Runs the benchmark once and returns the elapsed time."""
-    args = [interpreter, os.path.join('test', 'benchmark', benchmark + '.lox')]
+    args = [interpreter, benchmark]
     proc = subprocess.Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
     out, err = proc.communicate()
 
-    out = out.decode("utf-8").replace('\r\n', '\n')
+    out = out.decode("utf-8").replace("\r\n", "\n")
 
     # Remove the trailing last empty line.
-    out_lines = out.split('\n')
-    if out_lines[-1] == '':
+    out_lines = out.split("\n")
+    if out_lines[-1] == "":
         del out_lines[-1]
-
     # The benchmark should print the elapsed time last.
     return float(out_lines[-1])
 
 
-def run_comparison(interpreters, benchmark):
+def run_comparison(interpreters: list[str], benchmark: str) -> None:
     trial = 1
     best = {}
     for interpreter in interpreters:
@@ -59,13 +59,16 @@ def run_comparison(interpreters, benchmark):
             else:
                 ratio = best[interpreter] / best_time
                 suffix = "{0:0.4}x time of best".format(ratio)
-            print("  {0}   best {1:0.4}s  {2}".format(
-                interpreter, best[interpreter], suffix))
+            print(
+                "  {0}   best {1:0.4}s  {2}".format(
+                    interpreter, best[interpreter], suffix
+                )
+            )
 
         trial += 1
 
 
-def run_benchmark(interpreter, benchmark):
+def run_benchmark(interpreter, benchmark) -> None:
     trial = 1
     best = 9999
 
@@ -79,22 +82,18 @@ def run_benchmark(interpreter, benchmark):
 
 
 def main(argv: Optional[list[str]] = None) -> int:
-    if argv is None:
-        argv = sys.argv
-    interpreters = ['build/clox']
-    if len(argv) == 2:
-        benchmark = argv[1]
-    elif len(argv) > 2:
-        interpreters = argv[1:-1]
-        benchmark = argv[-1]
-    else:
-        print('Usage: benchmark.py [interpreters...] <benchmark>')
-        return 1
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--benchmark", required=True)
+    parser.add_argument("--interpreter", action="append")
+    args = parser.parse_args()
 
-    if len(interpreters) > 1:
-        run_comparison(interpreters, benchmark)
+    if args.interpreter is None or len(args.interpreter) == 0:
+        print("A minimum of 1 interpreter must be supplied with --interpreter.", file=sys.stderr)
+        return 1
+    elif len(args.interpreter) > 1:
+        run_comparison(args.interpreter, args.benchmark)
     else:
-        run_benchmark(interpreters[0], benchmark)
+        run_benchmark(args.interpreter[0], args.benchmark)
     return 0
 
 
