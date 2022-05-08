@@ -12,10 +12,7 @@ use debug::disassemble_chunk;
 use vm::interpret;
 
 fn main() {
-    println!("Hello, world!");
-
     let mut c: Chunk = build_chunk();
-    println!("{:?}", c);
 
     let constant = add_constant(&mut c, 1.2);
     write_chunk(&mut c, OpCode::OpConstant { constant }, 123);

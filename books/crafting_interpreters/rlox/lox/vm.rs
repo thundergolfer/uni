@@ -1,5 +1,6 @@
 use super::chunk;
 use super::chunk::OpCode;
+use super::debug;
 use super::value::Value;
 use super::value::print_value;
 
@@ -24,6 +25,10 @@ pub fn run(vm: &mut VM) -> InterpretResult {
     loop {
         let op = &vm.chunk.code[vm.ip];
         vm.ip += 1;
+
+        #[cfg(debug_assertions)]
+        debug::disassemble_instruction(vm.chunk, vm.ip-1);
+
         match op {
             OpCode::OpReturn => return InterpretResult::InterpretOk,
             OpCode::OpConstant { constant } => {
