@@ -1,6 +1,7 @@
 mod chunk;
 mod debug;
 mod value;
+mod vm;
 
 use chunk::Chunk;
 use chunk::OpCode;
@@ -8,6 +9,7 @@ use chunk::add_constant;
 use chunk::build_chunk;
 use chunk::write_chunk;
 use debug::disassemble_chunk;
+use vm::interpret;
 
 fn main() {
     println!("Hello, world!");
@@ -22,6 +24,6 @@ fn main() {
     write_chunk(&mut c, OpCode::OpReturn, 123);
 
     disassemble_chunk(&c, "test chunk");
-
+    interpret(&c);
     println!("{:?}", c);
 }
