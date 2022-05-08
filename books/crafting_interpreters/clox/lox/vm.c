@@ -494,6 +494,19 @@ static InterpretResult run() {
                 push(OBJ_VAL(newClass(READ_STRING())));
                 break;
             }
+            case OP_INHERIT: {
+                Value superclass = peek(1);
+                if (!IS_CLASS(superclass)) {
+                    runtimeError("Superclass must be a class.");
+                    return INTERPRET_RUNTIME_ERROR;
+                }
+                ObjClass* subclass = AS_CLASS(peek(0));
+                // At this point the subclass's method table is empty, so we're not
+                // clobbering any subclass overrides.
+                tableAddAll(&AS_CLASS(superclass)->methods, &subclass->methods);
+                pop(); // Subclass.
+                break;
+            }
             case OP_METHOD: {
                 defineMethod(READ_STRING());
                 break;
