@@ -1,5 +1,6 @@
 build --test_output=all
 
+common --incompatible_java_common_parameters=false
 
 # Note: Needed on my personal laptop
 # Workaround for https://github.com/bazelbuild/bazel/pull/12882. Issue should be fixed in >= 4.1.0
@@ -7,8 +8,8 @@ build --test_output=all
 
 # Configure Java version
 # --javabase set for Github Codespaces which doesn't have Java installed.
-build --javabase=@bazel_tools//tools/jdk:remote_jdk11
-build --java_toolchain=@bazel_tools//tools/jdk:toolchain_java11 
+build --java_runtime_version=remotejdk_11
+build --java_language_version=11
 build --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_java11
 
 build --sandbox_default_allow_network=false
