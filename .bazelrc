@@ -1,5 +1,6 @@
 build --test_output=all
 
+# Required for rules_scala
 common --incompatible_java_common_parameters=false
 
 # Note: Needed on my personal laptop
