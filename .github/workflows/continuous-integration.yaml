@@ -20,6 +20,14 @@ jobs:
         # Bazel version to install e.g. 1.2.1, 2.0.0, ...
         version: 5.1.0
 
+    # I shouldn't need to do this. It's non-hermetic.
+    # https://github.com/bazelbuild/rules_jvm_external/issues/445
+    - name: Setup Java
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+
     - name: Set up Python 3
       uses: actions/setup-python@v2
       with:
