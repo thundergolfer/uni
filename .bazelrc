@@ -10,7 +10,10 @@ common --incompatible_java_common_parameters=false
 # --javabase set for Github Codespaces which doesn't have Java installed.
 build --java_runtime_version=remotejdk_11
 build --java_language_version=11
-build --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_java11
+build --java_runtime_version=remotejdk_11
+build --tool_java_runtime_version=remotejdk_11
+# Required for rules_scala
+build --javabase=@bazel_tools//tools/jdk:remote_jdk11
 
 build --sandbox_default_allow_network=false
 build --remote_local_fallback

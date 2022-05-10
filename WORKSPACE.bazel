@@ -155,10 +155,10 @@ http_archive(
     url = "https://mirror.bazel.build/github.com/bazelbuild/bazel-skylib/releases/download/{}/bazel-skylib-{}.tar.gz".format(skylib_version, skylib_version),
 )
 
-rules_scala_version = "e7a948ad1948058a7a5ddfbd9d1629d6db839933"
+rules_scala_version = "62d2af160ce8ec298a72c92efcf913aac61867ee"
 http_archive(
     name = "io_bazel_rules_scala",
-    sha256 = "76e1abb8a54f61ada974e6e9af689c59fd9f0518b49be6be7a631ce9fa45f236",
+    sha256 = "6b415064d1b276b4a717bfd38132a53d11102ae01a75c4b3a962771d12f01335",
     strip_prefix = "rules_scala-%s" % rules_scala_version,
     type = "zip",
     url = "https://github.com/bazelbuild/rules_scala/archive/%s.zip" % rules_scala_version,
