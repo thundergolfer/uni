@@ -22,7 +22,7 @@ def run_file(file_path: str) -> None:
 
 
 def main(argv: Optional[list[str]] = None) -> int:
-    parser = argparse.ArgumentParser(usage="USAGE: pylox [path]", add_help=True)
+    parser = argparse.ArgumentParser(prog="lox", usage="USAGE: pylox [path]", add_help=True)
     parser.add_argument("--debug", default=False)
     parser.add_argument("path", nargs="?", default=None)
     arguments = parser.parse_args()
