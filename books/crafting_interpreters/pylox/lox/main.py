@@ -1,3 +1,4 @@
+import argparse
 import pathlib
 import sys
 
@@ -21,24 +22,25 @@ def run_file(file_path: str) -> None:
 
 
 def main(argv: Optional[list[str]] = None) -> int:
-    if len(argv) == 1:
+    parser = argparse.ArgumentParser(usage="USAGE: pylox [path]", add_help=True)
+    parser.add_argument("--debug", default=False)
+    parser.add_argument("path", nargs="?", default=None)
+    arguments = parser.parse_args()
+    if arguments.path is None:
         try:
             repl()
         except (EOFError, KeyboardInterrupt):
             # TODO(Jonathon): 130 is actually not returned.
             # See https://stackoverflow.com/questions/4606942/why-cant-i-handle-a-keyboardinterrupt-in-python
             return 130
-    elif len(argv) == 2:
+    else:
         try:
-            run_file(argv[1])
+            run_file(arguments.path)
         except RuntimeError as e:
             print(e, file=sys.stderr)
             return 1
-    else:
-        print("USAGE: pylox [path]", file=sys.stderr)
-        return 1
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv))
+    raise SystemExit(main())
