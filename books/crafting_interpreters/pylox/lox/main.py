@@ -4,6 +4,8 @@ import sys
 
 from typing import Optional
 
+import chunk
+
 
 def repl() -> None:
     while True:
@@ -22,7 +24,18 @@ def run_file(file_path: str) -> None:
 
 
 def main(argv: Optional[list[str]] = None) -> int:
-    parser = argparse.ArgumentParser(prog="lox", usage="USAGE: pylox [path]", add_help=True)
+
+    chunc = chunk.init_chunk()
+    constant = chunk.add_constant(chunc, 1.2)
+    chunk.write_chunk(chunc, chunk.OpCode.OP_CONSTANT)
+    chunk.write_chunk(chunc, constant)
+
+    chunk.write_chunk(chunc, chunk.OpCode.OP_RETURN)
+    return 0
+
+    parser = argparse.ArgumentParser(
+        prog="lox", usage="USAGE: pylox [path]", add_help=True
+    )
     parser.add_argument("--debug", default=False)
     parser.add_argument("path", nargs="?", default=None)
     arguments = parser.parse_args()
