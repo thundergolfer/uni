@@ -9,6 +9,7 @@ compile_pip_requirements(
     extra_args = [
         "--allow-unsafe",
     ],
+    tags = ["manual"],
 )
 
 # Vendored third-party dependencies are used to simplify project's WORKSPACE and
