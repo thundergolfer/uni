@@ -5,8 +5,9 @@ cc_binary(
     srcs = ["minitrace.c"],
     deps = [],
     # `ptrace`, used by minitrace.c, is only available on Linux.
-    target_compatible_with = select({
-        "@platforms//os:linux": [],  # [] -> compatible with everything
-        "//conditions:default": ["@platforms//:incompatible"],
-    })
+    # sys/reg.h is only valid on x86
+    target_compatible_with = [
+	"@platforms//os:linux",
+	"@platforms//cpu:x86_64",
+    ],
 )
