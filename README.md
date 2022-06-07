@@ -43,16 +43,7 @@ Currently, the contents of this mono-repo are broken down into the following top
 
 ### Prerequisites
 
-1. [Nix](https://nixos.org/) - Provide a hermetic developer environment. Runs properly on my machine, runs properly on everyone else's. At least, that's the idea.
-2. [Direnv](https://direnv.net/) - Integrate with Nix's `nix-shell` to provide hermetic developer environment.
-3. [`lorri`](https://github.com/target/lorri)
-4. [Bazel](https://bazel.build/) - build everything fast, and correctly, no matter the language.
-5. [`zstd`](https://github.com/facebook/zstd) - Required during install of Bazel Python toolchain on OSX.
-
-Importantly, the following components are included in the repo's Nix environment specification:
-
-* _Python 3_
-* _Racket_ lang, used in [`books/sicp`](/books/sicp)
+1. [Bazel](https://bazel.build/) - build everything fast, and correctly, no matter the language.
 
 ## Development
 
