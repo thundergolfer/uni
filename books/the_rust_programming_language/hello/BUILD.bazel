@@ -1,0 +1,7 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+# 20.1 Hello - Building a single-thread web server
+rust_binary(
+    name = "hello",
+    srcs = ["src/main.rs"],
+)
