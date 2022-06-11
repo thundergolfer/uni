@@ -1,7 +1,26 @@
-load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
 
 # 20.1 Hello - Building a single-thread web server
 rust_binary(
     name = "hello",
-    srcs = ["src/main.rs"],
+    srcs = [
+        "src/bin/main.rs",
+    ],
+    deps = [
+        ":hello_lib",
+    ],
+)
+
+# TODO(Jonathon): Why do I have to break out src/lib.rs into its own target?
+# Why do I get the following compile error when including the lib.rs and main.rs
+# in the same target?
+#
+# 9 | use hello::ThreadPool;
+#   |     ^^^^^ use of undeclared crate or module `hello`
+rust_library(
+    name = "hello_lib",
+    srcs = [
+        "src/lib.rs",
+    ],
+    crate_name = "hello",
 )
