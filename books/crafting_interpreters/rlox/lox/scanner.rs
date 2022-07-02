@@ -84,6 +84,10 @@ impl<'a> Scanner<'_> {
         }
 
         let c = self.advance();
+        if is_digit(c) {
+            return self.make_number_token();
+        };
+
         match c {
             b'(' => self.make_token(TokenType::TokenLeftParen),
             b')' => self.make_token(TokenType::TokenRightParen),
@@ -128,6 +132,7 @@ impl<'a> Scanner<'_> {
                 };
                 self.make_token(tkn_type)
             }
+            b'"' => self.make_string_token(),
             _ => self.error_token("Unexpected character.".into()),
         }
     }
@@ -148,6 +153,44 @@ impl<'a> Scanner<'_> {
 
     fn is_at_end(&self) -> bool {
         self.current == self.source.len()
+    }
+
+    fn make_number_token(&mut self) -> Token {
+        while is_digit(self.peek()) {
+            self.advance();
+        }
+
+        // Look for a fractional part.
+        if self.peek() == b'.' {
+            if let Some(ch) = self.peek_next() {
+                if is_digit(ch) {
+                    // Consume the ".".
+                    self.advance();
+
+                    while !self.is_at_end() && is_digit(self.peek()) {
+                        self.advance();
+                    }
+                }
+            }
+        }
+
+        self.make_token(TokenType::TokenNumber)
+    }
+
+    fn make_string_token(&mut self) -> Token {
+        while !self.is_at_end() && self.peek() != b'"' {
+            if self.peek() == b'\n' {
+                self.line += 1;
+            }
+            self.advance();
+        }
+        if self.is_at_end() {
+            return self.error_token("Unterminated string.".to_string());
+        }
+        // The closing quote.
+        self.advance();
+
+        self.make_token(TokenType::TokenString)
     }
 
     fn make_token(&self, token_type: TokenType) -> Token {
@@ -211,4 +254,12 @@ impl<'a> Scanner<'_> {
             }
         }
     }
+}
+
+fn is_digit(c: u8) -> bool {
+    c >= b'0' && c <= b'9'
+}
+
+fn is_alpha(c: u8) -> bool {
+    (c >= b'a' && c <= b'z') || (c >= b'A' && c <= b'Z') || c == b'_'
 }
