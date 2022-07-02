@@ -1,4 +1,4 @@
-load("@rules_rust//rust:defs.bzl", "rust_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_test")
 
 DEBUG = True
 # Pretty awkward compared to `cargo build --release`
@@ -9,4 +9,9 @@ rust_binary(
     name = "lox",
     srcs = glob(["*.rs"]),
     rustc_flags = RUSTC_FLAGS
+)
+
+rust_test(
+    name = "lox_test",
+    crate = ":lox",
 )

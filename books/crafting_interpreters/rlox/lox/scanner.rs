@@ -49,7 +49,7 @@ pub enum TokenType {
     TokenEOF,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Token {
     pub token_type: TokenType,
     pub line: usize,
@@ -331,4 +331,22 @@ fn is_digit(c: u8) -> bool {
 
 fn is_alpha(c: u8) -> bool {
     (c >= b'a' && c <= b'z') || (c >= b'A' && c <= b'Z') || c == b'_'
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_scanner_parses_empty_source() {
+        let mut scanner = Scanner::new("");
+        let actual = scanner.scan_token();
+        let expected = Token {
+            line: 1,
+            token_type: TokenEOF,
+            lexeme: "".to_string(),
+        };
+        assert_eq!(expected, actual)
+    }
 }
