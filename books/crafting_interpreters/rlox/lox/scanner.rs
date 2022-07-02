@@ -1,4 +1,4 @@
-use crate::scanner::TokenType::{TokenEOF, TokenElse};
+use crate::scanner::TokenType::{TokenEOF, TokenIdentifier};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum TokenType {
@@ -84,6 +84,9 @@ impl<'a> Scanner<'_> {
         }
 
         let c = self.advance();
+        if is_alpha(c) {
+            return self.make_identifier_token();
+        }
         if is_digit(c) {
             return self.make_number_token();
         };
@@ -153,6 +156,72 @@ impl<'a> Scanner<'_> {
 
     fn is_at_end(&self) -> bool {
         self.current == self.source.len()
+    }
+
+    fn check_keyword(
+        &self,
+        start: usize,
+        length: usize,
+        rest: &str,
+        keyword_type: TokenType,
+    ) -> TokenType {
+        if self.current - self.start == start + length {
+            // Check that begin + length is within the array, since we already moved current exactly that far.
+            let begin = self.start + start;
+            if &self.source[begin..(begin + length)] == rest {
+                return keyword_type;
+            }
+        }
+        TokenIdentifier
+    }
+
+    fn get_identifier_type(&self) -> TokenType {
+        match self.source.as_bytes()[self.start] {
+            b'a' => self.check_keyword(1, 2, "nd", TokenType::TokenAnd),
+            b'c' => self.check_keyword(1, 4, "lass", TokenType::TokenClass),
+            b'e' => self.check_keyword(1, 3, "lse", TokenType::TokenElse),
+            b'i' => self.check_keyword(1, 1, "f", TokenType::TokenIf),
+            b'n' => self.check_keyword(1, 2, "il", TokenType::TokenNil),
+            b'o' => self.check_keyword(1, 1, "r", TokenType::TokenOr),
+            b'p' => self.check_keyword(1, 4, "rint", TokenType::TokenPrint),
+            b'r' => self.check_keyword(1, 5, "eturn", TokenType::TokenReturn),
+            b's' => self.check_keyword(1, 4, "uper", TokenType::TokenSuper),
+            b'v' => self.check_keyword(1, 2, "ar", TokenType::TokenVar),
+            b'w' => self.check_keyword(1, 4, "hile", TokenType::TokenWhile),
+            b'f' => {
+                if self.current - self.start > 1 {
+                    // more than 1 char in this maybe keyword
+                    match self.source.as_bytes()[self.start + 1] {
+                        b'a' => self.check_keyword(2, 3, "lse", TokenType::TokenFalse),
+                        b'o' => self.check_keyword(2, 1, "r", TokenType::TokenFor),
+                        b'u' => self.check_keyword(2, 1, "n", TokenType::TokenFun),
+                        _ => TokenIdentifier,
+                    }
+                } else {
+                    TokenIdentifier
+                }
+            }
+            b't' => {
+                if self.current - self.start > 1 {
+                    // more than 1 char in this maybe keyword
+                    match self.source.as_bytes()[self.start + 1] {
+                        b'h' => self.check_keyword(2, 2, "is", TokenType::TokenThis),
+                        b'r' => self.check_keyword(2, 2, "ue", TokenType::TokenTrue),
+                        _ => TokenIdentifier,
+                    }
+                } else {
+                    TokenIdentifier
+                }
+            }
+            _ => TokenIdentifier,
+        }
+    }
+
+    fn make_identifier_token(&mut self) -> Token {
+        while !self.is_at_end() && (is_alpha(self.peek()) || is_digit(self.peek())) {
+            self.advance();
+        }
+        self.make_token(self.get_identifier_type())
     }
 
     fn make_number_token(&mut self) -> Token {
