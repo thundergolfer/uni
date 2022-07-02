@@ -330,7 +330,7 @@ fn is_alpha(c: u8) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::scanner::TokenType::TokenNumber;
+    use crate::scanner::TokenType::{TokenEqual, TokenNumber, TokenSemicolon, TokenVar};
 
     #[test]
     fn test_scanner_scans_empty_source() {
@@ -363,5 +363,51 @@ mod tests {
             lexeme: "99999".to_string(),
         };
         assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn test_scans_expression() {
+        let mut actual_tokens: Vec<Token> = Vec::new();
+        let mut scanner = Scanner::new("var foo = 1.2;");
+        loop {
+            let t = scanner.scan_token();
+            actual_tokens.push(t);
+            if actual_tokens.last().unwrap().token_type == TokenEOF {
+                break;
+            }
+        }
+        let expected_tokens = vec![
+            Token {
+                line: 1,
+                token_type: TokenVar,
+                lexeme: "var".to_string(),
+            },
+            Token {
+                line: 1,
+                token_type: TokenIdentifier,
+                lexeme: "foo".to_string(),
+            },
+            Token {
+                line: 1,
+                token_type: TokenEqual,
+                lexeme: "=".to_string(),
+            },
+            Token {
+                line: 1,
+                token_type: TokenNumber,
+                lexeme: "1.2".to_string(),
+            },
+            Token {
+                line: 1,
+                token_type: TokenSemicolon,
+                lexeme: ";".to_string(),
+            },
+            Token {
+                line: 1,
+                token_type: TokenEOF,
+                lexeme: "".to_string(),
+            },
+        ];
+        assert_eq!(actual_tokens, expected_tokens);
     }
 }
