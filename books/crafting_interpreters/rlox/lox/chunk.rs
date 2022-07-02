@@ -12,6 +12,11 @@ pub struct Chunk {
 #[derive(Debug)]
 pub enum OpCode {
     OpConstant { constant: usize },
+    OpAdd,
+    OpSubtract,
+    OpMultiply,
+    OpDivide,
+    OpNegate,
     OpReturn,
 }
 

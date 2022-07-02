@@ -17,11 +17,22 @@ fn main() {
     let constant = add_constant(&mut c, 1.2);
     write_chunk(&mut c, OpCode::OpConstant { constant }, 123);
 
-    write_chunk(&mut c, OpCode::OpReturn, 123);
+
+    let constant = add_constant(&mut c, 3.4);
+    write_chunk(&mut c, OpCode::OpConstant {constant }, 123);
+
+    write_chunk(&mut c, OpCode::OpAdd, 123);
+
+    let constant = add_constant(&mut c, 5.6);
+    write_chunk(&mut c, OpCode::OpConstant { constant }, 123);
+
+    write_chunk(&mut c, OpCode::OpDivide, 123);
+
+    write_chunk(&mut c, OpCode::OpNegate, 123);
+
     write_chunk(&mut c, OpCode::OpReturn, 123);
 
     #[cfg(debug_assertions)]
     disassemble_chunk(&c, "test chunk");
     interpret(&c);
-    println!("{:?}", c);
 }

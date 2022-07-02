@@ -28,6 +28,7 @@ impl VM<'_> {
     }
 
     fn pop(&mut self) -> Value {
+        self.stack_top -= 1;
         // TODO: Return a Result<Value, RuntimeError>
         self.stack.pop().unwrap()
     }
@@ -69,6 +70,10 @@ pub fn run(vm: &mut VM) -> InterpretResult {
         debug::disassemble_instruction(vm.chunk, vm.ip-1);
 
         match op {
+            OpCode::OpNegate => {
+                let v = vm.pop();
+                vm.push(-v);
+            },
             OpCode::OpReturn => {
                 print_value(vm.pop());
                 println!();
@@ -79,6 +84,26 @@ pub fn run(vm: &mut VM) -> InterpretResult {
                 vm.push(value);
                 println!();
             },
+            OpCode::OpAdd => {
+                let a = vm.pop();
+                let b = vm.pop();
+                vm.push(a + b);
+            }
+            OpCode::OpSubtract => {
+                let a = vm.pop();
+                let b = vm.pop();
+                vm.push(a - b);
+            }
+            OpCode::OpMultiply => {
+                let a = vm.pop();
+                let b = vm.pop();
+                vm.push(a * b);
+            }
+            OpCode::OpDivide => {
+                let a = vm.pop();
+                let b = vm.pop();
+                vm.push(a / b);
+            }
         }
     }
 }
