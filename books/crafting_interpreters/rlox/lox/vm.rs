@@ -1,8 +1,8 @@
 use super::chunk;
 use super::chunk::OpCode;
 use super::debug;
-use super::value::Value;
 use super::value::print_value;
+use super::value::Value;
 
 const STACK_MAX: usize = 256;
 
@@ -40,13 +40,12 @@ pub enum InterpretResult {
     InterpretRuntimeError,
 }
 
-
 pub fn interpret(chunk: &chunk::Chunk) -> InterpretResult {
     let mut vm = VM {
         chunk,
         ip: 0,
         stack: vec![0.0; STACK_MAX],
-        stack_top: 0
+        stack_top: 0,
     };
     run(&mut vm)
 }
@@ -67,23 +66,23 @@ pub fn run(vm: &mut VM) -> InterpretResult {
         }
 
         #[cfg(debug_assertions)]
-        debug::disassemble_instruction(vm.chunk, vm.ip-1);
+        debug::disassemble_instruction(vm.chunk, vm.ip - 1);
 
         match op {
             OpCode::OpNegate => {
                 let v = vm.pop();
                 vm.push(-v);
-            },
+            }
             OpCode::OpReturn => {
                 print_value(vm.pop());
                 println!();
-                return InterpretResult::InterpretOk
-            },
+                return InterpretResult::InterpretOk;
+            }
             OpCode::OpConstant { constant } => {
                 let value: Value = vm.chunk.constants[*constant];
                 vm.push(value);
                 println!();
-            },
+            }
             OpCode::OpAdd => {
                 let a = vm.pop();
                 let b = vm.pop();

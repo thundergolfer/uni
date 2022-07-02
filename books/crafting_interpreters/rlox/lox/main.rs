@@ -3,11 +3,11 @@ mod debug;
 mod value;
 mod vm;
 
-use chunk::Chunk;
-use chunk::OpCode;
 use chunk::add_constant;
 use chunk::build_chunk;
 use chunk::write_chunk;
+use chunk::Chunk;
+use chunk::OpCode;
 use debug::disassemble_chunk;
 use vm::interpret;
 
@@ -17,9 +17,8 @@ fn main() {
     let constant = add_constant(&mut c, 1.2);
     write_chunk(&mut c, OpCode::OpConstant { constant }, 123);
 
-
     let constant = add_constant(&mut c, 3.4);
-    write_chunk(&mut c, OpCode::OpConstant {constant }, 123);
+    write_chunk(&mut c, OpCode::OpConstant { constant }, 123);
 
     write_chunk(&mut c, OpCode::OpAdd, 123);
 

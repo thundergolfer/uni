@@ -28,20 +28,18 @@ pub fn disassemble_instruction(chunk: &Chunk, offset: usize) -> usize {
     let instruction = chunk.code.get(offset).unwrap();
     return match instruction {
         OpCode::OpNegate => simple_instruction("OP_NEGATE", offset),
-        OpCode::OpConstant { constant } => constant_instruction("OP_CONSTANT", chunk, *constant, offset),
+        OpCode::OpConstant { constant } => {
+            constant_instruction("OP_CONSTANT", chunk, *constant, offset)
+        }
         OpCode::OpReturn => simple_instruction("OP_RETURN", offset),
         OpCode::OpAdd => simple_instruction("OP_ADD", offset),
         OpCode::OpSubtract => simple_instruction("OP_SUBTRACT", offset),
         OpCode::OpMultiply => simple_instruction("OP_MULTIPLY", offset),
         OpCode::OpDivide => simple_instruction("OP_DIVIDE", offset),
-    }
+    };
 }
 
-fn constant_instruction(
-    name: &str,
-    chunk: &Chunk,
-    constant: usize,
-    offset: usize) -> usize {
+fn constant_instruction(name: &str, chunk: &Chunk, constant: usize, offset: usize) -> usize {
     print!("{:16} {} '", name, constant);
     print_value(*chunk.constants.get(constant).unwrap());
     println!("'");
