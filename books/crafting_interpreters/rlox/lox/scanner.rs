@@ -141,7 +141,7 @@ impl<'a> Scanner<'_> {
     }
 
     fn advance(&mut self) -> u8 {
-        let ret = self.peek();
+        let ret = self.peek().unwrap();
         self.current += 1;
         ret
     }
@@ -218,37 +218,34 @@ impl<'a> Scanner<'_> {
     }
 
     fn make_identifier_token(&mut self) -> Token {
-        while !self.is_at_end() && (is_alpha(self.peek()) || is_digit(self.peek())) {
+        while matches!(self.peek(), Some(c) if is_alpha(c) || is_digit(c)) {
             self.advance();
         }
         self.make_token(self.get_identifier_type())
     }
 
     fn make_number_token(&mut self) -> Token {
-        while is_digit(self.peek()) {
+        while matches!(self.peek(), Some(c) if is_digit(c)) {
             self.advance();
         }
-
         // Look for a fractional part.
-        if self.peek() == b'.' {
+        if matches!(self.peek(), Some(b'.')) {
             if let Some(ch) = self.peek_next() {
                 if is_digit(ch) {
                     // Consume the ".".
                     self.advance();
-
-                    while !self.is_at_end() && is_digit(self.peek()) {
+                    while matches!(self.peek(), Some(c) if is_digit(c)) {
                         self.advance();
                     }
                 }
             }
         }
-
         self.make_token(TokenType::TokenNumber)
     }
 
     fn make_string_token(&mut self) -> Token {
-        while !self.is_at_end() && self.peek() != b'"' {
-            if self.peek() == b'\n' {
+        while !matches!(self.peek(), Some(b'"')) {
+            if let Some(b'\n') = self.peek() {
                 self.line += 1;
             }
             self.advance();
@@ -258,7 +255,6 @@ impl<'a> Scanner<'_> {
         }
         // The closing quote.
         self.advance();
-
         self.make_token(TokenType::TokenString)
     }
 
@@ -271,18 +267,16 @@ impl<'a> Scanner<'_> {
     }
 
     fn match_char(&mut self, expected: u8) -> bool {
-        return if self.is_at_end() {
-            false
-        } else if self.peek() != expected {
-            false
-        } else {
+        if matches!(self.peek(), Some(c) if c == expected) {
             self.current += 1;
             true
-        };
+        } else {
+            false
+        }
     }
 
-    fn peek(&self) -> u8 {
-        self.source.as_bytes()[self.current]
+    fn peek(&self) -> Option<u8> {
+        self.source.as_bytes().get(self.current).map(|char| *char)
     }
 
     fn peek_next(&self) -> Option<u8> {
@@ -298,7 +292,7 @@ impl<'a> Scanner<'_> {
             if self.is_at_end() {
                 break;
             }
-            let c = self.peek();
+            let c = self.peek().unwrap();
             match c {
                 b' ' | b'\r' | b'\t' => {
                     self.advance();
@@ -311,7 +305,7 @@ impl<'a> Scanner<'_> {
                 }
                 b'/' => {
                     if let Some(b'/') = self.peek_next() {
-                        while self.peek() != b'\n' && !self.is_at_end() {
+                        while !matches!(self.peek(), Some(b'\n')) {
                             self.advance();
                         }
                     } else {
@@ -333,10 +327,10 @@ fn is_alpha(c: u8) -> bool {
     (c >= b'a' && c <= b'z') || (c >= b'A' && c <= b'Z') || c == b'_'
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::scanner::TokenType::TokenNumber;
 
     #[test]
     fn test_scanner_parses_empty_source() {
@@ -348,5 +342,26 @@ mod tests {
             lexeme: "".to_string(),
         };
         assert_eq!(expected, actual)
+    }
+
+    #[test]
+    fn test_scanner_parses_numbers() {
+        let mut scanner = Scanner::new("123.456");
+        let actual = scanner.scan_token();
+        let expected = Token {
+            line: 1,
+            token_type: TokenNumber,
+            lexeme: "123.456".to_string(),
+        };
+        assert_eq!(expected, actual);
+
+        let mut scanner = Scanner::new("99999;");
+        let actual = scanner.scan_token();
+        let expected = Token {
+            line: 1,
+            token_type: TokenNumber,
+            lexeme: "99999".to_string(),
+        };
+        assert_eq!(expected, actual);
     }
 }
