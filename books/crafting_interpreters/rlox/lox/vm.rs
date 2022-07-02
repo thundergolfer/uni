@@ -1,8 +1,10 @@
 use super::chunk;
 use super::chunk::OpCode;
+use super::compiler;
 use super::debug;
 use super::value::print_value;
 use super::value::Value;
+use crate::InterpretResult::InterpretOk;
 
 const STACK_MAX: usize = 256;
 
@@ -40,14 +42,17 @@ pub enum InterpretResult {
     InterpretRuntimeError,
 }
 
-pub fn interpret(chunk: &chunk::Chunk) -> InterpretResult {
-    let mut vm = VM {
-        chunk,
-        ip: 0,
-        stack: vec![0.0; STACK_MAX],
-        stack_top: 0,
-    };
-    run(&mut vm)
+pub fn interpret(_source: &str) -> InterpretResult {
+    // let mut chunk = &chunk::build_chunk();
+    // let mut vm = VM {
+    //     chunk,
+    //     ip: 0,
+    //     stack: vec![0.0; STACK_MAX],
+    //     stack_top: 0,
+    // };
+    // run(&mut vm)
+    compiler::compile(_source);
+    InterpretOk
 }
 
 pub fn run(vm: &mut VM) -> InterpretResult {
