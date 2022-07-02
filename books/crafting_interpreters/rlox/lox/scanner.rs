@@ -333,7 +333,7 @@ mod tests {
     use crate::scanner::TokenType::TokenNumber;
 
     #[test]
-    fn test_scanner_parses_empty_source() {
+    fn test_scanner_scans_empty_source() {
         let mut scanner = Scanner::new("");
         let actual = scanner.scan_token();
         let expected = Token {
@@ -345,7 +345,7 @@ mod tests {
     }
 
     #[test]
-    fn test_scanner_parses_numbers() {
+    fn test_scanner_scans_numbers() {
         let mut scanner = Scanner::new("123.456");
         let actual = scanner.scan_token();
         let expected = Token {
