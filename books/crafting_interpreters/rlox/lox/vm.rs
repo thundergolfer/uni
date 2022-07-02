@@ -24,6 +24,7 @@ impl VM<'_> {
 
     fn push(&mut self, value: Value) {
         self.stack.push(value);
+        self.stack_top += 1;
     }
 
     fn pop(&mut self) -> Value {
@@ -54,14 +55,28 @@ pub fn run(vm: &mut VM) -> InterpretResult {
         let op = &vm.chunk.code[vm.ip];
         vm.ip += 1;
 
+        if cfg!(debug_assertions) {
+            println!("          ");
+            for i in 0..vm.stack_top {
+                print!("[ ");
+                print_value(vm.stack[i]);
+                print!(" ]");
+            }
+            println!("\n");
+        }
+
         #[cfg(debug_assertions)]
         debug::disassemble_instruction(vm.chunk, vm.ip-1);
 
         match op {
-            OpCode::OpReturn => return InterpretResult::InterpretOk,
+            OpCode::OpReturn => {
+                print_value(vm.pop());
+                println!();
+                return InterpretResult::InterpretOk
+            },
             OpCode::OpConstant { constant } => {
                 let value: Value = vm.chunk.constants[*constant];
-                print_value(value);
+                vm.push(value);
                 println!();
             },
         }

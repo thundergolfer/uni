@@ -20,6 +20,7 @@ fn main() {
     write_chunk(&mut c, OpCode::OpReturn, 123);
     write_chunk(&mut c, OpCode::OpReturn, 123);
 
+    #[cfg(debug_assertions)]
     disassemble_chunk(&c, "test chunk");
     interpret(&c);
     println!("{:?}", c);

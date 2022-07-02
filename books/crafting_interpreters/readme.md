@@ -95,7 +95,7 @@ At the moment `rlox` is TODO.
 You can run the `rlox` exe in 'repl' mode: 
 
 ```bash
-TODO
+bazel run //books/crafting_interpreters/rlox/lox
 ```
 
 Or you can pass it a file: 
