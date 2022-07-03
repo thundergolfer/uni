@@ -18,14 +18,15 @@ use chunk::write_chunk;
 use chunk::Chunk;
 use chunk::OpCode;
 use debug::disassemble_chunk;
-use vm::interpret;
+use vm::{interpret, VM};
 
 fn repl() {
+    let mut vm = VM::new();
     print!("> ");
     io::stdout().flush().unwrap();
     let stdin = io::stdin();
     for line in stdin.lock().lines() {
-        interpret(&line.unwrap());
+        interpret(&mut vm, &line.unwrap());
         print!("> ");
         io::stdout().flush().unwrap();
     }
@@ -33,7 +34,8 @@ fn repl() {
 
 fn run_lox_file(filepath: &str) -> Result<InterpretResult, io::Error> {
     let code = std::fs::read_to_string(filepath)?;
-    Ok(interpret(&code))
+    let mut vm = VM::new();
+    Ok(interpret(&mut vm, &code))
 }
 
 fn main() {

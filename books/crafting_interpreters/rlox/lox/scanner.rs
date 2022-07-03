@@ -53,7 +53,7 @@ pub enum TokenType {
 pub struct Token {
     pub token_type: TokenType,
     pub line: usize,
-    // TODO(Jonathon): Should be &'a str or something not String.
+    // TODO(Jonathon): Should be &'a str not String.
     pub lexeme: String,
 }
 

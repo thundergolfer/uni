@@ -4,19 +4,29 @@ use super::compiler;
 use super::debug;
 use super::value::print_value;
 use super::value::Value;
+use crate::Chunk;
 use crate::InterpretResult::InterpretOk;
 
 const STACK_MAX: usize = 256;
 
 #[derive(Debug)]
-pub struct VM<'a> {
-    pub chunk: &'a chunk::Chunk,
+pub struct VM {
+    pub chunk: Chunk,
     pub ip: usize,
     pub stack: Vec<Value>,
     pub stack_top: usize,
 }
 
-impl VM<'_> {
+impl VM {
+    pub fn new() -> VM {
+        VM {
+            chunk: chunk::build_chunk(),
+            ip: 0,
+            stack: vec![0.0; STACK_MAX],
+            stack_top: 0,
+        }
+    }
+
     /// Reset the VM's state, keeping the global variables.
     pub fn reset(&mut self) {
         self.ip = 0;
@@ -42,17 +52,12 @@ pub enum InterpretResult {
     InterpretRuntimeError,
 }
 
-pub fn interpret(_source: &str) -> InterpretResult {
-    // let mut chunk = &chunk::build_chunk();
-    // let mut vm = VM {
-    //     chunk,
-    //     ip: 0,
-    //     stack: vec![0.0; STACK_MAX],
-    //     stack_top: 0,
-    // };
-    // run(&mut vm)
-    compiler::compile(_source);
-    InterpretOk
+pub fn interpret(vm: &mut VM, source: &str) -> InterpretResult {
+    if !compiler::compile(source, &vm.chunk) {
+        return InterpretResult::InterpretCompileError;
+    }
+    vm.ip = 0;
+    run(vm)
 }
 
 pub fn run(vm: &mut VM) -> InterpretResult {
@@ -71,7 +76,7 @@ pub fn run(vm: &mut VM) -> InterpretResult {
         }
 
         #[cfg(debug_assertions)]
-        debug::disassemble_instruction(vm.chunk, vm.ip - 1);
+        debug::disassemble_instruction(&vm.chunk, vm.ip - 1);
 
         match op {
             OpCode::OpNegate => {
