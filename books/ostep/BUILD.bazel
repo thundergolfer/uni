@@ -1,0 +1,16 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_test")
+
+# Alternatively, run with cargo:
+#
+# RUSTFLAGS="-C link-args=-no-pie" cargo run --bin all_virtual
+rust_binary(
+    name = "all_virtual",
+    srcs = ["src/bin/all_virtual.rs"],
+    # If this codegen (-C) flag is not set, then address space layout randomization (ASLR)
+    # will mean that the locations printed will NOT be consistent across executions.
+    # Ref: https://doc.rust-lang.org/rustc/codegen-options/index.html#primary-relocation-models
+    rustc_flags = [
+        "-C",
+        "link-args=-no-pie",
+    ],
+)
