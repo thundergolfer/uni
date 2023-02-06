@@ -1,0 +1,21 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "hello",
+    srcs = ["hello.c"],
+)
+
+cc_binary(
+    name = "bitcount",
+    srcs = ["bitcount.c"],
+)
+
+cc_binary(
+    name = "pangram",
+    srcs = ["pangram.c"],
+)
+
+cc_binary(
+    name = "dynarray",
+    srcs = ["dynarray.c"],
+)
