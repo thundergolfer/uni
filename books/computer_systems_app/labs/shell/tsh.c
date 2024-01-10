@@ -197,12 +197,12 @@ void eval(char *cmdline)
     int pid;
     pid = fork();
     if (pid == -1) {
-        char *msg = malloc(32 * sizeof(char));
-        snprintf(msg, 32, "error: fork failed, errno: %d", errno);
-        debug(msg);
+        unix_error("fork failed");
     } else if (pid == 0) {
         debug("after fork: child");
-        sleep(1);
+        if (execve(argv[0], argv, environ)) {
+            unix_error("failed to exec");
+        }
         exit(0); // TODO: dont always exit 0
     } else {
         debug("after fork: parent waiting for child");
@@ -329,7 +329,7 @@ void waitfg(pid_t pid)
             // TODO: check `stat_loc`
             break;
         } else if (result == -1) {
-            fprintf(stderr, "failed to waitpid, errno: %d", errno);
+            fprintf(stderr, ", errno: %d\n", errno);
             exit(1);
         } else {
             fprintf(stderr, "unknown return value: %d", pid);
