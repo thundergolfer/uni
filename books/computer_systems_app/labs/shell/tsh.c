@@ -186,6 +186,7 @@ void eval(char *cmdline)
     int bg = parseline(cmdline, argv);
     if (argv[0] == NULL) {
         debug("empty command");
+        return;
     }
     if (builtin_cmd(argv)) {
         debug("finished processing builtin");
