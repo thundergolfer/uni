@@ -206,6 +206,10 @@ void eval(char *cmdline)
         exit(0); // TODO: dont always exit 0
     } else {
         debug("after fork: parent waiting for child");
+        if (setpgid(pid, pid)) { // give unique proc group ID
+            unix_error("failed to set proc group ID");
+        }
+        addjob(jobs, pid, FG, cmdline);
         waitfg(pid);
     }
     return;
