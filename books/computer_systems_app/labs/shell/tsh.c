@@ -188,10 +188,25 @@ void eval(char *cmdline)
         debug("empty command");
     }
     if (builtin_cmd(argv)) {
-        
+        debug("finished processing builtin");
         return;
     }
 
+    // Fork and run job
+    int pid;
+    pid = fork();
+    if (pid == -1) {
+        char *msg = malloc(32 * sizeof(char));
+        snprintf(msg, 32, "error: fork failed, errno: %d", errno);
+        debug(msg);
+    } else if (pid == 0) {
+        debug("after fork: child");
+        sleep(1);
+        exit(0); // TODO: dont always exit 0
+    } else {
+        debug("after fork: parent waiting for child");
+        waitfg(pid);
+    }
     return;
 }
 
@@ -275,6 +290,7 @@ int builtin_cmd(char **argv)
     } else if (strcasecmp(argv[0], "jobs") == 0)
     {
         debug("got 'jobs' command");
+        listjobs(jobs);
         return 1;
     }
     else if (strcasecmp(argv[0], "quit") == 0)
@@ -299,6 +315,27 @@ void do_bgfg(char **argv)
  */
 void waitfg(pid_t pid)
 {
+    int stat_loc;
+    pid_t result;
+    int options = WNOHANG;
+    for (;;) {
+        result = waitpid(pid, &stat_loc, options);
+        if (result == 0) {
+            // Not finished
+            usleep(10000); // 10ms
+        } else if (result == pid) {
+            // Child finished.
+            // TODO: check `stat_loc`
+            break;
+        } else if (result == -1) {
+            fprintf(stderr, "failed to waitpid, errno: %d", errno);
+            exit(1);
+        } else {
+            fprintf(stderr, "unknown return value: %d", pid);
+            exit(1);
+        }
+    }
+    debug("after fork: parent finished waiting for child");
     return;
 }
 
