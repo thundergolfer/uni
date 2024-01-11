@@ -206,6 +206,7 @@ void eval(char *cmdline)
         exit(0); // TODO: dont always exit 0
     } else {
         debug("after fork: parent waiting for child");
+        // TODO: should this be set using setpgid(0, 0) in child instead?
         if (setpgid(pid, pid)) { // give unique proc group ID
             unix_error("failed to set proc group ID");
         }
