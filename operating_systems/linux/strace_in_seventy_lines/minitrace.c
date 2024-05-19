@@ -22,7 +22,7 @@ int do_child(int argc, char **argv) {
     // Next, we just execute the provided argument list, but first, we need to start the tracing process, so 
     // that the parent can start tracing the newly-executed program from the very start.
     // If a child knows that it wants to be traced, it can make the PTRACE_TRACEME ptrace request, 
-    // which starts tracing. In addition, it means that the next signal sent to this process wil stop 
+    // which starts tracing. In addition, it means that the next signal sent to this process will stop 
     // it and notify the parent (via wait), so that the parent knows to start tracing. 
     // So, after doing a TRACEME, we SIGSTOP ourselves, so that the parent can continue our execution with the exec call.
     return execvp(args[0], args);
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     // then we fork() to create two processes – one to execute the program to be traced, and the other to trace it.
     pid_t child = fork();
     if (child == 0) {
-        return do_child(argc-1, argv+1);
+        return do_child(argc-1  , argv+1);
     } else {
         return do_trace(child);
     }

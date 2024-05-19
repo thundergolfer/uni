@@ -80,3 +80,5 @@ pytestdebug.log
 # Rust
 books/the_rust_programming_language/**/target/**
 books/the_rust_programming_language/**/main
+
+operating_systems/linux/**/target/
