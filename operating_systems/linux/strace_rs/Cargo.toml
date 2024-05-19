@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+anyhow = "1.0.86"
 bitflags = "2.5.0"
 libc = "0.2.139"
 num = "0.4.3"
