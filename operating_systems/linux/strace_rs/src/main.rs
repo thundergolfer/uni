@@ -16,14 +16,10 @@ where T: IntoIterator<Item = String> {
     let child_prog = cstrings.get(0).unwrap().clone();
     debug!(?child_prog, "starting child");
     let child_prog = child_prog.into_raw();
-
-    // Step 3: Store pointers to these CStrings in a Vec<*const c_char>
     let mut c_pointers: Vec<*const libc::c_char> = cstrings
         .iter()
         .map(|cstr| cstr.as_ptr())
         .collect();
-
-    // Step 4: Convert this Vec<*const c_char> to a raw pointer
     // Ensure null termination for C-style argv array
     c_pointers.push(ptr::null());
 
@@ -38,10 +34,10 @@ where T: IntoIterator<Item = String> {
     let envp: *const *const libc::c_char = envp.as_ptr();
     libc::execve(child_prog, argv, envp);
 
-    // If execution continued there was an error.
+    // If execution continued to here there was an error.
     let errno: i32 = Error::last_os_error().raw_os_error().unwrap();
     error!("errno = {}", errno);
-    1
+    errno
 }
 
 fn do_trace(child: i32) -> i32 {

@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+bitflags = "2.5.0"
 libc = "0.2.139"
+num = "0.4.3"
+num-derive = "0.4.2"
+num-traits = "0.2.19"
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
