@@ -134,6 +134,10 @@ bitflags! {
   }
 }
 
+pub fn singlestep(pid: libc::pid_t) -> Result<libc::c_long, i32> {
+    unsafe { _ptrace(Request::SingleStep, pid, ptr::null_mut(), ptr::null_mut()) }
+}
+
 pub fn setoptions(pid: libc::pid_t, opts: Options) -> Result<libc::c_long, i32> {
     unsafe {
         _ptrace(

@@ -1,8 +1,9 @@
 use std::process;
 
 use anyhow::Result;
-use tracing::Level;
+use tracing::level_filters::LevelFilter;
 use tracing_subscriber;
+use tracing_subscriber::EnvFilter;
 
 use strace_rs::trace_command;
 
@@ -19,7 +20,11 @@ fn main() -> Result<()> {
     }
 
     tracing_subscriber::fmt()
-        .with_max_level(Level::TRACE)
+        .with_env_filter(
+            EnvFilter::builder()
+                .with_default_directive(LevelFilter::INFO.into())
+                .from_env_lossy(),
+        )
         .init();
 
     // We’ll start with the entry point. We check that we were passed a command,
