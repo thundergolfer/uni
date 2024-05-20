@@ -136,7 +136,7 @@ bitflags! {
 
 pub fn setoptions(pid: libc::pid_t, opts: Options) -> Result<libc::c_long, i32> {
     unsafe {
-        raw(
+        _ptrace(
             Request::SetOptions,
             pid,
             ptr::null_mut(),
@@ -150,7 +150,7 @@ pub fn getregs(pid: libc::pid_t) -> Result<Registers, i32> {
     let buf_mut: *mut Registers = &mut buf;
 
     match unsafe {
-        raw(
+        _ptrace(
             Request::GetRegs,
             pid,
             ptr::null_mut(),
@@ -165,21 +165,21 @@ pub fn getregs(pid: libc::pid_t) -> Result<Registers, i32> {
 pub fn setregs(pid: libc::pid_t, regs: &Registers) -> Result<libc::c_long, i32> {
     unsafe {
         let buf: *mut libc::c_void = mem::transmute(regs);
-        raw(Request::SetRegs, pid, ptr::null_mut(), buf)
+        _ptrace(Request::SetRegs, pid, ptr::null_mut(), buf)
     }
 }
 
 pub fn seize(pid: libc::pid_t) -> Result<libc::c_long, i32> {
-    unsafe { raw(Request::Seize, pid, ptr::null_mut(), ptr::null_mut()) }
+    unsafe { _ptrace(Request::Seize, pid, ptr::null_mut(), ptr::null_mut()) }
 }
 
 pub fn attach(pid: libc::pid_t) -> Result<libc::c_long, i32> {
-    unsafe { raw(Request::Attach, pid, ptr::null_mut(), ptr::null_mut()) }
+    unsafe { _ptrace(Request::Attach, pid, ptr::null_mut(), ptr::null_mut()) }
 }
 
 pub fn release(pid: libc::pid_t, signal: Signal) -> Result<libc::c_long, i32> {
     unsafe {
-        raw(
+        _ptrace(
             Request::Detatch,
             pid,
             ptr::null_mut(),
@@ -190,7 +190,7 @@ pub fn release(pid: libc::pid_t, signal: Signal) -> Result<libc::c_long, i32> {
 
 pub fn cont(pid: libc::pid_t, signal: Signal) -> Result<libc::c_long, i32> {
     unsafe {
-        raw(
+        _ptrace(
             Request::Continue,
             pid,
             ptr::null_mut(),
@@ -200,10 +200,10 @@ pub fn cont(pid: libc::pid_t, signal: Signal) -> Result<libc::c_long, i32> {
 }
 
 pub fn traceme() -> Result<libc::c_long, i32> {
-    unsafe { raw(Request::TraceMe, 0, ptr::null_mut(), ptr::null_mut()) }
+    unsafe { _ptrace(Request::TraceMe, 0, ptr::null_mut(), ptr::null_mut()) }
 }
 
-unsafe fn raw(
+unsafe fn _ptrace(
     request: Request,
     pid: libc::pid_t,
     addr: *mut libc::c_void,
@@ -281,7 +281,7 @@ impl Writer {
 
     pub fn poke_data(&self, address: Address, data: Word) -> Result<Word, i32> {
         match unsafe {
-            raw(
+            _ptrace(
                 Request::PokeData,
                 self.pid,
                 address as *mut libc::c_void,
@@ -352,7 +352,7 @@ impl Reader {
     pub fn peek_data(&self, address: Address) -> Result<Word, i32> {
         let l;
         unsafe {
-            l = raw(
+            l = _ptrace(
                 Request::PeekData,
                 self.pid,
                 address as *mut libc::c_void,

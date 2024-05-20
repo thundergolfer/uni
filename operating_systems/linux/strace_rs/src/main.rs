@@ -1,11 +1,12 @@
 use std::process;
 
+use anyhow::Result;
 use tracing::Level;
 use tracing_subscriber;
 
 use strace_rs::trace_command;
 
-fn main() {
+fn main() -> Result<()> {
     let mut args = std::env::args();
     if args.len() < 2 {
         eprintln!(
@@ -25,6 +26,5 @@ fn main() {
     // and then we fork() to create two processes –
     // one to execute the program to be traced, and
     // the other to trace it.
-    let exit_code = unsafe { trace_command(args.into_iter()) };
-    process::exit(exit_code);
+    unsafe { trace_command(args.into_iter()) }
 }
