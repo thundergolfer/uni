@@ -115,7 +115,7 @@ class AntiSpamServer(smtpd.SMTPServer):
             [str(component) for component in config.spam_detect_api_addr]
         )
 
-        req = urllib.request.Request(f"http://{spam_detect_api_url}")
+            
         req.add_header("Content-Type", "application/json; charset=utf-8")
         data = json.dumps(body)
         data_b = data.encode("utf-8")
