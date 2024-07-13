@@ -9,6 +9,7 @@ use computers_are_fast::gen_docs;
 use serde::{Deserialize, Serialize};
 use sysinfo::System;
 use tempfile::tempdir;
+use openssl::sha;
 
 const CHOICES: [u64; 10] = [
     1,
@@ -165,18 +166,17 @@ fn bench_json_parse(n: u64) {
 /// Number to guess: bytes hashed in one second.
 #[gen_docs]
 fn bench_sha256_digest(n: u64) {
-    use sha2::{Digest, Sha256};
+    let mut h = sha::Sha256::new();
     const CHUNK_SIZE: usize = 10_000;
     let s = "a".repeat(CHUNK_SIZE);
     let mut bytes_hashed: usize = 0;
-    let mut h = Sha256::new();
 
     while bytes_hashed < (n as usize) {
         h.update(s.as_bytes());
         bytes_hashed += CHUNK_SIZE;
     }
 
-    h.finalize();
+    h.finish();
 }
 
 /// Number to guess: bytes written to array in one second.
@@ -292,29 +292,29 @@ fn run_benchmark(b: &Bench) -> BenchResult {
 }
 
 fn main() -> Result<()> {
-    let benchmarks: [Bench; 11] = [
-        bnchmrk![bench_loop, Some(vec![
-            "black_box(()) is used only to avoid compiler optimizing out the loop. It adds no run time overhead.".to_string(), 
-            "A CPU can execute around a few billion instructions per second.".to_string()
-        ])],
-        bnchmrk!(bench_dict_mutation),
-        bnchmrk!(bench_download_webpage),
-        bnchmrk!(bench_run_python, Some(vec![
-            "This is much less than 100 million :)".to_string(),
-            "On startup Python reads of 100 files!".into(),
-            "Before running any code Python executes around 1000 syscalls".into(),
-        ])),
-        bnchmrk!(bench_create_files),
-        bnchmrk!(bench_write_to_disk, Some(vec![
-            "We make sure everything is sync'd to disk before exiting".to_string(),
-        ])),
-        bnchmrk!(bench_write_to_memory),
-        bnchmrk!(bench_json_parse),
+    let benchmarks: [Bench; 1] = [
+        // bnchmrk![bench_loop, Some(vec![
+        //     "black_box(()) is used only to avoid compiler optimizing out the loop. It adds no run time overhead.".to_string(), 
+        //     "A CPU can execute around a few billion instructions per second.".to_string()
+        // ])],
+        // bnchmrk!(bench_dict_mutation),
+        // bnchmrk!(bench_download_webpage),
+        // bnchmrk!(bench_run_python, Some(vec![
+        //     "This is much less than 100 million :)".to_string(),
+        //     "On startup Python reads of 100 files!".into(),
+        //     "Before running any code Python executes around 1000 syscalls".into(),
+        // ])),
+        // bnchmrk!(bench_create_files),
+        // bnchmrk!(bench_write_to_disk, Some(vec![
+        //     "We make sure everything is sync'd to disk before exiting".to_string(),
+        // ])),
+        // bnchmrk!(bench_write_to_memory),
+        // bnchmrk!(bench_json_parse),
         bnchmrk!(bench_sha256_digest, Some(vec![
             "sha256 is cryptographically secure and slower than md5, siphash, CRC32.".to_string()
         ])),
-        bnchmrk!(bench_fill_array),
-        bnchmrk!(bench_fill_array_out_of_order),
+        // bnchmrk!(bench_fill_array),
+        // bnchmrk!(bench_fill_array_out_of_order),
     ];
 
     let mut results = vec![];
