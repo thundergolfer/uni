@@ -165,18 +165,18 @@ fn bench_json_parse(n: u64) {
 /// Number to guess: bytes hashed in one second.
 #[gen_docs]
 fn bench_sha256_digest(n: u64) {
-    use sha2::{Digest, Sha256};
+    use openssl::sha;
+    let mut h = sha::Sha256::new();
     const CHUNK_SIZE: usize = 10_000;
     let s = "a".repeat(CHUNK_SIZE);
     let mut bytes_hashed: usize = 0;
-    let mut h = Sha256::new();
 
     while bytes_hashed < (n as usize) {
         h.update(s.as_bytes());
         bytes_hashed += CHUNK_SIZE;
     }
 
-    h.finalize();
+    let _multi_part = h.finish();
 }
 
 /// Number to guess: bytes written to array in one second.
