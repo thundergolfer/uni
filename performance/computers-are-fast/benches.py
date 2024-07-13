@@ -168,7 +168,7 @@ def bench_sha256_digest(n: int):
     """
     CHUNK_SIZE = 10_000
     s = b'a' * CHUNK_SIZE
-    h = hashlib.md5()
+    h = hashlib.sha256()
     bytes_hashed = 0
     while bytes_hashed < n:
         h.update(s)
